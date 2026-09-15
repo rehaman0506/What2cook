@@ -45,7 +45,7 @@ export const SAMPLE_RECIPES: Recipe[] = [
     description: 'Rich and luscious restaurant-style North Indian cottage cheese cubes simmered in a velvety buttery tomato-cashew gravy with fragrant kasuri methi.',
     image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
     cuisine: 'North Indian',
-    category: 'Vegetarian',
+    category: 'Dinner',
     food_type: 'VEGETARIAN',
     ingredients: [
       { name: 'Paneer (Cottage Cheese)', quantity: '250g (cubed)', isOptional: false },

@@ -59,14 +59,28 @@ export const App: React.FC = () => {
   const handleNavigateToRecipes = (
     query?: string,
     categoryTag?: string,
-    diet?: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'
+    diet?: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN',
+    resetOtherFilters: boolean = true
   ) => {
-    setFilters(prev => ({
-      ...prev,
-      searchQuery: query !== undefined ? query : prev.searchQuery,
-      category: categoryTag !== undefined ? categoryTag : prev.category,
-      foodType: diet !== undefined ? diet : prev.foodType,
-    }));
+    setFilters(prev => {
+      if (resetOtherFilters) {
+        return {
+          searchQuery: query !== undefined ? query : '',
+          category: categoryTag !== undefined ? categoryTag : 'ALL',
+          cuisine: 'ALL',
+          foodType: diet !== undefined ? diet : 'ALL',
+          maxCookTime: null,
+          difficulty: 'ALL',
+          sortBy: 'popular',
+        };
+      }
+      return {
+        ...prev,
+        searchQuery: query !== undefined ? query : prev.searchQuery,
+        category: categoryTag !== undefined ? categoryTag : prev.category,
+        foodType: diet !== undefined ? diet : prev.foodType,
+      };
+    });
     setActiveTab('recipes');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

@@ -31,6 +31,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const [selectedIngredients, setSelectedIngredients] = useState<string[]>(['Chicken', 'Rice']);
   const [customIngredient, setCustomIngredient] = useState('');
   const [homeSearch, setHomeSearch] = useState('');
+  const [selectedDiet, setSelectedDiet] = useState<'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'>('ALL');
 
   const toggleIngredient = (ing: string) => {
     setSelectedIngredients(prev =>
@@ -56,8 +57,12 @@ export const HomePage: React.FC<HomePageProps> = ({
 
   const handleHomeSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (homeSearch.trim()) {
-      onNavigateToRecipes(homeSearch.trim());
+    if (homeSearch.trim() || selectedDiet !== 'ALL') {
+      onNavigateToRecipes(
+        homeSearch.trim() || undefined,
+        undefined,
+        selectedDiet !== 'ALL' ? selectedDiet : undefined
+      );
     }
   };
 
@@ -99,6 +104,50 @@ export const HomePage: React.FC<HomePageProps> = ({
 
               {/* Interactive "What is in your kitchen?" ingredient selector */}
               <div className="p-5 sm:p-6 rounded-3xl bg-white border border-stone-200 shadow-xl shadow-orange-500/5 space-y-4 text-left">
+                {/* Dietary Preference Selector */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-stone-100">
+                  <span className="text-xs font-extrabold text-stone-900 uppercase tracking-wider flex items-center gap-1.5">
+                    Dietary Preference:
+                  </span>
+                  <div className="inline-flex p-1 rounded-xl bg-stone-100 border border-stone-200/60 text-xs font-bold">
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDiet('ALL')}
+                      className={`px-3 py-1 rounded-lg transition-all ${
+                        selectedDiet === 'ALL'
+                          ? 'bg-white text-stone-900 shadow-sm'
+                          : 'text-stone-500 hover:text-stone-900'
+                      }`}
+                    >
+                      All Diets
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDiet('VEGETARIAN')}
+                      className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
+                        selectedDiet === 'VEGETARIAN'
+                          ? 'bg-emerald-600 text-white shadow-sm'
+                          : 'text-emerald-700 hover:bg-emerald-50'
+                      }`}
+                    >
+                      <Leaf className="w-3.5 h-3.5" />
+                      Vegetarian
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDiet('NON-VEGETARIAN')}
+                      className={`px-3 py-1 rounded-lg transition-all flex items-center gap-1.5 ${
+                        selectedDiet === 'NON-VEGETARIAN'
+                          ? 'bg-rose-600 text-white shadow-sm'
+                          : 'text-rose-700 hover:bg-rose-50'
+                      }`}
+                    >
+                      <Drumstick className="w-3.5 h-3.5" />
+                      Non-Vegetarian
+                    </button>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-extrabold text-stone-900 uppercase tracking-wider flex items-center gap-2">
                     <ChefHat className="w-4 h-4 text-orange-500" />
@@ -163,10 +212,14 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </button>
 
                   <button
-                    onClick={() => onNavigateToRecipes()}
+                    onClick={() => onNavigateToRecipes(undefined, undefined, selectedDiet !== 'ALL' ? selectedDiet : undefined)}
                     className="w-full sm:w-auto px-5 py-3.5 rounded-2xl border border-stone-200 hover:bg-stone-100 text-stone-700 text-xs sm:text-sm font-bold transition-colors"
                   >
-                    Browse 25+ Recipes
+                    {selectedDiet === 'VEGETARIAN'
+                      ? 'Browse Vegetarian Recipes'
+                      : selectedDiet === 'NON-VEGETARIAN'
+                      ? 'Browse Non-Vegetarian Recipes'
+                      : 'Browse 25+ Recipes'}
                   </button>
                 </div>
               </div>
@@ -215,16 +268,44 @@ export const HomePage: React.FC<HomePageProps> = ({
                   </div>
                 </div>
 
-                {/* Floating Veg/Non-Veg Badges */}
-                <div className="absolute -top-4 -right-2 sm:-right-4 flex flex-col gap-2">
-                  <span className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white text-xs font-extrabold shadow-lg flex items-center gap-1.5">
-                    <Leaf className="w-3.5 h-3.5" />
+                {/* Floating Veg/Non-Veg Interactive Badges */}
+                <div className="absolute -top-4 -right-2 sm:-right-4 flex flex-col gap-2 z-20">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDiet(prev => prev === 'VEGETARIAN' ? 'ALL' : 'VEGETARIAN')}
+                    aria-label="Toggle Vegetarian filter"
+                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-lg flex items-center gap-1.5 transition-all cursor-pointer ${
+                      selectedDiet === 'VEGETARIAN'
+                        ? 'bg-emerald-600 text-white ring-4 ring-emerald-300 scale-105 shadow-emerald-500/30'
+                        : selectedDiet === 'ALL'
+                        ? 'bg-emerald-600/90 hover:bg-emerald-600 text-white hover:scale-105'
+                        : 'bg-stone-200 text-stone-500 opacity-60 hover:opacity-90'
+                    }`}
+                  >
+                    <Leaf className="w-3.5 h-3.5 fill-current" />
                     VEGETARIAN
-                  </span>
-                  <span className="px-3 py-1.5 rounded-xl bg-rose-600 text-white text-xs font-extrabold shadow-lg flex items-center gap-1.5">
-                    <Drumstick className="w-3.5 h-3.5" />
+                    {selectedDiet === 'VEGETARIAN' && (
+                      <span className="ml-1 text-[10px] bg-white/25 px-1 rounded font-black">✓</span>
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDiet(prev => prev === 'NON-VEGETARIAN' ? 'ALL' : 'NON-VEGETARIAN')}
+                    aria-label="Toggle Non-Vegetarian filter"
+                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold shadow-lg flex items-center gap-1.5 transition-all cursor-pointer ${
+                      selectedDiet === 'NON-VEGETARIAN'
+                        ? 'bg-rose-600 text-white ring-4 ring-rose-300 scale-105 shadow-rose-500/30'
+                        : selectedDiet === 'ALL'
+                        ? 'bg-rose-600/90 hover:bg-rose-600 text-white hover:scale-105'
+                        : 'bg-stone-200 text-stone-500 opacity-60 hover:opacity-90'
+                    }`}
+                  >
+                    <Drumstick className="w-3.5 h-3.5 fill-current" />
                     NON-VEGETARIAN
-                  </span>
+                    {selectedDiet === 'NON-VEGETARIAN' && (
+                      <span className="ml-1 text-[10px] bg-white/25 px-1 rounded font-black">✓</span>
+                    )}
+                  </button>
                 </div>
               </div>
             </div>

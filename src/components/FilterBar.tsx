@@ -14,7 +14,21 @@ export const FilterBar: React.FC<FilterBarProps> = ({
   totalResults,
 }) => {
   const cuisines = ['ALL', 'South Indian', 'North Indian', 'Italian', 'Mexican', 'Asian', 'American'];
-  const categories = ['ALL', 'Breakfast', 'Lunch', 'Dinner', 'Snacks', 'Desserts', 'Rice Dishes', 'Chicken', 'Vegetarian'];
+  const categories = [
+    'ALL',
+    'Breakfast',
+    'Lunch',
+    'Dinner',
+    'Snacks',
+    'Desserts',
+    'Rice Dishes',
+    'Chicken',
+    'Vegetarian',
+    'South Indian',
+    'North Indian',
+    'Italian',
+    'Mexican'
+  ];
   const difficulties = ['ALL', 'Easy', 'Medium', 'Hard'];
   const sortOptions = [
     { value: 'popular', label: 'Popular (Rating)' },
@@ -41,11 +55,11 @@ export const FilterBar: React.FC<FilterBarProps> = ({
 
   const isFiltered =
     filters.foodType !== 'ALL' ||
-    filters.cuisine !== 'ALL' ||
-    filters.category !== 'ALL' ||
-    filters.difficulty !== 'ALL' ||
+    (filters.cuisine && filters.cuisine.toUpperCase() !== 'ALL') ||
+    (filters.category && filters.category.toUpperCase() !== 'ALL') ||
+    (filters.difficulty && filters.difficulty.toUpperCase() !== 'ALL') ||
     filters.maxCookTime !== null ||
-    filters.searchQuery !== '';
+    filters.searchQuery.trim() !== '';
 
   return (
     <div className="bg-white rounded-2xl border border-stone-200/90 p-4 sm:p-5 shadow-sm space-y-4">
