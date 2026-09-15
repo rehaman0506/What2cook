@@ -219,7 +219,7 @@ export const HomePage: React.FC<HomePageProps> = ({
                       ? 'Browse Vegetarian Recipes'
                       : selectedDiet === 'NON-VEGETARIAN'
                       ? 'Browse Non-Vegetarian Recipes'
-                      : 'Browse 25+ Recipes'}
+                      : `Browse ${recipes.length > 0 ? recipes.length : 65}+ Recipes`}
                   </button>
                 </div>
               </div>

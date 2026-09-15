@@ -1,6 +1,9 @@
 import { Recipe, RecipeFilterState } from '../types';
 import { SAMPLE_RECIPES } from '../data/sampleRecipes';
 import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
+import { searchTheMealDB, fetchPopularGlobalMeals } from './mealDbService';
+
+export { searchTheMealDB, fetchPopularGlobalMeals };
 
 /**
  * Normalizes strings by trimming, lowercasing, and collapsing whitespace, hyphens, and underscores.

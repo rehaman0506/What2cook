@@ -1,6 +1,9 @@
 import { Recipe } from '../types';
 
 export const SAMPLE_RECIPES: Recipe[] = [
+  // ==========================================
+  // RICE DISHES & BIRYANI
+  // ==========================================
   {
     id: 'rec-01',
     name: 'Hyderabadi Chicken Dum Biryani',
@@ -41,376 +44,1300 @@ export const SAMPLE_RECIPES: Recipe[] = [
   },
   {
     id: 'rec-02',
-    name: 'Creamy Paneer Butter Masala',
-    description: 'Rich and luscious restaurant-style North Indian cottage cheese cubes simmered in a velvety buttery tomato-cashew gravy with fragrant kasuri methi.',
-    image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
+    name: 'Royal Vegetable Dum Biryani',
+    description: 'Fragrant long-grain basmati rice layered with spiced garden vegetables, paneer cubes, mint, saffron, and slow-cooked in dum style.',
+    image_url: 'https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=800&auto=format&fit=crop&q=80',
     cuisine: 'North Indian',
-    category: 'Dinner',
+    category: 'Rice Dishes',
     food_type: 'VEGETARIAN',
     ingredients: [
-      { name: 'Paneer (Cottage Cheese)', quantity: '250g (cubed)', isOptional: false },
-      { name: 'Ripe Tomatoes', quantity: '4 large (chopped)', isOptional: false },
-      { name: 'Cashews (soaked in warm water)', quantity: '12-15 pieces', isOptional: false },
-      { name: 'Butter', quantity: '2 tbsp', isOptional: false },
-      { name: 'Fresh Cream', quantity: '2 tbsp', isOptional: false },
-      { name: 'Kashmiri Red Chili Powder', quantity: '1 tsp', isOptional: false },
-      { name: 'Kasuri Methi (Dried Fenugreek)', quantity: '1 tsp (crushed)', isOptional: false },
-      { name: 'Garam Masala & Sugar', quantity: '1/2 tsp each', isOptional: true }
+      { name: 'Basmati Rice', quantity: '2 cups', isOptional: false },
+      { name: 'Mixed Vegetables (Carrot, Beans, Cauliflower, Peas)', quantity: '2 cups chopped', isOptional: false },
+      { name: 'Paneer Cubes', quantity: '150g', isOptional: true },
+      { name: 'Thick Curd / Yogurt', quantity: '1/2 cup', isOptional: false },
+      { name: 'Fried Onions (Birista)', quantity: '3/4 cup', isOptional: false },
+      { name: 'Biryani Spices (Cardamom, Cloves, Bay Leaf)', quantity: '1 tbsp whole spices', isOptional: false },
+      { name: 'Saffron & Warm Milk', quantity: '1 pinch in 3 tbsp milk', isOptional: true },
+      { name: 'Ghee & Mint Leaves', quantity: '2 tbsp ghee, 1/2 cup mint', isOptional: false }
     ],
     instructions: [
-      { step: 1, text: 'Boil chopped tomatoes, soaked cashews, 1 green cardamom, and a slit green chili in 1/2 cup water for 8 minutes until soft and tender.' },
-      { step: 2, text: 'Cool down and blend into a silky smooth puree. Strain through a sieve for that signature restaurant velvety texture.' },
-      { step: 3, text: 'Melt butter in a pan with 1 tsp oil. Add ginger-garlic paste and sauté for 1 minute until fragrant.' },
-      { step: 4, text: 'Pour in tomato-cashew puree, Kashmiri red chili powder, coriander powder, and salt. Simmer covered for 8-10 minutes until butter separates from sides.' },
-      { step: 5, text: 'Gently fold in paneer cubes, fresh cream, crushed kasuri methi, and a pinch of sugar. Cook gently on low for 3 minutes.' },
-      { step: 6, text: 'Garnish with a swirl of cream and fresh coriander. Serve with hot garlic butter naan or jeera rice.' }
+      { step: 1, text: 'Cook soaked basmati rice in salted water with whole spices until 75% done. Drain well.' },
+      { step: 2, text: 'Sauté mixed vegetables and paneer in ghee with onions, ginger-garlic paste, yogurt, and biryani spices until tender-crisp.' },
+      { step: 3, text: 'Layer vegetable masala at the bottom of a heavy handi, then top with aromatic rice, fried onions, mint, coriander, and saffron milk.' },
+      { step: 4, text: 'Seal handi with aluminum foil and cover with lid. Dum cook on a low flame for 20 minutes.' },
+      { step: 5, text: 'Fluff gently and serve with boondi raita and roasted papad.' }
     ],
-    preparation_time: '15 mins',
-    cooking_time: '20 mins',
-    total_time: '35 mins',
-    difficulty: 'Easy',
-    servings: 3,
+    preparation_time: '25 mins',
+    cooking_time: '35 mins',
+    total_time: '60 mins',
+    difficulty: 'Medium',
+    servings: 4,
     rating: 4.8,
-    tips: [
-      'Soak paneer cubes in warm salted water for 10 minutes before adding to keep them pillow-soft.',
-      'Rub kasuri methi between your palms before sprinkling to unleash its maximum herbal fragrance.'
-    ],
-    nutrition: { calories: 410, protein: '16g', carbs: '18g', fat: '30g' }
+    tips: ['Fry paneer lightly in ghee before adding to keep it soft and prevent breaking.'],
+    nutrition: { calories: 480, protein: '15g', carbs: '72g', fat: '14g' }
   },
   {
     id: 'rec-03',
-    name: 'Crispy South Indian Masala Dosa',
-    description: 'Golden-crispy fermented rice-lentil crepe filled with spiced mustard-potato bhaji, served with fresh coconut chutney and piping hot sambar.',
-    image_url: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'South Indian',
-    category: 'Breakfast',
+    name: 'Fragrant Jeera Rice with Tadka',
+    description: 'Fluffy basmati rice tempered with aromatic cumin seeds, ghee, and whole spices. Perfect companion for dal, paneer, and curries.',
+    image_url: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Rice Dishes',
     food_type: 'VEGETARIAN',
     ingredients: [
-      { name: 'Dosa Batter (fermented)', quantity: '3 cups', isOptional: false },
-      { name: 'Potatoes (Boiled & lightly mashed)', quantity: '3 medium', isOptional: false },
-      { name: 'Onion', quantity: '1 medium (thinly sliced)', isOptional: false },
-      { name: 'Mustard seeds & Curry leaves', quantity: '1 tsp mustard, 10 leaves', isOptional: false },
-      { name: 'Green chilies & Ginger', quantity: '2 chilies, 1 tsp grated ginger', isOptional: false },
-      { name: 'Turmeric powder', quantity: '1/2 tsp', isOptional: false },
-      { name: 'Ghee or Sesame Oil', quantity: '3 tbsp', isOptional: false }
+      { name: 'Basmati Rice', quantity: '1.5 cups', isOptional: false },
+      { name: 'Cumin Seeds (Jeera)', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Pure Desi Ghee', quantity: '2 tbsp', isOptional: false },
+      { name: 'Green Chilies & Bay Leaf', quantity: '2 slit chilies, 1 bay leaf', isOptional: false },
+      { name: 'Fresh Coriander', quantity: '2 tbsp finely chopped', isOptional: true }
     ],
     instructions: [
-      { step: 1, text: 'Potato Masala: Heat 1 tbsp oil in a pan. Splutter mustard seeds, urad dal, curry leaves, green chilies, and ginger.' },
-      { step: 2, text: 'Add sliced onions and sauté until translucent. Stir in turmeric powder and salt.' },
-      { step: 3, text: 'Add boiled mashed potatoes with 3 tbsp water. Simmer for 3 minutes until moist and cohesive. Garnish with coriander.' },
-      { step: 4, text: 'Heat a cast iron tawa or non-stick griddle until medium hot. Sprinkle a few drops of water to temper the heat, then wipe clean.' },
-      { step: 5, text: 'Pour a ladleful of batter in center and spread outwards in quick circular motions to form a thin crepe. Drizzle ghee around edges.' },
-      { step: 6, text: 'Cook on medium-high until golden and crisp. Place a spoonful of potato masala in center, fold into a cylinder, and serve hot.' }
-    ],
-    preparation_time: '20 mins',
-    cooking_time: '15 mins',
-    total_time: '35 mins',
-    difficulty: 'Medium',
-    servings: 2,
-    rating: 4.9,
-    tips: [
-      'Regulate tawa temperature between dosas with a splash of water for uniform golden browning.',
-      'Add 1 tsp semolina (rava) to batter for extra crispiness.'
-    ],
-    nutrition: { calories: 320, protein: '7g', carbs: '52g', fat: '10g' }
-  },
-  {
-    id: 'rec-04',
-    name: 'Classic Italian Penne All\'Arrabbiata',
-    description: 'Authentic fiery Roman pasta tossed in garlic-infused extra virgin olive oil, crushed San Marzano tomatoes, chili flakes, and fresh basil.',
-    image_url: 'https://images.unsplash.com/photo-1621996346565-e3d5d62810ef?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'Italian',
-    category: 'Dinner',
-    food_type: 'VEGETARIAN',
-    ingredients: [
-      { name: 'Penne Rigate Pasta', quantity: '250g', isOptional: false },
-      { name: 'Garlic cloves', quantity: '4 (thinly sliced)', isOptional: false },
-      { name: 'Crushed red chili flakes', quantity: '1 tsp (adjust to taste)', isOptional: false },
-      { name: 'Canned crushed tomatoes / Passata', quantity: '400g', isOptional: false },
-      { name: 'Extra Virgin Olive Oil', quantity: '3 tbsp', isOptional: false },
-      { name: 'Fresh Basil leaves', quantity: 'Handful', isOptional: false },
-      { name: 'Parmesan or Pecorino Romano', quantity: '2 tbsp grated', isOptional: true }
-    ],
-    instructions: [
-      { step: 1, text: 'Bring a large pot of water to a rolling boil. Add generous salt and drop the penne.' },
-      { step: 2, text: 'In a wide skillet, heat extra virgin olive oil over medium-low heat. Add sliced garlic and chili flakes, sautéing gently for 90 seconds until fragrant.' },
-      { step: 3, text: 'Pour in crushed tomatoes and salt. Simmer gently for 12 minutes until sauce deepens and thickens.' },
-      { step: 4, text: 'Cook pasta until 1 minute before al dente. Reserve 1/2 cup of starchy pasta water, then drain pasta.' },
-      { step: 5, text: 'Toss penne directly into the simmering sauce. Splash in 2-3 tbsp pasta water and toss vigorously for 1 minute over high heat to emulsify.' },
-      { step: 6, text: 'Tear in fresh basil, finish with a drizzle of raw olive oil and grated cheese, and serve immediately.' }
+      { step: 1, text: 'Rinse basmati rice thoroughly and soak in water for 20 minutes. Drain completely.' },
+      { step: 2, text: 'Heat ghee in a pot. Add cumin seeds, bay leaf, and slit green chilies. Allow cumin to crackle and turn golden brown.' },
+      { step: 3, text: 'Add soaked rice and gently sauté for 1 minute in the spiced ghee.' },
+      { step: 4, text: 'Pour in 3 cups of hot water, add salt to taste, bring to a rolling boil, then cover and simmer on low for 12 minutes.' },
+      { step: 5, text: 'Turn off heat, let steam for 5 minutes, garnish with fresh coriander, and fluff with a fork.' }
     ],
     preparation_time: '10 mins',
     cooking_time: '15 mins',
     total_time: '25 mins',
     difficulty: 'Easy',
-    servings: 2,
+    servings: 4,
     rating: 4.7,
-    tips: [
-      'Always reserve pasta cooking water! The starch emulsifies the tomato sauce into a silky restaurant glaze.',
-      'Use Penne Rigate (ridged) so the fiery sauce clings to every bite.'
-    ],
-    nutrition: { calories: 380, protein: '11g', carbs: '62g', fat: '9g' }
+    tips: ['Sauteing rice in ghee before adding water prevents grains from sticking together.'],
+    nutrition: { calories: 290, protein: '5g', carbs: '52g', fat: '7g' }
   },
   {
-    id: 'rec-05',
-    name: 'Authentic Street-Style Chicken Tacos',
-    description: 'Juicy citrus-spiced shredded chicken tucked inside warm toasted corn tortillas, topped with fresh pico de gallo, diced avocado, and lime crema.',
-    image_url: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'Mexican',
-    category: 'Lunch',
-    food_type: 'NON-VEGETARIAN',
+    id: 'rec-04',
+    name: 'South Indian Temple Curd Rice',
+    description: 'Creamy, comforting mashed rice mixed with fresh yogurt and tempered with mustard seeds, curry leaves, ginger, and crunchy cashews.',
+    image_url: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Rice Dishes',
+    food_type: 'VEGETARIAN',
     ingredients: [
-      { name: 'Chicken Breast or Thighs', quantity: '400g', isOptional: false },
-      { name: 'Small Corn or Flour Tortillas', quantity: '8 tortillas', isOptional: false },
-      { name: 'Lime juice', quantity: '2 tbsp fresh', isOptional: false },
-      { name: 'Cumin, smoked paprika & chili powder', quantity: '1 tsp each', isOptional: false },
-      { name: 'Red onion & Fresh Cilantro', quantity: '1/2 cup finely chopped', isOptional: false },
-      { name: 'Avocado', quantity: '1 diced', isOptional: true },
-      { name: 'Sour cream or Greek yogurt', quantity: '3 tbsp', isOptional: true }
+      { name: 'Cooked Soft Rice (slightly mashed)', quantity: '2 cups', isOptional: false },
+      { name: 'Fresh Thick Yogurt / Curd', quantity: '1.5 cups', isOptional: false },
+      { name: 'Whole Milk', quantity: '1/2 cup', isOptional: false },
+      { name: 'Mustard Seeds & Urad Dal', quantity: '1 tsp each', isOptional: false },
+      { name: 'Curry Leaves & Green Chili', quantity: '1 sprig curry leaves, 1 chili', isOptional: false },
+      { name: 'Grated Ginger & Pomegranate Seeds', quantity: '1 tsp ginger, 2 tbsp pomegranate', isOptional: true }
     ],
     instructions: [
-      { step: 1, text: 'Season chicken with lime juice, olive oil, minced garlic, cumin, smoked paprika, chili powder, and salt.' },
-      { step: 2, text: 'Sear chicken in a hot cast iron skillet for 5-6 minutes per side until charred and thoroughly cooked (165°F).' },
-      { step: 3, text: 'Let chicken rest 5 minutes, then shred or slice into bite-sized strips.' },
-      { step: 4, text: 'Toast tortillas on the hot dry griddle for 30 seconds per side until lightly charred and pliable.' },
-      { step: 5, text: 'Assemble tacos: layer shredded chicken, diced avocado, fresh onion-cilantro mix, and a drizzle of lime crema.' },
-      { step: 6, text: 'Serve immediately with fresh lime wedges and spicy salsa.' }
+      { step: 1, text: 'In a mixing bowl, mash cooked warm rice slightly. Add warm milk and mix well (milk prevents sourness).' },
+      { step: 2, text: 'Whisk curd and fold it into the cooled rice with salt.' },
+      { step: 3, text: 'Heat oil in a small tadka pan. Sputter mustard seeds, urad dal, green chilies, ginger, and curry leaves.' },
+      { step: 4, text: 'Pour fragrant tempering over the curd rice and blend gently.' },
+      { step: 5, text: 'Garnish with ruby red pomegranate seeds and serve chilled with spicy mango pickle.' }
     ],
-    preparation_time: '15 mins',
-    cooking_time: '15 mins',
-    total_time: '30 mins',
+    preparation_time: '10 mins',
+    cooking_time: '10 mins',
+    total_time: '20 mins',
     difficulty: 'Easy',
     servings: 3,
     rating: 4.8,
-    tips: [
-      'Warm the tortillas on a hot dry pan to bring out their corn fragrance and make them fold without tearing.',
-      'Rest the cooked chicken before slicing so juices stay locked inside.'
+    tips: ['Adding a splash of warm milk keeps curd rice silky and prevents it from turning sour over time.'],
+    nutrition: { calories: 270, protein: '8g', carbs: '44g', fat: '6g' }
+  },
+  {
+    id: 'rec-05',
+    name: 'Tangy South Indian Lemon Rice',
+    description: 'Vibrant golden turmeric-infused rice with roasted crunchy peanuts, fresh curry leaves, green chilies, and tangy lemon juice.',
+    image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Rice Dishes',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Cooked Basmati or Sona Masoori Rice', quantity: '3 cups (cooled)', isOptional: false },
+      { name: 'Fresh Lemon Juice', quantity: '3 tbsp', isOptional: false },
+      { name: 'Raw Peanuts', quantity: '3 tbsp', isOptional: false },
+      { name: 'Mustard Seeds, Chana Dal, Urad Dal', quantity: '1 tsp each', isOptional: false },
+      { name: 'Curry Leaves & Green Chilies', quantity: '10 leaves, 2 slit chilies', isOptional: false },
+      { name: 'Turmeric Powder & Asafoetida (Hing)', quantity: '1/2 tsp turmeric, pinch hing', isOptional: false }
     ],
-    nutrition: { calories: 420, protein: '34g', carbs: '35g', fat: '16g' }
+    instructions: [
+      { step: 1, text: 'Spread cooled cooked rice on a large tray to let each grain separate.' },
+      { step: 2, text: 'Heat oil in a pan. Fry peanuts until golden and crunchy, then set aside.' },
+      { step: 3, text: 'In same oil, sputter mustard seeds, chana dal, urad dal, green chilies, and curry leaves until aromatic.' },
+      { step: 4, text: 'Stir in turmeric powder and hing. Turn off heat and immediately add freshly squeezed lemon juice and salt.' },
+      { step: 5, text: 'Pour tempering over rice, add crunchy fried peanuts, and gently toss together with clean hands or spatula.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '10 mins',
+    total_time: '20 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.7,
+    tips: ['Never cook lemon juice on direct heat to avoid bitterness.'],
+    nutrition: { calories: 310, protein: '6g', carbs: '50g', fat: '9g' }
   },
   {
     id: 'rec-06',
-    name: 'Warm Melt-in-Mouth Gulab Jamun',
-    description: 'Delicate golden-brown milk dumplings fried to perfection and soaked in fragrant rose-cardamom saffron sugar syrup.',
-    image_url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'North Indian',
-    category: 'Desserts',
-    food_type: 'VEGETARIAN',
+    name: 'Schezwan Chicken Fried Rice',
+    description: 'Fiery Indo-Chinese street-style stir-fried rice tossed with tender shredded chicken, crunchy vegetables, eggs, and zesty Schezwan sauce.',
+    image_url: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Indo-Chinese',
+    category: 'Rice Dishes',
+    food_type: 'NON-VEGETARIAN',
     ingredients: [
-      { name: 'Milk Powder or Mawa (Khoya)', quantity: '1 cup milk powder', isOptional: false },
-      { name: 'All-purpose Flour (Maida)', quantity: '1/4 cup', isOptional: false },
-      { name: 'Baking Soda', quantity: '1/4 tsp', isOptional: false },
-      { name: 'Ghee', quantity: '1 tbsp + ghee/oil for deep frying', isOptional: false },
-      { name: 'Milk', quantity: '4-5 tbsp (room temp)', isOptional: false },
-      { name: 'Sugar', quantity: '1.5 cups', isOptional: false },
-      { name: 'Cardamom pods & Rose Water', quantity: '4 pods crushed, 1 tsp rose water', isOptional: false },
-      { name: 'Saffron strands', quantity: 'Generous pinch', isOptional: true }
+      { name: 'Cooked & Chilled Jasmine or Long-Grain Rice', quantity: '3 cups', isOptional: false },
+      { name: 'Cooked Shredded Chicken', quantity: '200g', isOptional: false },
+      { name: 'Eggs (scrambled)', quantity: '2 large', isOptional: false },
+      { name: 'Schezwan Sauce', quantity: '2.5 tbsp', isOptional: false },
+      { name: 'Minced Garlic & Ginger', quantity: '1.5 tbsp combined', isOptional: false },
+      { name: 'Finely Chopped Veggies (Carrot, Cabbage, Bell Pepper)', quantity: '1 cup', isOptional: false },
+      { name: 'Spring Onion Greens & Soy Sauce', quantity: '1/2 cup spring onions, 1 tbsp soy sauce', isOptional: false }
     ],
     instructions: [
-      { step: 1, text: 'Make syrup: Boil sugar and 1.5 cups water with crushed cardamom and saffron for 6-7 minutes until sticky. Stir in rose water and keep warm.' },
-      { step: 2, text: 'Make dough: In a bowl, mix milk powder, maida, and baking soda. Rub in 1 tbsp ghee gently.' },
-      { step: 3, text: 'Add milk tablespoon by tablespoon, combining gently into a soft, smooth dough. Do not knead hard. Rest for 5 mins.' },
-      { step: 4, text: 'Divide into 15 small smooth balls without any cracks (cracks cause balls to break while frying).' },
-      { step: 5, text: 'Heat ghee/oil over low-medium heat. Slide in balls; fry on gentle low heat, swirling oil continuously until evenly deep golden brown (about 8-10 minutes).' },
-      { step: 6, text: 'Drain and immediately drop hot jamuns into warm sugar syrup. Let soak for at least 1 hour before serving warm with vanilla ice cream.' }
+      { step: 1, text: 'Heat a large wok over high smoking heat with 2 tablespoons of oil.' },
+      { step: 2, text: 'Add minced garlic and ginger, stir-frying for 30 seconds until aromatic.' },
+      { step: 3, text: 'Toss in mixed chopped vegetables and shredded chicken, stir-frying rapidly for 2 minutes.' },
+      { step: 4, text: 'Add scrambled eggs, Schezwan sauce, soy sauce, and a splash of vinegar.' },
+      { step: 5, text: 'Add cold rice and toss vigorously on maximum heat so grains get toasted with smoky wok flavor.' },
+      { step: 6, text: 'Garnish generously with sliced spring onion greens and serve immediately.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '12 mins',
+    total_time: '27 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Always use refrigerated day-old rice so the grains fry crisply without turning mushy.'],
+    nutrition: { calories: 510, protein: '28g', carbs: '62g', fat: '14g' }
+  },
+
+  // ==========================================
+  // BREAKFAST DISHES
+  // ==========================================
+  {
+    id: 'rec-07',
+    name: 'Crispy South Indian Masala Dosa',
+    description: 'Golden fermented rice and lentil crepe crisped to perfection, filled with spiced mashed potato bhaji, served with coconut chutney and sambar.',
+    image_url: 'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Breakfast',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Fermented Dosa Batter', quantity: '3 cups', isOptional: false },
+      { name: 'Boiled Potatoes (crumbled)', quantity: '3 large', isOptional: false },
+      { name: 'Sliced Onions & Green Chilies', quantity: '1 large onion, 2 chilies', isOptional: false },
+      { name: 'Mustard Seeds, Urad Dal, Curry Leaves', quantity: '1 tsp each', isOptional: false },
+      { name: 'Turmeric Powder & Salt', quantity: '1/2 tsp turmeric, salt to taste', isOptional: false },
+      { name: 'Ghee or Butter for roasting', quantity: '3 tbsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Prepare the potato masala: heat oil, sputter mustard seeds, urad dal, curry leaves, and green chilies. Sauté sliced onions until translucent.' },
+      { step: 2, text: 'Add turmeric, salt, and crumbled potatoes. Mix gently with 2 tablespoons of water and simmer for 3 minutes.' },
+      { step: 3, text: 'Heat a cast-iron tawa until smoking hot. Sprinkle water droplets and wipe clean.' },
+      { step: 4, text: 'Pour a ladle of batter in center and spread outward in circular strokes into a thin disc.' },
+      { step: 5, text: 'Drizzle ghee along the edges. Cook on medium-high until base turns golden brown and crisp.' },
+      { step: 6, text: 'Place spiced potato masala in center, fold into a cylinder or triangle, and serve hot with fresh coconut chutney.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '20 mins',
+    total_time: '35 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Use a well-seasoned cast iron tawa and regulate the temperature by wiping with a wet cloth before every dosa.'],
+    nutrition: { calories: 340, protein: '8g', carbs: '56g', fat: '9g' }
+  },
+  {
+    id: 'rec-08',
+    name: 'Steamed Idli & Crispy Medu Vada',
+    description: 'Pillowy soft fermented rice cakes paired with crunchy golden lentil donuts, served with hot drumstick sambar and fresh coconut chutney.',
+    image_url: 'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Breakfast',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Fermented Idli Batter', quantity: '3 cups', isOptional: false },
+      { name: 'Urad Dal (soaked 3 hrs for Vada)', quantity: '1 cup', isOptional: false },
+      { name: 'Finely Chopped Ginger & Green Chilies', quantity: '1 tbsp each', isOptional: false },
+      { name: 'Cracked Black Peppercorns & Cumin', quantity: '1 tsp each', isOptional: false },
+      { name: 'Fresh Curry Leaves', quantity: '10 leaves chopped', isOptional: false },
+      { name: 'Oil for deep frying vadas', quantity: '2 cups', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Grease idli plates with sesame oil. Pour fermented idli batter into moulds and steam for 10-12 minutes until soft and fluffy.' },
+      { step: 2, text: 'Grind soaked urad dal with minimal ice water into a fluffy, aerated batter. Whisk vigorously for 5 minutes.' },
+      { step: 3, text: 'Fold in chopped ginger, green chilies, crushed black pepper, cumin seeds, curry leaves, and salt.' },
+      { step: 4, text: 'Wet palms with water, shape small dough balls, make a hole in center with thumb, and gently slide into medium-hot oil.' },
+      { step: 5, text: 'Fry vadas until evenly crisp and golden amber. Drain on paper towels.' },
+      { step: 6, text: 'Serve steaming hot idlis and crisp vadas alongside spicy drumstick sambar and chutney.' }
+    ],
+    preparation_time: '25 mins',
+    cooking_time: '20 mins',
+    total_time: '45 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Aerate the vada batter by beating thoroughly with hand; drop a small ball in water—if it floats, the batter is ready.'],
+    nutrition: { calories: 380, protein: '14g', carbs: '58g', fat: '10g' }
+  },
+  {
+    id: 'rec-09',
+    name: 'Street-Style Kanda Poha',
+    description: 'Light and wholesome flattened rice tempered with mustard seeds, crunchy roasted peanuts, green chilies, turmeric, and fresh lemon.',
+    image_url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Breakfast',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Thick Flattened Rice (Poha)', quantity: '2 cups', isOptional: false },
+      { name: 'Onions (finely chopped)', quantity: '1 large', isOptional: false },
+      { name: 'Raw Peanuts', quantity: '3 tbsp', isOptional: false },
+      { name: 'Mustard Seeds & Cumin', quantity: '1 tsp each', isOptional: false },
+      { name: 'Green Chilies & Curry Leaves', quantity: '2 chilies, 10 curry leaves', isOptional: false },
+      { name: 'Turmeric & Sugar', quantity: '1/2 tsp turmeric, 1 tsp sugar', isOptional: false },
+      { name: 'Lemon Juice & Fresh Coriander', quantity: '2 tbsp juice, 2 tbsp coriander', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Rinse thick poha in a colander under running water for 1 minute until softened. Drain completely and toss with salt and sugar.' },
+      { step: 2, text: 'Heat oil in a pan. Fry peanuts until crunchy and golden brown, then drain and set aside.' },
+      { step: 3, text: 'In same oil, sputter mustard seeds and cumin. Add green chilies, curry leaves, and chopped onions.' },
+      { step: 4, text: 'Sauté until onions turn translucent and soft. Add turmeric powder.' },
+      { step: 5, text: 'Add rinsed poha and fried peanuts. Toss gently on low flame for 2-3 minutes until heated through.' },
+      { step: 6, text: 'Squeeze fresh lemon juice, garnish with coriander, and serve hot with roasted sev.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '10 mins',
+    total_time: '20 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.7,
+    tips: ['Do not soak poha in water; gently rinse in a colander to keep flakes distinct and fluffy.'],
+    nutrition: { calories: 260, protein: '6g', carbs: '44g', fat: '7g' }
+  },
+  {
+    id: 'rec-10',
+    name: 'Stuffed Punjabi Aloo Paratha',
+    description: 'Whole wheat flatbread stuffed with spiced mashed potato filling, pan-roasted with desi ghee until golden crisp, served with curd and butter.',
+    image_url: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Breakfast',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Whole Wheat Flour (Atta)', quantity: '2 cups', isOptional: false },
+      { name: 'Boiled Potatoes (mashed smoothly)', quantity: '3 medium', isOptional: false },
+      { name: 'Green Chilies & Ginger', quantity: '1 tbsp finely minced', isOptional: false },
+      { name: 'Ajwain (Carom seeds) & Amchur (Dry Mango)', quantity: '1/2 tsp each', isOptional: false },
+      { name: 'Garam Masala & Red Chili Powder', quantity: '1/2 tsp each', isOptional: false },
+      { name: 'Desi Ghee or Butter for roasting', quantity: '3 tbsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Knead whole wheat flour with water and pinch of salt into a soft, pliable dough. Rest for 15 minutes.' },
+      { step: 2, text: 'Mix mashed potatoes with ginger, chilies, ajwain, amchur, garam masala, salt, and coriander into a smooth stuffing.' },
+      { step: 3, text: 'Roll a golf-ball sized dough into a 4-inch round. Place equal amount of potato stuffing in the center.' },
+      { step: 4, text: 'Gather edges to seal stuffing tightly. Dust with flour and roll gently into a 7-inch round flatbread.' },
+      { step: 5, text: 'Cook on a medium-hot tawa until small bubbles appear. Flip and smear generously with desi ghee.' },
+      { step: 6, text: 'Press edges with spatula until crisp and golden brown spots appear. Serve hot with homemade white butter and mixed pickle.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '15 mins',
+    total_time: '35 mins',
+    difficulty: 'Medium',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Cool mashed potatoes completely before mixing spices to prevent dough from becoming soggy.'],
+    nutrition: { calories: 360, protein: '7g', carbs: '54g', fat: '12g' }
+  },
+  {
+    id: 'rec-11',
+    name: 'Spicy Indian Masala Omelette',
+    description: 'Fluffy pan-fried eggs whisked with finely diced red onions, juicy tomatoes, fiery green chilies, cilantro, and warm Indian spices.',
+    image_url: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Breakfast',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Fresh Farm Eggs', quantity: '3 large', isOptional: false },
+      { name: 'Red Onion (finely diced)', quantity: '1 small', isOptional: false },
+      { name: 'Tomato (finely diced)', quantity: '1/2 medium', isOptional: false },
+      { name: 'Green Chilies & Fresh Cilantro', quantity: '2 chilies, 2 tbsp cilantro', isOptional: false },
+      { name: 'Turmeric & Kashmiri Chili Powder', quantity: '1/4 tsp each', isOptional: false },
+      { name: 'Butter or Oil', quantity: '1.5 tbsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'In a mixing bowl, combine diced onions, tomatoes, green chilies, cilantro, turmeric, chili powder, and salt.' },
+      { step: 2, text: 'Crack eggs into the bowl and whisk vigorously for 1-2 minutes until frothy and well aerated.' },
+      { step: 3, text: 'Melt butter in a non-stick frying pan over medium heat.' },
+      { step: 4, text: 'Pour the frothy egg mixture into the pan, swirling to spread toppings evenly.' },
+      { step: 5, text: 'Cook until bottom sets and turns golden brown (approx 2 mins). Flip carefully and cook other side for 1 minute.' },
+      { step: 6, text: 'Fold into half and serve hot with buttered toast or soft pav.' }
+    ],
+    preparation_time: '8 mins',
+    cooking_time: '6 mins',
+    total_time: '14 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.8,
+    tips: ['Whisking vigorously incorporates air pockets that make the omelette exceptionally fluffy.'],
+    nutrition: { calories: 230, protein: '18g', carbs: '5g', fat: '15g' }
+  },
+  {
+    id: 'rec-12',
+    name: 'Fluffy Blueberry Buttermilk Pancakes',
+    description: 'Tall, golden, cloud-like American pancakes bursting with sweet fresh blueberries, served with melted salted butter and warm pure maple syrup.',
+    image_url: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'American',
+    category: 'Breakfast',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'All-Purpose Flour', quantity: '2 cups', isOptional: false },
+      { name: 'Buttermilk (or milk with lemon)', quantity: '1.5 cups', isOptional: false },
+      { name: 'Fresh Blueberries', quantity: '1 cup', isOptional: false },
+      { name: 'Baking Powder & Baking Soda', quantity: '2 tsp powder, 1/2 tsp soda', isOptional: false },
+      { name: 'Egg & Melted Butter', quantity: '1 egg, 3 tbsp butter', isOptional: false },
+      { name: 'Sugar & Vanilla Extract', quantity: '2 tbsp sugar, 1 tsp vanilla', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'In a bowl, whisk flour, sugar, baking powder, baking soda, and a pinch of salt.' },
+      { step: 2, text: 'In another bowl, whisk buttermilk, egg, melted butter, and vanilla extract.' },
+      { step: 3, text: 'Pour wet ingredients into dry ingredients and fold gently until just combined. Do not overmix (lumps are fine).' },
+      { step: 4, text: 'Heat a skillet over medium heat and grease lightly with butter.' },
+      { step: 5, text: 'Pour 1/3 cup batter for each pancake. Scatter blueberries on top. Cook until bubbles form and pop on surface (2-3 mins).' },
+      { step: 6, text: 'Flip and cook the second side until golden brown. Stack tall, top with butter and maple syrup.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '12 mins',
+    total_time: '22 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Do not overmix the batter; small lumps keep the pancakes tender and fluffy.'],
+    nutrition: { calories: 350, protein: '8g', carbs: '52g', fat: '12g' }
+  },
+
+  // ==========================================
+  // LUNCH & CURRIES
+  // ==========================================
+  {
+    id: 'rec-13',
+    name: 'Creamy Paneer Butter Masala',
+    description: 'Rich and luscious restaurant-style North Indian cottage cheese cubes simmered in a velvety buttery tomato-cashew gravy with fragrant kasuri methi.',
+    image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Lunch',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Paneer (Cottage Cheese)', quantity: '250g (cubed)', isOptional: false },
+      { name: 'Ripe Tomatoes', quantity: '4 large (chopped)', isOptional: false },
+      { name: 'Cashews (soaked in warm water)', quantity: '12-15 pieces', isOptional: false },
+      { name: 'Butter & Desi Ghee', quantity: '2 tbsp each', isOptional: false },
+      { name: 'Fresh Cream', quantity: '2 tbsp', isOptional: false },
+      { name: 'Kashmiri Red Chili Powder', quantity: '1 tsp', isOptional: false },
+      { name: 'Kasuri Methi (Dried Fenugreek)', quantity: '1 tsp (crushed)', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil chopped tomatoes, onions, garlic, ginger, and soaked cashews in water for 10 minutes until soft.' },
+      { step: 2, text: 'Cool and blend into a silky smooth purée. Strain through a sieve for restaurant-style satin texture.' },
+      { step: 3, text: 'Melt butter and ghee in a pan. Add bay leaf, cinnamon stick, and Kashmiri chili powder for rich natural color.' },
+      { step: 4, text: 'Pour in the strained tomato gravy and cook on medium heat until ghee separates along edges (8-10 mins).' },
+      { step: 5, text: 'Add paneer cubes, pinch of sugar, and garam masala. Simmer on low heat for 3-4 minutes.' },
+      { step: 6, text: 'Crush kasuri methi between palms and sprinkle on top. Finish with fresh heavy cream and serve with garlic naan.' }
     ],
     preparation_time: '20 mins',
     cooking_time: '25 mins',
     total_time: '45 mins',
     difficulty: 'Medium',
-    servings: 5,
-    rating: 4.9,
-    tips: [
-      'Never fry on high heat or the crust will brown while the core stays raw and doughy.',
-      'Syrup should be warm (not boiling) when sliding the fried dumplings in.'
-    ],
-    nutrition: { calories: 280, protein: '5g', carbs: '45g', fat: '9g' }
-  },
-  {
-    id: 'rec-07',
-    name: '15-Minute Egg & Veggie Fried Rice',
-    description: 'Fast, vibrant, wok-tossed jasmine rice with scrambled eggs, scallions, carrots, peas, and a savory sesame soy glaze.',
-    image_url: 'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'Asian',
-    category: 'Rice Dishes',
-    food_type: 'NON-VEGETARIAN',
-    ingredients: [
-      { name: 'Cooked Day-Old Rice', quantity: '3 cups (cold)', isOptional: false },
-      { name: 'Eggs', quantity: '3 large (whisked)', isOptional: false },
-      { name: 'Garlic & Ginger', quantity: '1 tbsp minced', isOptional: false },
-      { name: 'Carrots & Green Peas', quantity: '1/2 cup diced', isOptional: false },
-      { name: 'Soy Sauce & Dark Soy Sauce', quantity: '2 tbsp light, 1 tsp dark', isOptional: false },
-      { name: 'Toasted Sesame Oil', quantity: '1 tsp', isOptional: false },
-      { name: 'Spring Onions (Scallions)', quantity: '3 stalks sliced', isOptional: false }
-    ],
-    instructions: [
-      { step: 1, text: 'Heat 1 tbsp oil in a smoking-hot wok or skillet. Pour in whisked eggs and soft scramble for 45 seconds. Remove and set aside.' },
-      { step: 2, text: 'Add another tablespoon of oil. Add minced garlic, ginger, carrots, and peas. Stir-fry on high heat for 2 minutes.' },
-      { step: 3, text: 'Add cold day-old rice. Break up clumps with the back of the spatula and toss vigorously over high heat.' },
-      { step: 4, text: 'Drizzle soy sauce, dark soy sauce, and white pepper around the perimeter of the wok so it caramelizes.' },
-      { step: 5, text: 'Return scrambled eggs to the wok, along with sliced scallions and sesame oil. Toss for 1 final minute.' },
-      { step: 6, text: 'Serve steaming hot with chili garlic oil or sriracha.' }
-    ],
-    preparation_time: '5 mins',
-    cooking_time: '10 mins',
-    total_time: '15 mins',
-    difficulty: 'Easy',
-    servings: 2,
+    servings: 4,
     rating: 4.8,
-    tips: [
-      'Day-old refrigerated rice is essential; fresh rice has too much moisture and turns mushy.',
-      'Cook on maximum heat to get that irresistible wok hei aroma.'
-    ],
-    nutrition: { calories: 390, protein: '14g', carbs: '54g', fat: '13g' }
+    tips: ['Soak paneer cubes in warm salted water for 10 minutes before adding to keep them melt-in-the-mouth soft.'],
+    nutrition: { calories: 440, protein: '16g', carbs: '20g', fat: '34g' }
   },
   {
-    id: 'rec-08',
-    name: 'Classic Cheesy Margherita Pizza',
-    description: 'Crispy hand-stretched crust topped with crushed San Marzano tomato sauce, fresh buffalo mozzarella, fragrant basil leaves, and olive oil.',
-    image_url: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'Italian',
-    category: 'Dinner',
-    food_type: 'VEGETARIAN',
-    ingredients: [
-      { name: 'Pizza Dough ball', quantity: '250g', isOptional: false },
-      { name: 'Crushed San Marzano Tomatoes', quantity: '1/2 cup', isOptional: false },
-      { name: 'Fresh Mozzarella Cheese', quantity: '150g (sliced or torn)', isOptional: false },
-      { name: 'Fresh Basil leaves', quantity: '8-10 leaves', isOptional: false },
-      { name: 'Extra Virgin Olive Oil', quantity: '1 tbsp', isOptional: false },
-      { name: 'Sea salt', quantity: 'Pinch', isOptional: false }
-    ],
-    instructions: [
-      { step: 1, text: 'Preheat your oven and pizza stone to its highest possible setting (500°F / 260°C) for at least 30 minutes.' },
-      { step: 2, text: 'Stretch pizza dough gently on a floured surface, leaving a puffy border (cornicione).' },
-      { step: 3, text: 'Spread tomato sauce thinly over the base, leaving a 1/2-inch border.' },
-      { step: 4, text: 'Distribute torn pieces of fresh mozzarella evenly. Drizzle with extra virgin olive oil and a pinch of salt.' },
-      { step: 5, text: 'Bake for 8-10 minutes until the crust is blistered, bubbly, and golden brown.' },
-      { step: 6, text: 'Scatter fresh basil leaves over the molten cheese right out of the oven. Slice and serve.' }
-    ],
-    preparation_time: '15 mins',
-    cooking_time: '10 mins',
-    total_time: '25 mins',
-    difficulty: 'Easy',
-    servings: 2,
-    rating: 4.8,
-    tips: [
-      'Pat mozzarella dry with paper towels beforehand to prevent excess moisture from making the crust soggy.',
-      'Add basil immediately AFTER baking so its delicate essential oils do not burn.'
-    ],
-    nutrition: { calories: 510, protein: '20g', carbs: '64g', fat: '19g' }
-  },
-  {
-    id: 'rec-09',
-    name: 'Old Delhi Style Butter Chicken (Murgh Makhani)',
-    description: 'Tandoori-spiced char-grilled chicken pieces simmered in a silky, mildly sweet and tangy satin tomato-butter-cream gravy.',
-    image_url: 'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&auto=format&fit=crop&q=80',
+    id: 'rec-14',
+    name: 'Classic Murgh Butter Chicken',
+    description: 'Iconic Punjabi dish featuring tender marinated chicken tikka pieces bathed in an aromatic, velvety spiced butter-cream tomato gravy.',
+    image_url: 'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&auto=format&fit=crop&q=80',
     cuisine: 'North Indian',
-    category: 'Chicken',
+    category: 'Lunch',
     food_type: 'NON-VEGETARIAN',
     ingredients: [
-      { name: 'Boneless Chicken Thighs', quantity: '500g (cubed)', isOptional: false },
-      { name: 'Yogurt, Lemon juice & Ginger-garlic', quantity: '1/3 cup yogurt, 1 tbsp juice, 1 tbsp paste', isOptional: false },
-      { name: 'Kashmiri Chili Powder & Garam Masala', quantity: '1.5 tsp each', isOptional: false },
-      { name: 'Pureed Ripe Tomatoes', quantity: '2 cups', isOptional: false },
-      { name: 'Butter & Heavy Cream', quantity: '3 tbsp butter, 3 tbsp cream', isOptional: false },
-      { name: 'Kasuri Methi & Honey/Sugar', quantity: '1 tsp methi, 1 tsp honey', isOptional: false },
-      { name: 'Cashew paste', quantity: '2 tbsp (cashews ground with warm water)', isOptional: true }
+      { name: 'Boneless Chicken Breast/Thighs', quantity: '500g', isOptional: false },
+      { name: 'Greek Yogurt & Ginger-Garlic Paste', quantity: '1/2 cup curd, 1.5 tbsp paste', isOptional: false },
+      { name: 'Pure Tomato Puree', quantity: '2 cups', isOptional: false },
+      { name: 'Cashew Nut Paste', quantity: '3 tbsp', isOptional: false },
+      { name: 'Salted Butter', quantity: '3 tbsp', isOptional: false },
+      { name: 'Heavy Cream & Kasuri Methi', quantity: '3 tbsp cream, 1 tbsp methi', isOptional: false },
+      { name: 'Kashmiri Chili & Garam Masala', quantity: '1.5 tsp chili, 1 tsp garam masala', isOptional: false }
     ],
     instructions: [
-      { step: 1, text: 'Marinate chicken in yogurt, lemon juice, ginger-garlic paste, Kashmiri chili, and salt for at least 1 hour.' },
-      { step: 2, text: 'Sear chicken on high heat in a cast iron skillet or broil in the oven for 8-10 minutes until charred and cooked through.' },
-      { step: 3, text: 'In a separate saucepan, simmer tomato puree, ginger, cashew paste, and butter for 10 minutes until thick and aromatic.' },
-      { step: 4, text: 'Stir in heavy cream, honey, and garam masala. Blend with an immersion blender for ultimate silkiness.' },
-      { step: 5, text: 'Add the charred chicken pieces and simmer gently for 5 minutes.' },
-      { step: 6, text: 'Finish with crushed kasuri methi and extra cream swirl. Serve with hot butter naan.' }
+      { step: 1, text: 'Marinate chicken with yogurt, ginger-garlic paste, chili powder, and lemon juice for 1 hour.' },
+      { step: 2, text: 'Pan-sear chicken in butter on high heat until slightly charred on edges (about 6-8 minutes). Set aside.' },
+      { step: 3, text: 'In same pan, melt butter and simmer tomato puree with cashew paste until thick and oil starts releasing.' },
+      { step: 4, text: 'Add Kashmiri chili powder, garam masala, salt, and a pinch of sugar to balance acidity.' },
+      { step: 5, text: 'Slide the charred chicken pieces into the gravy. Simmer gently for 8-10 minutes.' },
+      { step: 6, text: 'Finish with heavy cream, crushed roasted kasuri methi, and extra butter. Serve hot with butter naan.' }
     ],
-    preparation_time: '25 mins',
-    cooking_time: '25 mins',
+    preparation_time: '30 mins',
+    cooking_time: '30 mins',
+    total_time: '60 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Charring the chicken pieces first gives that authentic tandoor smokiness to the final gravy.'],
+    nutrition: { calories: 560, protein: '42g', carbs: '18g', fat: '36g' }
+  },
+  {
+    id: 'rec-15',
+    name: 'South Indian Chettinad Pepper Chicken',
+    description: 'Fiery and deeply aromatic chicken curry cooked with freshly dry-roasted Chettinad spices, black pepper, shallots, and curry leaves.',
+    image_url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Lunch',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Chicken (curry cut)', quantity: '500g', isOptional: false },
+      { name: 'Small Shallots (Sambar Onions)', quantity: '15 peeled & halved', isOptional: false },
+      { name: 'Black Peppercorns', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Coriander Seeds & Cumin Seeds', quantity: '1.5 tbsp coriander, 1 tsp cumin', isOptional: false },
+      { name: 'Fennel Seeds, Star Anise, Cinnamon', quantity: '1 tsp fennel, 1 star anise, 1 stick', isOptional: false },
+      { name: 'Curry Leaves & Coconut Oil', quantity: '2 sprigs leaves, 2 tbsp oil', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Dry roast black peppercorns, coriander seeds, cumin, fennel, and whole spices until fragrant. Grind to a coarse Chettinad spice powder.' },
+      { step: 2, text: 'Heat coconut oil in a clay pot or heavy pan. Sauté small shallots, garlic, and fresh curry leaves until golden.' },
+      { step: 3, text: 'Add chopped tomatoes and cook until soft and pulpy.' },
+      { step: 4, text: 'Add chicken pieces, turmeric powder, and salt. Sauté on medium-high for 5 minutes until chicken turns white.' },
+      { step: 5, text: 'Add freshly ground Chettinad pepper spice blend and 1 cup water. Cover and simmer for 20 minutes until chicken is fork-tender.' },
+      { step: 6, text: 'Uncover and simmer until gravy thickens and coats the chicken. Garnish with crisp curry leaves and serve with hot parotta or rice.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '30 mins',
     total_time: '50 mins',
     difficulty: 'Medium',
     servings: 4,
     rating: 4.9,
-    tips: [
-      'Getting good char marks on the chicken provides the authentic tandoor smokiness.',
-      'Kashmiri chili gives radiant red color without overwhelming heat.'
-    ],
-    nutrition: { calories: 540, protein: '42g', carbs: '14g', fat: '36g' }
+    tips: ['Freshly roasting and grinding whole black pepper and spices is the key secret to true Chettinad flavor.'],
+    nutrition: { calories: 420, protein: '36g', carbs: '14g', fat: '24g' }
   },
   {
-    id: 'rec-10',
-    name: 'South Indian Crispy Medu Vada',
-    description: 'Golden, doughnut-shaped crispy lentil fritters with a fluffy interior, speckled with whole peppercorns, curry leaves, and ginger.',
-    image_url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'South Indian',
-    category: 'Snacks',
-    food_type: 'VEGETARIAN',
-    ingredients: [
-      { name: 'Urad Dal (Whole white lentil)', quantity: '1 cup (soaked 3 hours)', isOptional: false },
-      { name: 'Green chilies & Ginger', quantity: '2 chilies, 1 inch ginger finely chopped', isOptional: false },
-      { name: 'Whole Black Peppercorns', quantity: '1 tsp', isOptional: false },
-      { name: 'Curry leaves & Fresh Coconut bits', quantity: '10 leaves, 2 tbsp tiny coconut bits', isOptional: false },
-      { name: 'Hing (Asafoetida)', quantity: 'Generous pinch', isOptional: false },
-      { name: 'Oil for deep frying', quantity: '2 cups', isOptional: false }
-    ],
-    instructions: [
-      { step: 1, text: 'Grind soaked drained urad dal using minimal water (sprinkle 2-3 tbsp as needed) into a thick, fluffy, aerated batter.' },
-      { step: 2, text: 'Beat batter briskly with your hand for 3-4 minutes to incorporate air until light and buoyant (test a drop in a cup of water—it should float).' },
-      { step: 3, text: 'Fold in green chilies, ginger, peppercorns, curry leaves, coconut bits, hing, and salt.' },
-      { step: 4, text: 'Wet your palms with water. Take a small portion of batter, flatten into a round, and poke a hole in center.' },
-      { step: 5, text: 'Gently slide into medium-hot oil. Fry on medium heat for 4-5 minutes, turning occasionally until golden and crisp.' },
-      { step: 6, text: 'Drain on paper towels and serve piping hot with coconut chutney and hot sambar.' }
-    ],
-    preparation_time: '20 mins',
-    cooking_time: '15 mins',
-    total_time: '35 mins',
-    difficulty: 'Medium',
-    servings: 3,
-    rating: 4.8,
-    tips: [
-      'Grinding with too much water will cause the vadas to soak up oil; keep the batter thick and fluffy.',
-      'Beating air into the batter is the secret to fluffy, cloud-like vadas inside.'
-    ],
-    nutrition: { calories: 290, protein: '9g', carbs: '32g', fat: '14g' }
-  },
-  {
-    id: 'rec-11',
-    name: 'Spicy Potato & Cauliflower (Aloo Gobi Matar)',
-    description: 'Homestyle comforting North Indian curry with tender potatoes, golden cauliflower florets, and sweet green peas in a spiced onion-tomato masala.',
+    id: 'rec-16',
+    name: 'Slow-Cooked Punjabi Dal Makhani',
+    description: 'Traditional slow-simmered whole black lentils and red kidney beans simmered overnight with butter, cream, and smoky aromatic spices.',
     image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
     cuisine: 'North Indian',
     category: 'Lunch',
     food_type: 'VEGETARIAN',
     ingredients: [
-      { name: 'Potatoes (Aloo)', quantity: '2 medium (cubed)', isOptional: false },
-      { name: 'Cauliflower (Gobi)', quantity: '1 medium head (cut into florets)', isOptional: false },
-      { name: 'Green Peas (Matar)', quantity: '1/2 cup (fresh or frozen)', isOptional: false },
-      { name: 'Onion & Tomatoes', quantity: '1 onion chopped, 2 tomatoes pureed', isOptional: false },
-      { name: 'Cumin seeds & Ginger-garlic paste', quantity: '1 tsp cumin, 1 tbsp paste', isOptional: false },
-      { name: 'Turmeric, Coriander & Garam masala', quantity: '1 tsp each', isOptional: false },
-      { name: 'Fresh Cilantro', quantity: '1/4 cup chopped', isOptional: false }
+      { name: 'Whole Black Urad Dal', quantity: '1 cup (soaked overnight)', isOptional: false },
+      { name: 'Rajma (Red Kidney Beans)', quantity: '1/4 cup (soaked overnight)', isOptional: false },
+      { name: 'Pure Butter (Makhan)', quantity: '4 tbsp', isOptional: false },
+      { name: 'Fresh Tomato Puree', quantity: '1.5 cups', isOptional: false },
+      { name: 'Ginger-Garlic Paste', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Kashmiri Chili & Garam Masala', quantity: '1 tsp each', isOptional: false },
+      { name: 'Fresh Heavy Cream', quantity: '3 tbsp', isOptional: false }
     ],
     instructions: [
-      { step: 1, text: 'Heat 2 tbsp oil in a heavy kadai. Add cumin seeds; let them crackle.' },
-      { step: 2, text: 'Add chopped onions and sauté until golden brown. Stir in ginger-garlic paste for 1 minute.' },
-      { step: 3, text: 'Add pureed tomatoes, turmeric, coriander powder, Kashmiri chili powder, and salt. Cook until oil leaves masala.' },
-      { step: 4, text: 'Add potato cubes and cauliflower florets. Toss well to coat every piece with the spiced gravy.' },
-      { step: 5, text: 'Cover with lid, lower heat, and steam cook for 12-15 minutes, stirring once or twice until veggies are fork-tender.' },
-      { step: 6, text: 'Stir in green peas, sprinkle garam masala and fresh cilantro. Serve with warm phulkas or parathas.' }
+      { step: 1, text: 'Pressure cook soaked urad dal and rajma with salt and 4 cups of water for 6-7 whistles until completely tender and mashable.' },
+      { step: 2, text: 'Heat 2 tbsp butter in a heavy pot. Add ginger-garlic paste and sauté for 1 minute.' },
+      { step: 3, text: 'Add tomato puree and Kashmiri chili powder. Cook until puree reduces and releases fat.' },
+      { step: 4, text: 'Pour in cooked lentils along with cooking water. Mash some lentils against the side of pot with back of ladle for creaminess.' },
+      { step: 5, text: 'Simmer on lowest heat for at least 45 minutes, adding water as needed and remaining butter.' },
+      { step: 6, text: 'Stir in fresh cream, garam masala, and roasted kasuri methi. Serve piping hot with jeera rice.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '60 mins',
+    total_time: '75 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.8,
+    tips: ['The longer dal makhani simmers on low heat, the creamier and more divine it tastes.'],
+    nutrition: { calories: 380, protein: '16g', carbs: '42g', fat: '18g' }
+  },
+  {
+    id: 'rec-17',
+    name: 'Punjabi Chana Masala (Chole)',
+    description: 'Plump chickpeas simmered in a dark, robust, tangy onion-tomato gravy infused with whole spices, black tea, and dry pomegranate seeds.',
+    image_url: 'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Lunch',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Kabuli Chana (Chickpeas)', quantity: '2 cups (soaked 8 hrs)', isOptional: false },
+      { name: 'Tea Bag (for rich dark color)', quantity: '1 bag', isOptional: true },
+      { name: 'Chopped Onions & Ginger-Garlic', quantity: '2 onions, 2 tbsp paste', isOptional: false },
+      { name: 'Chopped Tomatoes & Puree', quantity: '3 large tomatoes', isOptional: false },
+      { name: 'Chole Masala & Anardana (Pomegranate powder)', quantity: '2 tbsp masala, 1 tsp anardana', isOptional: false },
+      { name: 'Slit Green Chilies & Ginger Juliennes', quantity: 'For final tadka garnish', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil soaked chickpeas with a tea bag, bay leaf, cinnamon, and salt in a pressure cooker for 5-6 whistles until melt-in-mouth tender.' },
+      { step: 2, text: 'Discard tea bag. Heat oil in a pan, sauté onions until deep brown.' },
+      { step: 3, text: 'Add ginger-garlic paste and cook for 2 minutes. Add tomatoes and cook until oil separates.' },
+      { step: 4, text: 'Add chole masala powder, anardana powder, red chili powder, and coriander powder.' },
+      { step: 5, text: 'Add boiled chickpeas with broth. Mash 1/4 of chickpeas to thicken gravy and simmer for 15 minutes.' },
+      { step: 6, text: 'Temper with hot ghee, cumin, green chilies, and ginger juliennes. Serve with fluffy bhature or steamed rice.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '35 mins',
+    total_time: '50 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Boiling chickpeas with a tea bag gives authentic dark North Indian dhaba color.'],
+    nutrition: { calories: 340, protein: '15g', carbs: '52g', fat: '8g' }
+  },
+  {
+    id: 'rec-18',
+    name: 'Malabar Fish Curry with Coconut Milk',
+    description: 'Coastal Kerala style kingfish steaks simmered in a golden coconut milk curry with kudampuli (pot tamarind), fenugreek, and shallots.',
+    image_url: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Lunch',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Fish Steaks (Seer / Kingfish / Pomfret)', quantity: '500g', isOptional: false },
+      { name: 'Thick & Thin Coconut Milk', quantity: '1/2 cup thick, 1.5 cups thin', isOptional: false },
+      { name: 'Kudampuli / Kokum (soaked in water)', quantity: '2-3 pieces', isOptional: false },
+      { name: 'Shallots & Green Chilies', quantity: '10 shallots, 3 slit chilies', isOptional: false },
+      { name: 'Turmeric, Kashmiri Chili, Coriander', quantity: '1/2 tsp turmeric, 1 tbsp chili, 1 tbsp coriander', isOptional: false },
+      { name: 'Coconut Oil & Curry Leaves', quantity: '2 tbsp oil, 2 sprigs leaves', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'In an earthen manchatti (clay pot), heat coconut oil. Sputter fenugreek seeds and curry leaves.' },
+      { step: 2, text: 'Add sliced shallots, ginger, garlic, and green chilies. Sauté until translucent.' },
+      { step: 3, text: 'Mix spice powders with 2 tablespoons of water into a paste and fry on low flame for 2 minutes.' },
+      { step: 4, text: 'Pour in thin coconut milk, soaked kudampuli with its soaking water, and salt. Bring to a gentle boil.' },
+      { step: 5, text: 'Slide in fish steaks gently and simmer on medium-low for 10-12 minutes until fish is cooked through.' },
+      { step: 6, text: 'Pour thick coconut milk, swirl pot gently without using ladle, heat through for 1 minute (do not boil), and remove from heat.' }
     ],
     preparation_time: '15 mins',
     cooking_time: '20 mins',
     total_time: '35 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Swirl the clay pot rather than stirring with a spoon to keep tender fish steaks intact.'],
+    nutrition: { calories: 390, protein: '34g', carbs: '10g', fat: '24g' }
+  },
+
+  // ==========================================
+  // DINNER SPECIALS
+  // ==========================================
+  {
+    id: 'rec-19',
+    name: 'Kashmiri Rogan Josh',
+    description: 'Regal slow-cooked lamb or mutton in an intensely aromatic Kashmiri red gravy flavored with maval (cockscomb), dried ginger, and fennel.',
+    image_url: 'https://images.unsplash.com/photo-1545247181-516773ca838b?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Dinner',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Mutton / Lamb (bone-in chunks)', quantity: '600g', isOptional: false },
+      { name: 'Whisked Yogurt / Curd', quantity: '3/4 cup', isOptional: false },
+      { name: 'Mustard Oil', quantity: '3 tbsp', isOptional: false },
+      { name: 'Kashmiri Red Chili Powder', quantity: '2 tbsp (for color, mild heat)', isOptional: false },
+      { name: 'Saunth (Dry Ginger) & Saunf (Fennel) Powder', quantity: '1 tsp each', isOptional: false },
+      { name: 'Whole Spices (Black Cardamom, Cloves, Cinnamon)', quantity: '1 tbsp mixed', isOptional: false },
+      { name: 'Asafoetida (Hing)', quantity: '1/4 tsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Heat mustard oil in a heavy pot until it smokes, then cool slightly.' },
+      { step: 2, text: 'Add whole spices and a pinch of hing. Add mutton pieces and sear on high heat until nicely browned.' },
+      { step: 3, text: 'Dissolve Kashmiri chili powder in 2 tablespoons of water and pour into pot to give deep crimson color.' },
+      { step: 4, text: 'Lower heat and gradually whisk in yogurt, stirring continuously to prevent curdling.' },
+      { step: 5, text: 'Add dry ginger powder, fennel powder, and salt. Add 1.5 cups hot water.' },
+      { step: 6, text: 'Cover and simmer on low heat for 50-60 minutes until meat is completely succulent and tender. Serve with saffron pulao.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '60 mins',
+    total_time: '80 mins',
+    difficulty: 'Hard',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Mustard oil must be heated until smoking point then cooled before cooking to remove raw pungency.'],
+    nutrition: { calories: 520, protein: '44g', carbs: '8g', fat: '35g' }
+  },
+  {
+    id: 'rec-20',
+    name: 'Classic Italian Margherita Pizza',
+    description: 'Traditional Neapolitan pizza with a crispy blistered crust, sweet San Marzano tomato sauce, fresh buffalo mozzarella, and aromatic sweet basil.',
+    image_url: 'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Italian',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Pizza Dough Ball (fermented 24 hrs)', quantity: '250g', isOptional: false },
+      { name: 'Crushed San Marzano Tomatoes', quantity: '1/2 cup', isOptional: false },
+      { name: 'Fresh Buffalo Mozzarella (torn)', quantity: '120g', isOptional: false },
+      { name: 'Fresh Sweet Basil Leaves', quantity: '8-10 leaves', isOptional: false },
+      { name: 'Extra Virgin Olive Oil', quantity: '1 tbsp', isOptional: false },
+      { name: 'Sea Salt', quantity: 'A pinch', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Preheat oven with pizza stone or heavy baking steel to 500°F (260°C) for at least 45 minutes.' },
+      { step: 2, text: 'Dust work surface with semolina flour. Stretch pizza dough gently by hand from center outward, leaving an airy crust edge.' },
+      { step: 3, text: 'Spread crushed tomatoes evenly over the base with back of ladle, leaving 1/2 inch border.' },
+      { step: 4, text: 'Scatter torn fresh mozzarella pieces across the sauce. Drizzle with extra virgin olive oil and pinch of sea salt.' },
+      { step: 5, text: 'Slide onto blazing hot pizza stone. Bake for 7-9 minutes until crust is charred with leopard spots and cheese is bubbling.' },
+      { step: 6, text: 'Top immediately with fresh fragrant basil leaves, slice, and enjoy.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '10 mins',
+    total_time: '30 mins',
+    difficulty: 'Medium',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Never use a rolling pin on fermented pizza dough; stretch gently by hand to preserve airy bubbles inside the crust.'],
+    nutrition: { calories: 580, protein: '24g', carbs: '74g', fat: '21g' }
+  },
+  {
+    id: 'rec-21',
+    name: 'Creamy Fettuccine Alfredo',
+    description: 'Silky ribbons of fettuccine pasta tossed in a luxurious emulsion of pure butter, heavy cream, garlic, and freshly grated aged Parmigiano-Reggiano.',
+    image_url: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Italian',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Fettuccine Pasta', quantity: '350g', isOptional: false },
+      { name: 'Unsalted Butter', quantity: '4 tbsp', isOptional: false },
+      { name: 'Heavy Cream', quantity: '1 cup', isOptional: false },
+      { name: 'Freshly Minced Garlic', quantity: '1 tbsp', isOptional: false },
+      { name: 'Aged Parmigiano-Reggiano (finely grated)', quantity: '1 cup', isOptional: false },
+      { name: 'Fresh Nutmeg & Black Pepper', quantity: 'Pinch of nutmeg, fresh black pepper', isOptional: false },
+      { name: 'Fresh Italian Parsley', quantity: '2 tbsp chopped', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil fettuccine in generously salted water until 1 minute before al dente. Reserve 1 cup of starchy pasta cooking water.' },
+      { step: 2, text: 'In a wide skillet, melt butter over medium-low heat. Add minced garlic and cook gently for 1 minute without browning.' },
+      { step: 3, text: 'Pour in heavy cream and bring to a gentle simmer for 2-3 minutes until slightly reduced.' },
+      { step: 4, text: 'Transfer cooked pasta directly into the cream sauce along with 1/4 cup reserved pasta water.' },
+      { step: 5, text: 'Remove from direct heat and toss vigorously while gradually showering in grated Parmigiano-Reggiano until a creamy, glossy emulsion forms.' },
+      { step: 6, text: 'Season with freshly cracked black pepper and a grating of nutmeg. Serve immediately.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '15 mins',
+    total_time: '25 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Toss cheese off the direct burner so the dairy emulsifies into a silk sheen rather than clumping.'],
+    nutrition: { calories: 590, protein: '16g', carbs: '64g', fat: '31g' }
+  },
+  {
+    id: 'rec-22',
+    name: 'Cheesy Chicken Quesadillas',
+    description: 'Crispy pan-toasted flour tortillas packed with juicy seasoned chicken breast, melted Monterey Jack & Cheddar, sautéed bell peppers, and salsa.',
+    image_url: 'https://images.unsplash.com/photo-1618040996337-56904b7850b9?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Mexican',
+    category: 'Dinner',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Large Flour Tortillas', quantity: '4 tortillas', isOptional: false },
+      { name: 'Chicken Breast (cooked & shredded)', quantity: '300g', isOptional: false },
+      { name: 'Shredded Monterey Jack & Cheddar', quantity: '2 cups combined', isOptional: false },
+      { name: 'Bell Peppers & Onions (sliced)', quantity: '1 cup sautéed', isOptional: false },
+      { name: 'Taco Seasoning (Cumin, Paprika, Oregano)', quantity: '1 tbsp', isOptional: false },
+      { name: 'Sour Cream, Guacamole, Pico de Gallo', quantity: 'For serving', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Toss shredded chicken with taco seasoning, squeeze of lime, and sautéed bell peppers.' },
+      { step: 2, text: 'Heat a large skillet or comal over medium heat with a tiny dab of butter.' },
+      { step: 3, text: 'Place one tortilla flat in skillet. Sprinkle a generous layer of cheese over one half.' },
+      { step: 4, text: 'Add chicken and pepper mixture over the cheese, then top with another handful of cheese.' },
+      { step: 5, text: 'Fold tortilla over to create a half-moon. Cook for 3-4 minutes until bottom is golden and crisp, then flip.' },
+      { step: 6, text: 'Cook until second side is golden and cheese is completely melted. Slice into triangles and serve with sour cream and guacamole.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '12 mins',
+    total_time: '27 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Putting cheese both below and above the chicken acts as culinary glue, keeping the quesadilla together when sliced.'],
+    nutrition: { calories: 510, protein: '36g', carbs: '38g', fat: '24g' }
+  },
+  {
+    id: 'rec-23',
+    name: 'Thai Green Curry with Jasmine Rice',
+    description: 'Fragrant aromatic Thai coconut curry packed with crisp baby corn, bamboo shoots, eggplant, bell peppers, and fresh Thai sweet basil.',
+    image_url: 'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Asian',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Thai Green Curry Paste', quantity: '3 tbsp', isOptional: false },
+      { name: 'Coconut Milk (full fat)', quantity: '400ml can', isOptional: false },
+      { name: 'Tofu or Mixed Veggies (Eggplant, Bamboo Shoots, Bell Pepper)', quantity: '2.5 cups', isOptional: false },
+      { name: 'Kaffir Lime Leaves & Lemongrass', quantity: '4 leaves torn, 1 stalk bruised', isOptional: false },
+      { name: 'Soy Sauce or Vegetarian Stir Fry Sauce', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Palm Sugar & Thai Basil Leaves', quantity: '1 tsp sugar, 1/2 cup fresh basil', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Heat 3 tablespoons of coconut cream from top of can in a pot until oil begins separating.' },
+      { step: 2, text: 'Add Thai green curry paste and fry for 2 minutes until intensely aromatic.' },
+      { step: 3, text: 'Pour in remaining coconut milk, bruised lemongrass, and torn kaffir lime leaves. Bring to a gentle simmer.' },
+      { step: 4, text: 'Add cubed vegetables and tofu. Simmer for 8-10 minutes until vegetables are tender-crisp.' },
+      { step: 5, text: 'Season with soy sauce and palm sugar to achieve the signature Thai balance of spicy, savory, and sweet.' },
+      { step: 6, text: 'Turn off heat, stir in fresh Thai basil leaves, and serve hot over steamed jasmine rice.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '18 mins',
+    total_time: '33 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Frying the green curry paste directly in thick coconut cream unlocks all essential herb oils.'],
+    nutrition: { calories: 410, protein: '12g', carbs: '28g', fat: '29g' }
+  },
+  {
+    id: 'rec-24',
+    name: 'Pan-Seared Salmon with Garlic Herb Butter',
+    description: 'Crispy skin salmon fillets pan-seared to tender perfection, basted with rich garlic butter, fresh dill, parsley, and lemon juice.',
+    image_url: 'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Continental',
+    category: 'Dinner',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Fresh Salmon Fillets (skin-on)', quantity: '2 fillets (about 200g each)', isOptional: false },
+      { name: 'Butter', quantity: '2 tbsp', isOptional: false },
+      { name: 'Minced Garlic', quantity: '1 tbsp', isOptional: false },
+      { name: 'Fresh Lemon Juice & Lemon Slices', quantity: '1 lemon', isOptional: false },
+      { name: 'Fresh Dill & Parsley (chopped)', quantity: '2 tbsp combined', isOptional: false },
+      { name: 'Olive Oil, Salt, and Black Pepper', quantity: '1 tbsp oil, salt & pepper', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Pat salmon fillets thoroughly dry with paper towels. Season both sides with salt and cracked black pepper.' },
+      { step: 2, text: 'Heat olive oil in a stainless steel or cast-iron skillet over medium-high heat until shimmering.' },
+      { step: 3, text: 'Place salmon skin-side down. Press gently with spatula for 15 seconds to prevent curling.' },
+      { step: 4, text: 'Cook undisturbed for 4-5 minutes until skin is golden brown and crisp.' },
+      { step: 5, text: 'Flip gently, lower heat to medium, add butter, minced garlic, and lemon slices to skillet.' },
+      { step: 6, text: 'Spoon melted garlic butter over the salmon for 2-3 minutes. Garnish with chopped fresh dill and serve.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '10 mins',
+    total_time: '20 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Drying the salmon skin thoroughly is the single most important step for shatteringly crisp skin.'],
+    nutrition: { calories: 460, protein: '38g', carbs: '2g', fat: '32g' }
+  },
+
+  // ==========================================
+  // SNACKS & APPETIZERS
+  // ==========================================
+  {
+    id: 'rec-25',
+    name: 'Crispy Punjabi Samosa with Mint Chutney',
+    description: 'Golden, flaky pastry pyramids stuffed with spiced potatoes, green peas, roasted cashews, and aromatic carom seeds, served with tangy chutneys.',
+    image_url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Snacks',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'All-Purpose Flour (Maida)', quantity: '2 cups', isOptional: false },
+      { name: 'Ajwain (Carom Seeds)', quantity: '1 tsp', isOptional: false },
+      { name: 'Desi Ghee (Moyan)', quantity: '4 tbsp', isOptional: false },
+      { name: 'Boiled Potatoes (crumbled)', quantity: '3 large', isOptional: false },
+      { name: 'Green Peas & Cashews', quantity: '1/2 cup peas, 2 tbsp cashews', isOptional: false },
+      { name: 'Crushed Coriander Seeds, Cumin & Garam Masala', quantity: '1 tsp each', isOptional: false },
+      { name: 'Oil for deep frying', quantity: '3 cups', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Rub ghee and ajwain into flour until it resembles breadcrumbs. Knead with cold water into a stiff, firm dough. Rest 20 mins.' },
+      { step: 2, text: 'Heat 1 tbsp oil, fry cashews, coriander seeds, cumin, ginger, and green chilies. Add peas, crumbled potatoes, and spices. Cook 4 mins and cool.' },
+      { step: 3, text: 'Divide dough into balls, roll into an oval, cut in half to create two semi-circles.' },
+      { step: 4, text: 'Wet straight edge with water, fold into a cone, fill with 2 tablespoons potato stuffing.' },
+      { step: 5, text: 'Seal top edges tightly by pinching and pleating.' },
+      { step: 6, text: 'Fry in medium-low hot oil for 15-18 minutes until uniformly crisp and golden. Serve with spicy mint chutney.' }
+    ],
+    preparation_time: '30 mins',
+    cooking_time: '25 mins',
+    total_time: '55 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Frying samosas on low heat slowly produces the characteristic blister-free, crisp pastry crust.'],
+    nutrition: { calories: 310, protein: '6g', carbs: '38g', fat: '15g' }
+  },
+  {
+    id: 'rec-26',
+    name: 'Crispy Andhra Chicken 65',
+    description: 'Bite-sized boneless chicken pieces coated in a spicy red masala batter, deep-fried to crisp perfection and tossed with curry leaves, garlic, and slit chilies.',
+    image_url: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Snacks',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Boneless Chicken (cut into bite-sized cubes)', quantity: '400g', isOptional: false },
+      { name: 'Corn Flour & Rice Flour', quantity: '2 tbsp each', isOptional: false },
+      { name: 'Thick Curd / Yogurt', quantity: '2 tbsp', isOptional: false },
+      { name: 'Ginger-Garlic Paste', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Kashmiri Chili Powder & Black Pepper', quantity: '1.5 tsp chili, 1/2 tsp pepper', isOptional: false },
+      { name: 'Curry Leaves, Garlic Cloves & Slit Chilies', quantity: '2 sprigs leaves, 6 garlic, 3 chilies', isOptional: false },
+      { name: 'Oil for deep frying', quantity: '2 cups', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Marinate chicken cubes with curd, ginger-garlic paste, chili powder, black pepper, lemon juice, and salt for 30 minutes.' },
+      { step: 2, text: 'Just before frying, add corn flour and rice flour. Mix well to form a light, crisp coating.' },
+      { step: 3, text: 'Deep fry chicken pieces in medium-hot oil for 5-6 minutes until crisp, golden red, and cooked through. Drain.' },
+      { step: 4, text: 'In another pan, heat 1 tablespoon oil. Sauté crushed garlic, slit green chilies, and fresh curry leaves until crackling.' },
+      { step: 5, text: 'Toss the crispy fried chicken pieces in the aromatic tempering for 1 minute on high heat.' },
+      { step: 6, text: 'Squeeze fresh lemon juice over the chicken and serve hot with sliced red onions.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '15 mins',
+    total_time: '35 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Adding rice flour alongside corn flour provides long-lasting extra crunch.'],
+    nutrition: { calories: 380, protein: '32g', carbs: '14g', fat: '22g' }
+  },
+  {
+    id: 'rec-27',
+    name: 'Tandoori Paneer Tikka Skewers',
+    description: 'Succulent cubes of fresh paneer, bell peppers, and red onions marinated in spiced mustard oil yogurt, roasted to smoky perfection.',
+    image_url: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Appetizers',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Paneer (cut into large cubes)', quantity: '300g', isOptional: false },
+      { name: 'Bell Peppers & Onions (cut into squares)', quantity: '1 cup each', isOptional: false },
+      { name: 'Hung Curd / Greek Yogurt', quantity: '1/2 cup', isOptional: false },
+      { name: 'Mustard Oil (hot)', quantity: '2 tbsp', isOptional: false },
+      { name: 'Kashmiri Chili Powder & Garam Masala', quantity: '1.5 tsp chili, 1 tsp masala', isOptional: false },
+      { name: 'Kasuri Methi & Chaat Masala', quantity: '1 tsp each', isOptional: false },
+      { name: 'Lemon Juice', quantity: '1 tbsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Heat mustard oil until smoking, cool slightly, and whisk into hung curd with chili powder, garam masala, kasuri methi, and salt.' },
+      { step: 2, text: 'Gently coat paneer cubes, bell pepper chunks, and onion squares in the marinade. Rest for 30 minutes.' },
+      { step: 3, text: 'Thread alternating pieces of pepper, paneer, and onion onto soaked wooden or metal skewers.' },
+      { step: 4, text: 'Preheat oven to 425°F (220°C) or heat a grill pan. Brush skewers lightly with oil or butter.' },
+      { step: 5, text: 'Grill or bake for 12-15 minutes, turning occasionally until edges have delicious charred spots.' },
+      { step: 6, text: 'Sprinkle with tangy chaat masala, squeeze fresh lemon juice, and serve hot with mint chutney.' }
+    ],
+    preparation_time: '25 mins',
+    cooking_time: '15 mins',
+    total_time: '40 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Whisking Kashmiri chili powder directly into warm mustard oil yields that vibrant restaurant red hue naturally.'],
+    nutrition: { calories: 340, protein: '18g', carbs: '12g', fat: '25g' }
+  },
+  {
+    id: 'rec-28',
+    name: 'Italian Tomato Basil Bruschetta',
+    description: 'Toasted rustic Italian ciabatta rubbed with garlic cloves, piled high with marinated ripe Roma tomatoes, sweet basil, olive oil, and balsamic glaze.',
+    image_url: 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Italian',
+    category: 'Appetizers',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Rustic Baguette or Ciabatta', quantity: '1 loaf (sliced)', isOptional: false },
+      { name: 'Ripe Roma Tomatoes (seeded & diced)', quantity: '4 medium', isOptional: false },
+      { name: 'Fresh Sweet Basil Leaves (chiffonade)', quantity: '1/3 cup', isOptional: false },
+      { name: 'Garlic Cloves', quantity: '2 whole for rubbing + 1 minced', isOptional: false },
+      { name: 'Extra Virgin Olive Oil', quantity: '3 tbsp', isOptional: false },
+      { name: 'Balsamic Glaze Reduction', quantity: '1.5 tbsp', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'In a bowl, toss diced tomatoes, minced garlic, fresh basil, 2 tablespoons olive oil, salt, and black pepper. Marinate for 15 minutes.' },
+      { step: 2, text: 'Brush bread slices with remaining olive oil.' },
+      { step: 3, text: 'Grill or bake bread slices until golden brown and crunchy on both sides.' },
+      { step: 4, text: 'While bread is hot, rub cut surface of whole garlic clove across the toasted bread.' },
+      { step: 5, text: 'Spoon marinated tomato mixture generously over each toast slice.' },
+      { step: 6, text: 'Drizzle with balsamic glaze reduction and serve immediately.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '5 mins',
+    total_time: '20 mins',
     difficulty: 'Easy',
     servings: 4,
     rating: 4.7,
-    tips: [
-      'Do not add too much water; cooking the vegetables in their own steam preserves sweet nutty flavors.',
-      'Cut potatoes and cauliflower into similar sizes for even cooking.'
+    tips: ['Remove seeds and watery pulp from tomatoes before dicing so the toasted bread remains crisp.'],
+    nutrition: { calories: 190, protein: '4g', carbs: '26g', fat: '8g' }
+  },
+
+  // ==========================================
+  // STREET FOOD & FAST FOOD
+  // ==========================================
+  {
+    id: 'rec-29',
+    name: 'Mumbai Street-Style Pav Bhaji',
+    description: 'Iconic Mumbai street food featuring a spiced mashed vegetable curry cooked on a giant flat tawa with mountains of butter, served with toasted ladi pav.',
+    image_url: 'https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Street Food',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Boiled Potatoes & Cauliflower', quantity: '3 potatoes, 1 cup cauliflower', isOptional: false },
+      { name: 'Green Peas & Carrots', quantity: '1/2 cup each (boiled)', isOptional: false },
+      { name: 'Finely Chopped Onions & Capsicum', quantity: '1 large onion, 1 capsicum', isOptional: false },
+      { name: 'Pure Butter (Amul)', quantity: '5 tbsp', isOptional: false },
+      { name: 'Pav Bhaji Masala', quantity: '2.5 tbsp', isOptional: false },
+      { name: 'Kashmiri Chili Paste', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Ladi Pav (soft buns)', quantity: '6 pieces', isOptional: false }
     ],
-    nutrition: { calories: 230, protein: '6g', carbs: '36g', fat: '8g' }
+    instructions: [
+      { step: 1, text: 'Boil potatoes, cauliflower, peas, and carrots. Mash thoroughly with a potato masher until almost smooth.' },
+      { step: 2, text: 'Melt 2 tbsp butter on a wide pan or flat tawa. Sauté chopped onions and finely diced capsicum for 3 minutes.' },
+      { step: 3, text: 'Add ginger-garlic paste, Kashmiri chili paste, and chopped tomatoes. Cook until soft and buttery.' },
+      { step: 4, text: 'Add pav bhaji masala, salt, and mashed vegetables with 1/2 cup water. Mash continuously with potato masher on high heat.' },
+      { step: 5, text: 'Simmer for 10 minutes, continually adding dollops of butter until glossy and aromatic.' },
+      { step: 6, text: 'Slit pav buns, toast on hot tawa with butter, pav bhaji masala, and coriander. Serve with lemon wedges and diced raw onions.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '25 mins',
+    total_time: '45 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Continuous mashing on a flat tawa while cooking incorporates the butter and creates the authentic street texture.'],
+    nutrition: { calories: 420, protein: '9g', carbs: '58g', fat: '18g' }
   },
   {
-    id: 'rec-12',
+    id: 'rec-30',
+    name: 'Crispy Pani Puri / Golgappe',
+    description: 'Hollow, crispy semolina puris filled with spiced potato-chickpea mash and dunked in chilled spicy mint-coriander water and sweet tamarind sauce.',
+    image_url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Street Food',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Crisp Puris', quantity: '24 puris', isOptional: false },
+      { name: 'Boiled Potatoes & Kala Chana (crumbled)', quantity: '2 potatoes, 1/2 cup black chickpeas', isOptional: false },
+      { name: 'Fresh Mint & Coriander leaves', quantity: '1 cup mint, 1 cup coriander', isOptional: false },
+      { name: 'Green Chilies & Ginger', quantity: '3 chilies, 1 inch ginger', isOptional: false },
+      { name: 'Pani Puri Masala & Black Salt', quantity: '2 tbsp masala, 1 tsp black salt', isOptional: false },
+      { name: 'Tamarind Chutney (Meethi Chutney)', quantity: '1/2 cup', isOptional: false },
+      { name: 'Boondi & Chilled Ice Water', quantity: '3 tbsp boondi, 4 cups water', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Blend mint, coriander, green chilies, ginger, lemon juice, and black salt into a fine green paste.' },
+      { step: 2, text: 'Mix paste with 4 cups of chilled water, pani puri masala, and ice cubes. Stir in crisp boondi.' },
+      { step: 3, text: 'Mix boiled potatoes, black chickpeas, chaat masala, chili powder, and salt for the filling.' },
+      { step: 4, text: 'Poke a small thumb hole in the center of a crisp puri.' },
+      { step: 5, text: 'Stuff with 1 teaspoon of potato filling and a dash of sweet tamarind chutney.' },
+      { step: 6, text: 'Dip generously into the spicy chilled mint pani and eat in one single exhilarating bite!' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '5 mins',
+    total_time: '25 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Keep the spiced mint water ice-cold for the ultimate refreshing street sensation.'],
+    nutrition: { calories: 220, protein: '5g', carbs: '42g', fat: '4g' }
+  },
+  {
+    id: 'rec-31',
+    name: 'Gourmet Double Smash Cheeseburger',
+    description: 'Crispy lacy-edged all-beef or chicken patties smashed thin on a searing griddle, layered with melted American cheese, pickles, and special sauce.',
+    image_url: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'American',
+    category: 'Fast Food',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Ground Meat (80/20 beef or minced chicken)', quantity: '350g (portioned into 4 balls)', isOptional: false },
+      { name: 'Brioche Burger Buns', quantity: '2 buns (toasted)', isOptional: false },
+      { name: 'American Cheese Slices', quantity: '4 slices', isOptional: false },
+      { name: 'Dill Pickle Slices', quantity: '8 slices', isOptional: false },
+      { name: 'Burger Sauce (Mayo, Ketchup, Relish, Mustard)', quantity: '3 tbsp', isOptional: false },
+      { name: 'Salt & Coarse Black Pepper', quantity: 'Generous pinch', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Heat a heavy cast-iron skillet or flat griddle on high until smoking hot.' },
+      { step: 2, text: 'Place loose meat balls onto dry hot griddle. Press down firmly with a flat metal spatula until paper-thin with ragged edges.' },
+      { step: 3, text: 'Season generously with salt and pepper. Cook undisturbed for 2 minutes until edges are deeply caramelized and crispy.' },
+      { step: 4, text: 'Scrape under the patty and flip. Place a slice of American cheese on each patty immediately.' },
+      { step: 5, text: 'Stack two patties together so cheese melts in between.' },
+      { step: 6, text: 'Spread burger sauce on toasted brioche buns, add pickles, top with double cheesy patties, and close bun.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '8 mins',
+    total_time: '18 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Smash firmly within the first 30 seconds of hitting the pan to get that coveted crispy lacy edge.'],
+    nutrition: { calories: 650, protein: '44g', carbs: '36g', fat: '38g' }
+  },
+  {
+    id: 'rec-32',
+    name: 'Crispy Veggie Supreme Burger',
+    description: 'Golden crumb-crusted spiced vegetable and potato patty topped with melted cheddar, crisp lettuce, juicy tomato, and tangy chipotle mayo.',
+    image_url: 'https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'American',
+    category: 'Fast Food',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Boiled Potatoes, Carrots, Peas, Corn', quantity: '2 cups mashed', isOptional: false },
+      { name: 'Panko Breadcrumbs', quantity: '1 cup', isOptional: false },
+      { name: 'Sesame Brioche Buns', quantity: '2 buns', isOptional: false },
+      { name: 'Cheddar Cheese Slices', quantity: '2 slices', isOptional: false },
+      { name: 'Chipotle Mayonnaise', quantity: '3 tbsp', isOptional: false },
+      { name: 'Lettuce, Sliced Tomato & Pickled Jalapeños', quantity: 'For topping', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Combine mashed vegetables with garam masala, chili powder, breadcrumbs, and salt. Shape into firm burger patties.' },
+      { step: 2, text: 'Dip patties in cornstarch slurry, then coat generously in crunchy panko breadcrumbs.' },
+      { step: 3, text: 'Shallow fry or air fry at 390°F until golden brown and super crispy (4-5 mins each side).' },
+      { step: 4, text: 'Place a cheddar slice on hot patty to melt.' },
+      { step: 5, text: 'Toast brioche buns with butter on a skillet.' },
+      { step: 6, text: 'Assemble with chipotle mayo, fresh lettuce, tomato slices, crispy veggie patty, jalapeños, and top bun.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '12 mins',
+    total_time: '32 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.7,
+    tips: ['Using panko breadcrumbs gives an incomparably crunchier crust than standard breadcrumbs.'],
+    nutrition: { calories: 480, protein: '12g', carbs: '64g', fat: '20g' }
+  },
+
+  // ==========================================
+  // SOUPS & SALADS
+  // ==========================================
+  {
+    id: 'rec-33',
+    name: 'Roasted Cream of Tomato & Basil Soup',
+    description: 'Velvety soup made from oven-roasted vine-ripened tomatoes, sweet garlic, caramelized onions, fresh basil, and a swirl of cream.',
+    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Continental',
+    category: 'Soups',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Ripe Vine Tomatoes (halved)', quantity: '1 kg', isOptional: false },
+      { name: 'Garlic Cloves & Red Onion', quantity: '6 cloves, 1 large onion', isOptional: false },
+      { name: 'Olive Oil', quantity: '2 tbsp', isOptional: false },
+      { name: 'Fresh Basil Leaves', quantity: '1/2 cup', isOptional: false },
+      { name: 'Vegetable Broth', quantity: '2 cups', isOptional: false },
+      { name: 'Heavy Cream', quantity: '3 tbsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Toss halved tomatoes, garlic cloves, and onion wedges with olive oil, salt, and pepper on a baking sheet.' },
+      { step: 2, text: 'Roast in oven at 400°F (200°C) for 35 minutes until tomatoes are caramelized and slightly charred.' },
+      { step: 3, text: 'Transfer roasted vegetables into a blender with fresh basil and vegetable broth. Blend until silky smooth.' },
+      { step: 4, text: 'Pour soup into a pot and bring to a gentle simmer for 5 minutes.' },
+      { step: 5, text: 'Stir in heavy cream and adjust salt and black pepper to taste.' },
+      { step: 6, text: 'Ladle into warm bowls, drizzle with olive oil, and serve with grilled cheese sandwiches.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '35 mins',
+    total_time: '50 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Roasting tomatoes intensifies their natural sweetness and cuts down on excess acidity.'],
+    nutrition: { calories: 180, protein: '4g', carbs: '18g', fat: '11g' }
+  },
+  {
+    id: 'rec-34',
+    name: 'Indo-Chinese Hot & Sour Chicken Soup',
+    description: 'A comforting, spicy, and tangy Chinese-style broth loaded with shredded chicken, mushrooms, tofu, bamboo shoots, and ribbons of egg drop.',
+    image_url: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Indo-Chinese',
+    category: 'Soups',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Chicken Broth', quantity: '4 cups', isOptional: false },
+      { name: 'Shredded Cooked Chicken', quantity: '150g', isOptional: false },
+      { name: 'Sliced Shiitake Mushrooms & Carrots', quantity: '1 cup combined', isOptional: false },
+      { name: 'Dark Soy Sauce & Rice Vinegar', quantity: '2 tbsp each', isOptional: false },
+      { name: 'Chili Garlic Sauce & White Pepper', quantity: '1 tbsp sauce, 1/2 tsp white pepper', isOptional: false },
+      { name: 'Cornstarch Slurry', quantity: '2 tbsp starch in 3 tbsp water', isOptional: false },
+      { name: 'Beaten Egg', quantity: '1 large', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Bring chicken broth to a boil in a medium pot.' },
+      { step: 2, text: 'Add mushrooms, carrots, soy sauce, rice vinegar, chili garlic sauce, and white pepper.' },
+      { step: 3, text: 'Add shredded chicken and simmer for 5 minutes.' },
+      { step: 4, text: 'Stir in cornstarch slurry and cook for 2 minutes until broth thickens to a glossy consistency.' },
+      { step: 5, text: 'Slowly drizzle beaten egg into simmering soup while gently stirring in circles to create silken egg ribbons.' },
+      { step: 6, text: 'Ladle into bowls, top with sliced green onions, and serve steaming hot.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '15 mins',
+    total_time: '25 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['White pepper provides the authentic, throat-warming kick traditional to hot and sour soups.'],
+    nutrition: { calories: 190, protein: '18g', carbs: '12g', fat: '7g' }
+  },
+  {
+    id: 'rec-35',
+    name: 'Greek Mediterranean Village Salad',
+    description: 'Crisp English cucumbers, vine tomatoes, Kalamata olives, thinly sliced red onions, and a thick block of creamy Greek feta drizzled with oregano olive oil.',
+    image_url: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Continental',
+    category: 'Salads',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Ripe Vine Tomatoes (cut into wedges)', quantity: '3 large', isOptional: false },
+      { name: 'English Cucumber (sliced)', quantity: '1 large', isOptional: false },
+      { name: 'Red Onion (thinly sliced half-moons)', quantity: '1/2 medium', isOptional: false },
+      { name: 'Kalamata Olives (pitted)', quantity: '1/2 cup', isOptional: false },
+      { name: 'Greek Feta Cheese Block', quantity: '150g', isOptional: false },
+      { name: 'Extra Virgin Olive Oil & Red Wine Vinegar', quantity: '3 tbsp oil, 1 tbsp vinegar', isOptional: false },
+      { name: 'Dried Oregano & Sea Salt', quantity: '1 tsp oregano, salt to taste', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'In a wide salad bowl, combine tomato wedges, sliced cucumber, red onion slices, and Kalamata olives.' },
+      { step: 2, text: 'In a small jar, whisk extra virgin olive oil, red wine vinegar, dried oregano, salt, and black pepper.' },
+      { step: 3, text: 'Pour dressing over the vegetables and toss gently to coat.' },
+      { step: 4, text: 'Place a whole slab of creamy Greek feta right on top of the salad.' },
+      { step: 5, text: 'Drizzle extra olive oil over the feta cheese and dust with dried oregano.' },
+      { step: 6, text: 'Serve fresh with warm pita bread or crusty sourdough.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '0 mins',
+    total_time: '15 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Authentic Greek salad (Horiatiki) contains no lettuce; keeping large rustic cuts preserves crunch and freshness.'],
+    nutrition: { calories: 240, protein: '8g', carbs: '12g', fat: '18g' }
+  },
+  {
+    id: 'rec-36',
+    name: 'Classic Caesar Salad with Grilled Chicken',
+    description: 'Crisp romaine lettuce hearts tossed in creamy homemade Caesar dressing, garlic herb croutons, shaved parmesan, and juicy grilled chicken breast.',
+    image_url: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'American',
+    category: 'Salads',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Romaine Lettuce Hearts (chopped)', quantity: '2 large heads', isOptional: false },
+      { name: 'Grilled Chicken Breast (sliced)', quantity: '250g', isOptional: false },
+      { name: 'Garlic Herb Croutons', quantity: '1 cup', isOptional: false },
+      { name: 'Parmesan Cheese (shaved ribbons)', quantity: '1/2 cup', isOptional: false },
+      { name: 'Caesar Dressing (Mayo, Garlic, Lemon, Anchovy/Worcestershire, Dijon)', quantity: '1/3 cup', isOptional: false },
+      { name: 'Fresh Cracked Black Pepper', quantity: 'To taste', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Season chicken breast with olive oil, garlic powder, salt, and pepper. Grill 6 minutes per side until cooked through, then slice.' },
+      { step: 2, text: 'Wash, spin dry, and chop crisp romaine hearts into bite-sized pieces.' },
+      { step: 3, text: 'In a large wooden bowl, toss romaine with half of the creamy Caesar dressing until leaves are lightly coated.' },
+      { step: 4, text: 'Add crunchy garlic croutons and half of the shaved parmesan ribbons.' },
+      { step: 5, text: 'Top with warm sliced grilled chicken breast.' },
+      { step: 6, text: 'Finish with remaining parmesan ribbons, drizzle of dressing, and coarse cracked black pepper.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '12 mins',
+    total_time: '27 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.8,
+    tips: ['Ensure romaine lettuce is completely dry before tossing so the dressing clings cleanly.'],
+    nutrition: { calories: 410, protein: '34g', carbs: '16g', fat: '24g' }
+  },
+
+  // ==========================================
+  // DESSERTS & SWEETS
+  // ==========================================
+  {
+    id: 'rec-37',
+    name: 'Melt-in-Mouth Royal Gulab Jamun',
+    description: 'Golden fried khoya and milk dumplings soaked in a warm, fragrant sugar syrup infused with green cardamom pods, saffron strands, and rose water.',
+    image_url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Desserts',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Mawa / Khoya (crumbled)', quantity: '200g', isOptional: false },
+      { name: 'Chenna / Paneer (grated fine)', quantity: '50g', isOptional: false },
+      { name: 'All-Purpose Flour (Maida)', quantity: '3 tbsp', isOptional: false },
+      { name: 'Sugar', quantity: '2 cups', isOptional: false },
+      { name: 'Cardamom Pods & Saffron Strands', quantity: '4 pods, pinch saffron', isOptional: false },
+      { name: 'Rose Water', quantity: '1 tsp', isOptional: true },
+      { name: 'Ghee or Oil for deep frying', quantity: '2 cups', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil sugar and 2 cups of water with crushed cardamom and saffron for 6-8 minutes until syrup is slightly sticky (half string). Add rose water and keep warm.' },
+      { step: 2, text: 'Knead khoya, grated paneer, and flour with the heel of your palm for 5 minutes into a smooth, lump-free dough.' },
+      { step: 3, text: 'Roll into small crack-free balls between smooth palms without applying excess pressure.' },
+      { step: 4, text: 'Heat ghee on low flame. Fry dumplings slowly, swirling ghee with a spoon without touching dumplings directly.' },
+      { step: 5, text: 'Fry until dumplings turn deep golden brown all around (about 10-12 minutes).' },
+      { step: 6, text: 'Drain and slide immediately into warm sugar syrup. Let soak for at least 2 hours before serving warm with vanilla ice cream.' }
+    ],
+    preparation_time: '25 mins',
+    cooking_time: '25 mins',
+    total_time: '50 mins',
+    difficulty: 'Medium',
+    servings: 6,
+    rating: 4.9,
+    tips: ['Keep frying temperature low so the jamuns cook evenly through to the core without becoming dense.'],
+    nutrition: { calories: 340, protein: '6g', carbs: '56g', fat: '12g' }
+  },
+  {
+    id: 'rec-38',
+    name: 'Soft & Spongy Kolkata Rasmalai',
+    description: 'Delicate melt-in-mouth cottage cheese patties soaked in thickened saffron and cardamom scented milk, garnished with slivered pistachios and almonds.',
+    image_url: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Desserts',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Whole Cow Milk (for fresh chenna)', quantity: '1 liter', isOptional: false },
+      { name: 'Full Cream Milk (for rabdi)', quantity: '1 liter', isOptional: false },
+      { name: 'Lemon Juice (for curdling)', quantity: '2 tbsp in 2 tbsp water', isOptional: false },
+      { name: 'Sugar', quantity: '1.5 cups for syrup + 1/2 cup for rabdi', isOptional: false },
+      { name: 'Saffron Strands & Green Cardamom', quantity: 'Pinch saffron, 1/2 tsp cardamom powder', isOptional: false },
+      { name: 'Slivered Pistachios & Almonds', quantity: '3 tbsp combined', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Make rabdi: simmer 1 liter full cream milk in a wide pan until reduced to half. Add sugar, saffron, and cardamom. Chill in fridge.' },
+      { step: 2, text: 'Curdle boiling cow milk with lemon juice. Strain chenna in muslin cloth, rinse with cold water, and hang for 30 minutes to drain moisture.' },
+      { step: 3, text: 'Knead chenna for 5 minutes until soft and grease-free. Shape into small flat discs.' },
+      { step: 4, text: 'Boil 1.5 cups sugar with 5 cups water. Drop chenna discs into boiling syrup, cover and cook on high for 10 minutes until puffed double.' },
+      { step: 5, text: 'Remove discs and press gently between spoons to squeeze out sugar syrup.' },
+      { step: 6, text: 'Drop into cold saffron rabdi. Chill for 4 hours and garnish with slivered nuts before serving.' }
+    ],
+    preparation_time: '35 mins',
+    cooking_time: '40 mins',
+    total_time: '75 mins',
+    difficulty: 'Hard',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Do not over-knead chenna or fat will separate, resulting in hard patties.'],
+    nutrition: { calories: 310, protein: '9g', carbs: '44g', fat: '11g' }
+  },
+  {
+    id: 'rec-39',
+    name: 'Traditional Gajar Ka Halwa',
+    description: 'Slow-cooked Punjabi winter pudding made with freshly grated sweet red carrots, full cream milk, mawa, ghee, cardamom, and crunchy nuts.',
+    image_url: 'https://images.unsplash.com/photo-1599488615731-7e5c2823ff28?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Desserts',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Fresh Red Delhi Carrots (grated)', quantity: '1 kg', isOptional: false },
+      { name: 'Full Cream Milk', quantity: '1 liter', isOptional: false },
+      { name: 'Desi Ghee', quantity: '4 tbsp', isOptional: false },
+      { name: 'Sugar', quantity: '3/4 cup', isOptional: false },
+      { name: 'Mawa / Khoya (crumbled)', quantity: '100g', isOptional: true },
+      { name: 'Cashews, Almonds & Cardamom Powder', quantity: '1/4 cup nuts, 1 tsp cardamom', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'In a heavy kadai, combine grated carrots and milk. Bring to a boil on medium heat.' },
+      { step: 2, text: 'Simmer stirring periodically until all the milk is completely absorbed by the carrots (approx 35-40 mins).' },
+      { step: 3, text: 'Add sugar and mix well. The halwa will loosen as sugar melts; cook until liquid evaporates.' },
+      { step: 4, text: 'Add desi ghee and roast (bhunao) the halwa on medium heat for 10 minutes until deep glossy red.' },
+      { step: 5, text: 'Stir in crumbled mawa, fried cashews, almonds, and cardamom powder.' },
+      { step: 6, text: 'Serve warm as is or topped with a scoop of vanilla ice cream.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '50 mins',
+    total_time: '70 mins',
+    difficulty: 'Medium',
+    servings: 6,
+    rating: 4.9,
+    tips: ['Slow roasting with ghee after milk evaporates gives halwa its iconic rich red sheen.'],
+    nutrition: { calories: 370, protein: '8g', carbs: '48g', fat: '17g' }
+  },
+  {
+    id: 'rec-40',
     name: 'Molten Chocolate Lava Cake',
     description: 'Decadent individual warm chocolate cakes with a moist tender sponge and a heavenly flowing molten dark chocolate center.',
     image_url: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=800&auto=format&fit=crop&q=80',
@@ -423,16 +1350,15 @@ export const SAMPLE_RECIPES: Recipe[] = [
       { name: 'Powdered Sugar', quantity: '1/2 cup', isOptional: false },
       { name: 'Eggs + Egg yolks', quantity: '2 whole eggs + 2 yolks', isOptional: false },
       { name: 'All-purpose flour', quantity: '3 tbsp', isOptional: false },
-      { name: 'Vanilla extract & Salt', quantity: '1 tsp vanilla, pinch of salt', isOptional: false },
-      { name: 'Cocoa powder', quantity: 'For dusting ramekins', isOptional: true }
+      { name: 'Vanilla extract & Salt', quantity: '1 tsp vanilla, pinch of salt', isOptional: false }
     ],
     instructions: [
       { step: 1, text: 'Preheat oven to 425°F (220°C). Butter four 6-ounce ramekins and dust thoroughly with cocoa powder.' },
-      { step: 2, text: 'Melt dark chocolate and butter together in a heatproof bowl set over simmering water (or in microwave in 30s bursts).' },
+      { step: 2, text: 'Melt dark chocolate and butter together in a heatproof bowl set over simmering water.' },
       { step: 3, text: 'Whisk eggs, egg yolks, powdered sugar, and vanilla in a separate bowl until pale and slightly thick.' },
-      { step: 4, text: 'Fold melted chocolate mixture into the egg mixture. Gently fold in flour and pinch of salt until just incorporated.' },
-      { step: 5, text: 'Divide batter evenly between ramekins. Bake for 12-14 minutes until edges are firm but center is soft and jiggly.' },
-      { step: 6, text: 'Let sit for 1 minute. Run a knife around edge, invert onto dessert plates, dust with powdered sugar, and serve immediately with vanilla bean ice cream.' }
+      { step: 4, text: 'Fold melted chocolate mixture into the egg mixture. Gently fold in flour and pinch of salt.' },
+      { step: 5, text: 'Divide batter evenly between ramekins. Bake for 12-14 minutes until edges are firm but center is jiggly.' },
+      { step: 6, text: 'Invert onto dessert plates, dust with powdered sugar, and serve immediately with vanilla bean ice cream.' }
     ],
     preparation_time: '15 mins',
     cooking_time: '12 mins',
@@ -440,10 +1366,872 @@ export const SAMPLE_RECIPES: Recipe[] = [
     difficulty: 'Medium',
     servings: 4,
     rating: 4.9,
-    tips: [
-      'Do not overbake! The center must remain jiggly when you gently nudge the ramekin.',
-      'Greasing and dusting ramekins properly ensures the cake slides out smoothly when inverted.'
-    ],
+    tips: ['Do not overbake! The center must remain jiggly when you gently nudge the ramekin.'],
     nutrition: { calories: 430, protein: '7g', carbs: '44g', fat: '27g' }
+  },
+  {
+    id: 'rec-41',
+    name: 'Classic Italian Tiramisu',
+    description: 'Iconic Italian dessert made with crisp ladyfinger biscuits dipped in espresso coffee, layered with whipped mascarpone cream and dusted with cocoa.',
+    image_url: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Italian',
+    category: 'Desserts',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Italian Savoiardi Ladyfingers', quantity: '24 biscuits', isOptional: false },
+      { name: 'Mascarpone Cheese', quantity: '500g', isOptional: false },
+      { name: 'Fresh Brewed Strong Espresso', quantity: '1.5 cups (cooled)', isOptional: false },
+      { name: 'Egg Yolks & Granulated Sugar', quantity: '4 yolks, 1/2 cup sugar', isOptional: false },
+      { name: 'Heavy Whipping Cream', quantity: '1 cup', isOptional: false },
+      { name: 'Dutch-Process Cocoa Powder', quantity: '3 tbsp for dusting', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Whisk egg yolks and sugar in a heatproof bowl over simmering water for 5 minutes until pale and doubled in volume. Cool slightly.' },
+      { step: 2, text: 'Beat mascarpone cheese into yolk mixture until smooth and creamy.' },
+      { step: 3, text: 'Whip heavy cream to stiff peaks in another bowl and gently fold into mascarpone cream.' },
+      { step: 4, text: 'Dip ladyfingers one by one into cooled espresso for 1 second per side (do not soak).' },
+      { step: 5, text: 'Arrange a layer of dipped biscuits in a serving dish. Spread half of mascarpone cream over biscuits. Repeat layer.' },
+      { step: 6, text: 'Refrigerate for at least 6 hours (preferably overnight). Dust generously with dark cocoa powder before slicing.' }
+    ],
+    preparation_time: '25 mins',
+    cooking_time: '0 mins',
+    total_time: '25 mins',
+    difficulty: 'Medium',
+    servings: 8,
+    rating: 4.9,
+    tips: ['Quick 1-second dip per side into espresso prevents ladyfingers from turning soggy.'],
+    nutrition: { calories: 390, protein: '7g', carbs: '36g', fat: '25g' }
+  },
+
+  // ==========================================
+  // REFRESHING BEVERAGES
+  // ==========================================
+  {
+    id: 'rec-42',
+    name: 'Royal Kesari Mango Lassi',
+    description: 'Thick, chilled sweet yogurt shake blended with ripe Alphonso mango pulp, saffron strands, green cardamom, and garnished with pistachios.',
+    image_url: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Beverages',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Ripe Alphonso Mango Pulp', quantity: '1.5 cups', isOptional: false },
+      { name: 'Thick Fresh Yogurt / Curd', quantity: '2 cups', isOptional: false },
+      { name: 'Whole Cold Milk', quantity: '1/2 cup', isOptional: false },
+      { name: 'Sugar or Honey', quantity: '3 tbsp', isOptional: false },
+      { name: 'Green Cardamom Powder & Saffron', quantity: '1/4 tsp cardamom, pinch saffron', isOptional: false },
+      { name: 'Crushed Ice & Pistachios', quantity: 'For blending & garnish', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Add ripe mango pulp, chilled yogurt, cold milk, sugar, cardamom powder, and crushed ice to a blender.' },
+      { step: 2, text: 'Blend on high speed for 1-2 minutes until thick, frothy, and silky smooth.' },
+      { step: 3, text: 'Pour into tall chilled glasses.' },
+      { step: 4, text: 'Garnish with soaked saffron strands and slivered pistachio nuts.' },
+      { step: 5, text: 'Serve immediately as a cool, refreshing summer treat.' }
+    ],
+    preparation_time: '5 mins',
+    cooking_time: '0 mins',
+    total_time: '5 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Using chilled thick yogurt produces that rich, spoonable restaurant consistency.'],
+    nutrition: { calories: 230, protein: '8g', carbs: '38g', fat: '5g' }
+  },
+  {
+    id: 'rec-43',
+    name: 'Kadak Masala Chai with Ginger & Cardamom',
+    description: 'Invigorating Indian milk tea brewed with strong Assam CTC black tea, freshly crushed ginger, green cardamom pods, cloves, and whole milk.',
+    image_url: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Beverages',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Assam CTC Black Tea Leaves', quantity: '2.5 tsp', isOptional: false },
+      { name: 'Whole Milk', quantity: '1 cup', isOptional: false },
+      { name: 'Water', quantity: '1.5 cups', isOptional: false },
+      { name: 'Fresh Ginger (crushed)', quantity: '1 inch knob', isOptional: false },
+      { name: 'Green Cardamom Pods & Cloves', quantity: '3 pods crushed, 2 cloves', isOptional: false },
+      { name: 'Sugar', quantity: '2 tsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Bring water to a boil in a saucepan. Add crushed ginger, crushed cardamom, and cloves. Simmer for 2 minutes to extract essential oils.' },
+      { step: 2, text: 'Add black tea leaves and simmer on low for 1-2 minutes until water turns deep amber.' },
+      { step: 3, text: 'Pour in whole milk and add sugar.' },
+      { step: 4, text: 'Bring to a boil on medium heat until milk rises to top. Lower flame and repeat 2-3 times for depth of flavor.' },
+      { step: 5, text: 'Strain through a fine mesh strainer into kulhad cups and serve steaming with crispy biscuits.' }
+    ],
+    preparation_time: '3 mins',
+    cooking_time: '7 mins',
+    total_time: '10 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Crushing the spices rather than using powder extracts cleaner and brighter herbal notes.'],
+    nutrition: { calories: 95, protein: '4g', carbs: '12g', fat: '4g' }
+  },
+  {
+    id: 'rec-44',
+    name: 'Fresh Mint Lime Virgin Mojito',
+    description: 'Crisp and effervescent mocktail muddled with fresh spearmint leaves, juicy lime wedges, raw sugar, and topped with chilled sparkling club soda.',
+    image_url: 'https://images.unsplash.com/photo-1551024709-8f23befc6f87?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Continental',
+    category: 'Beverages',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Fresh Mint Leaves', quantity: '12-15 leaves', isOptional: false },
+      { name: 'Fresh Lime Wedges', quantity: '1 whole lime (cut in wedges)', isOptional: false },
+      { name: 'Sugar Syrup or Raw Cane Sugar', quantity: '2 tbsp', isOptional: false },
+      { name: 'Crushed Ice', quantity: '1 cup', isOptional: false },
+      { name: 'Chilled Club Soda or Sprite', quantity: '1 cup', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Place fresh mint leaves and lime wedges in bottom of a sturdy highball glass.' },
+      { step: 2, text: 'Add cane sugar or simple syrup.' },
+      { step: 3, text: 'Muddle gently with a muddler to release lime juices and essential mint oils (do not shred mint).' },
+      { step: 4, text: 'Fill glass to the brim with crushed ice.' },
+      { step: 5, text: 'Top up with chilled sparkling club soda and stir gently with a long bar spoon.' },
+      { step: 6, text: 'Garnish with a fresh mint sprig and a lime wheel. Serve with a straw.' }
+    ],
+    preparation_time: '5 mins',
+    cooking_time: '0 mins',
+    total_time: '5 mins',
+    difficulty: 'Easy',
+    servings: 1,
+    rating: 4.8,
+    tips: ['Muddle mint gently; bruising releases refreshing aromatic oils, whereas shredding releases bitter chlorophyll.'],
+    nutrition: { calories: 80, protein: '0g', carbs: '20g', fat: '0g' }
+  },
+
+  // ==========================================
+  // MORE REGIONAL & GLOBAL FAVORITES
+  // ==========================================
+  {
+    id: 'rec-45',
+    name: 'Hyderabadi Mutton Dum Biryani',
+    description: 'Legendary Nizami biryani with succulent marinated goat meat layered with saffron basmati rice, mint, fried onions, and slow-dum cooked.',
+    image_url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Rice Dishes',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Mutton (bone-in pieces)', quantity: '750g', isOptional: false },
+      { name: 'Basmati Rice (aged)', quantity: '3 cups', isOptional: false },
+      { name: 'Raw Papaya Paste (meat tenderizer)', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Fried Onions (Birista)', quantity: '1.5 cups', isOptional: false },
+      { name: 'Thick Yogurt & Ginger-Garlic', quantity: '1 cup yogurt, 2 tbsp paste', isOptional: false },
+      { name: 'Biryani Spices, Saffron Milk & Ghee', quantity: '2 tbsp spices, 4 tbsp ghee', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Marinate mutton with raw papaya paste, yogurt, ginger-garlic paste, chili powder, biryani masala, half the fried onions, mint, and salt for at least 4 hours (or overnight).' },
+      { step: 2, text: 'Cook soaked basmati rice with whole spices in boiling water until 70% done. Drain.' },
+      { step: 3, text: 'Spread marinated raw mutton evenly on the base of a heavy bottomed handi (Kacchi dum method).' },
+      { step: 4, text: 'Layer parboiled basmati rice over the mutton. Top with fried onions, mint, saffron milk, and golden ghee.' },
+      { step: 5, text: 'Seal handi tightly with dough or foil. Cook on high heat for 10 minutes, then low heat over a tawa for 45 minutes.' },
+      { step: 6, text: 'Let rest for 15 minutes before opening. Gently uncover and serve hot with mirchi ka salan.' }
+    ],
+    preparation_time: '40 mins',
+    cooking_time: '60 mins',
+    total_time: '100 mins',
+    difficulty: 'Hard',
+    servings: 6,
+    rating: 4.9,
+    tips: ['Raw papaya paste breaks down tough mutton collagen so the meat melts tenderly during dum.'],
+    nutrition: { calories: 680, protein: '46g', carbs: '64g', fat: '28g' }
+  },
+  {
+    id: 'rec-46',
+    name: 'Andhra Spicy Gongura Mutton',
+    description: 'A fiery Andhra delicacy featuring tender bone-in mutton pieces simmered in a tangy sorrel leaf (gongura) masala with crushed red chilies.',
+    image_url: 'https://images.unsplash.com/photo-1545247181-516773ca838b?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Lunch',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Mutton (curry cut)', quantity: '500g', isOptional: false },
+      { name: 'Fresh Gongura (Sorrel) Leaves', quantity: '3 bunches', isOptional: false },
+      { name: 'Red Chilies & Green Chilies', quantity: '6 dry red chilies, 4 green chilies', isOptional: false },
+      { name: 'Onions & Garlic', quantity: '2 onions sliced, 8 garlic pods', isOptional: false },
+      { name: 'Coriander Seeds & Cumin', quantity: '1 tbsp each roasted', isOptional: false },
+      { name: 'Sesame or Peanut Oil', quantity: '3 tbsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Sauté gongura leaves in 1 tsp oil until wilted, then grind into a coarse tangy paste.' },
+      { step: 2, text: 'Pressure cook mutton with turmeric, ginger-garlic paste, and salt for 5 whistles until tender.' },
+      { step: 3, text: 'Heat oil in a pan. Sputter mustard seeds, cumin, dried red chilies, garlic, and onions until brown.' },
+      { step: 4, text: 'Add cooked mutton along with its broth and simmer for 5 minutes.' },
+      { step: 5, text: 'Stir in the gongura paste and roasted coriander-cumin powder. Cook on low heat until oil surfaces.' },
+      { step: 6, text: 'Serve hot with steamed rice and a generous dollop of pure desi ghee.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '35 mins',
+    total_time: '55 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Gongura leaves have natural tartness; balance with red chilies and garlic for classic Andhra kick.'],
+    nutrition: { calories: 490, protein: '38g', carbs: '12g', fat: '32g' }
+  },
+  {
+    id: 'rec-47',
+    name: 'North Indian Palak Paneer',
+    description: 'Fresh paneer cubes gently simmered in a vibrant, spiced, smooth spinach puree flavored with garlic, cumin, and finished with fresh cream.',
+    image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Fresh Spinach (Palak)', quantity: '500g (washed)', isOptional: false },
+      { name: 'Paneer (cubed)', quantity: '250g', isOptional: false },
+      { name: 'Garlic Cloves (finely minced)', quantity: '1.5 tbsp', isOptional: false },
+      { name: 'Green Chilies & Ginger', quantity: '2 chilies, 1 inch ginger', isOptional: false },
+      { name: 'Ghee or Butter', quantity: '2 tbsp', isOptional: false },
+      { name: 'Fresh Cream & Kasuri Methi', quantity: '2 tbsp cream, 1/2 tsp methi', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Blanch spinach leaves in boiling water for 2 minutes, then immediately transfer into an ice water bath to preserve bright green color.' },
+      { step: 2, text: 'Blend cooled spinach with green chilies and ginger into a smooth purée without adding excess water.' },
+      { step: 3, text: 'Heat ghee in a pan. Add cumin seeds and minced garlic, sautéing until garlic turns golden.' },
+      { step: 4, text: 'Pour in the vibrant spinach purée. Simmer on medium-low for 5-6 minutes.' },
+      { step: 5, text: 'Add paneer cubes, salt, and a pinch of garam masala. Simmer gently for 2 minutes.' },
+      { step: 6, text: 'Swirl in fresh cream, sprinkle crushed kasuri methi, and serve hot with tandoori roti or naan.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '15 mins',
+    total_time: '30 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Shocking blanched spinach in ice water arrests cooking and keeps that gorgeous emerald green hue.'],
+    nutrition: { calories: 320, protein: '16g', carbs: '14g', fat: '22g' }
+  },
+  {
+    id: 'rec-48',
+    name: 'Indo-Chinese Veg Manchurian Gravy',
+    description: 'Crispy vegetable dumplings made with cabbage and carrots, simmered in a savory, tangy, and garlicky dark Indo-Chinese Manchurian sauce.',
+    image_url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Indo-Chinese',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Finely Grated Cabbage & Carrot', quantity: '2 cups cabbage, 1 cup carrot', isOptional: false },
+      { name: 'Cornstarch & All-Purpose Flour', quantity: '3 tbsp each', isOptional: false },
+      { name: 'Minced Garlic, Ginger & Green Chilies', quantity: '2 tbsp garlic, 1 tbsp ginger, 2 chilies', isOptional: false },
+      { name: 'Dark Soy Sauce & Vinegar', quantity: '2 tbsp soy, 1 tbsp vinegar', isOptional: false },
+      { name: 'Chili Sauce & Tomato Ketchup', quantity: '1.5 tbsp each', isOptional: false },
+      { name: 'Spring Onion Greens & Veg Broth', quantity: '1/2 cup onions, 1.5 cups broth', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Squeeze excess water from grated cabbage and carrot. Mix with cornstarch, flour, pepper, and salt. Shape into small balls.' },
+      { step: 2, text: 'Deep fry balls in hot oil until golden brown and crispy on the outside. Drain.' },
+      { step: 3, text: 'Heat 2 tbsp oil in a wok. Sauté minced garlic, ginger, and green chilies on high flame for 1 minute.' },
+      { step: 4, text: 'Add soy sauce, chili sauce, tomato ketchup, vinegar, and vegetable broth. Bring to a boil.' },
+      { step: 5, text: 'Thicken sauce with 1 tablespoon cornstarch slurry until glossy.' },
+      { step: 6, text: 'Drop in fried veggie balls, toss for 1 minute to coat, garnish with spring onion greens, and serve with fried rice.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '15 mins',
+    total_time: '35 mins',
+    difficulty: 'Medium',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Squeezing moisture from cabbage prevents the balls from becoming soggy when fried.'],
+    nutrition: { calories: 330, protein: '6g', carbs: '46g', fat: '14g' }
+  },
+  {
+    id: 'rec-49',
+    name: 'Chili Chicken Indo-Chinese Dry',
+    description: 'Crisp battered chicken chunks stir-fried with diced bell peppers, red onions, hot green chilies, garlic, and savory umami sauces.',
+    image_url: 'https://images.unsplash.com/photo-1525755662778-989d0524087e?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Indo-Chinese',
+    category: 'Snacks',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Boneless Chicken (cut into cubes)', quantity: '400g', isOptional: false },
+      { name: 'Egg White & Cornstarch', quantity: '1 egg white, 3 tbsp cornstarch', isOptional: false },
+      { name: 'Diced Bell Peppers & Red Onion', quantity: '1 cup each', isOptional: false },
+      { name: 'Chopped Garlic & Slit Green Chilies', quantity: '2 tbsp garlic, 4 chilies', isOptional: false },
+      { name: 'Dark Soy Sauce, Red Chili Sauce, Vinegar', quantity: '1.5 tbsp soy, 1.5 tbsp chili, 1 tsp vinegar', isOptional: false },
+      { name: 'Spring Onions & White Pepper', quantity: '1/2 cup spring onions, 1/2 tsp pepper', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Marinate chicken with egg white, 1 tbsp soy sauce, white pepper, salt, and cornstarch.' },
+      { step: 2, text: 'Deep fry chicken in hot oil for 4-5 minutes until crisp and pale golden. Drain.' },
+      { step: 3, text: 'Heat oil in a wok over maximum flame until smoking. Add garlic and green chilies, stir-frying for 30 seconds.' },
+      { step: 4, text: 'Add diced bell peppers and onions, tossing rapidly for 1-2 minutes to keep them crisp.' },
+      { step: 5, text: 'Add soy sauce, chili sauce, vinegar, and a pinch of sugar.' },
+      { step: 6, text: 'Toss in fried chicken cubes, coat in sauce over roaring heat, garnish with spring onion greens, and serve sizzling hot.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '12 mins',
+    total_time: '27 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Keep vegetables crunchy by stir-frying over maximum heat for under 2 minutes.'],
+    nutrition: { calories: 390, protein: '32g', carbs: '18g', fat: '21g' }
+  },
+  {
+    id: 'rec-50',
+    name: 'Vegetable Hakka Noodles',
+    description: 'Wok-tossed thin noodles tossed with shredded cabbage, carrots, bell peppers, spring onions, garlic, and light soy-sesame seasoning.',
+    image_url: 'https://images.unsplash.com/photo-1585032226651-759b368d7246?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Indo-Chinese',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Hakka Noodles (boiled al dente)', quantity: '300g', isOptional: false },
+      { name: 'Julienned Cabbage, Carrots & Bell Peppers', quantity: '2 cups combined', isOptional: false },
+      { name: 'Finely Chopped Garlic & Ginger', quantity: '1.5 tbsp each', isOptional: false },
+      { name: 'Soy Sauce, Green Chili Sauce & Vinegar', quantity: '1.5 tbsp soy, 1 tbsp chili, 1 tsp vinegar', isOptional: false },
+      { name: 'Toasted Sesame Oil', quantity: '1 tbsp', isOptional: false },
+      { name: 'Spring Onion Greens', quantity: '1/2 cup sliced', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil noodles until just tender. Drain, rinse under cold water, and toss with 1 tsp oil to prevent sticking.' },
+      { step: 2, text: 'Heat a wide wok over high heat with 2 tablespoons of oil.' },
+      { step: 3, text: 'Add minced garlic and ginger, stir-frying for 30 seconds.' },
+      { step: 4, text: 'Add julienned vegetables and stir-fry vigorously on high heat for 2 minutes.' },
+      { step: 5, text: 'Add cooked noodles, soy sauce, green chili sauce, vinegar, black pepper, and salt.' },
+      { step: 6, text: 'Toss continuously with two spatulas until noodles are evenly glazed. Drizzle sesame oil, sprinkle spring onions, and serve hot.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '10 mins',
+    total_time: '25 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Rinsing boiled noodles under cold tap water stops cooking and preserves springy al dente texture.'],
+    nutrition: { calories: 340, protein: '8g', carbs: '56g', fat: '10g' }
+  },
+  {
+    id: 'rec-51',
+    name: 'Malabar Parotta with Vegetable Kurma',
+    description: 'Flaky, multi-layered Kerala flatbreads paired with a mildly spiced, aromatic coconut and cashew-based mixed vegetable kurma.',
+    image_url: 'https://images.unsplash.com/photo-1626074353765-517a681e40be?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'All-Purpose Flour Parottas', quantity: '4 layered parottas', isOptional: false },
+      { name: 'Diced Vegetables (Carrot, Potato, Beans, Peas)', quantity: '2 cups', isOptional: false },
+      { name: 'Grated Coconut & Soaked Cashews', quantity: '1/2 cup coconut, 10 cashews', isOptional: false },
+      { name: 'Fennel Seeds, Poppy Seeds, Green Chilies', quantity: '1 tsp fennel, 1 tsp poppy, 3 chilies', isOptional: false },
+      { name: 'Coconut Oil, Curry Leaves & Whole Spices', quantity: '2 tbsp oil, 2 sprigs leaves', isOptional: false },
+      { name: 'Coconut Milk', quantity: '1/2 cup', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Grind coconut, soaked cashews, fennel seeds, poppy seeds, and green chilies into a silky smooth white paste.' },
+      { step: 2, text: 'Heat coconut oil in a pot. Sputter cinnamon, cloves, cardamom, and curry leaves. Sauté chopped onions until golden.' },
+      { step: 3, text: 'Add diced mixed vegetables, turmeric, and 1 cup water. Simmer for 10 minutes until tender.' },
+      { step: 4, text: 'Stir in the ground coconut-cashew paste and salt. Simmer on low flame for 6-8 minutes until fragrant.' },
+      { step: 5, text: 'Finish with thick coconut milk and turn off heat.' },
+      { step: 6, text: 'Crush hot flaky parottas between your hands to separate the delicate layers and serve immediately with hot kurma.' }
+    ],
+    preparation_time: '25 mins',
+    cooking_time: '20 mins',
+    total_time: '45 mins',
+    difficulty: 'Medium',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Clapping hot parottas between palms while still warm releases steam and fluffs up the layered rings.'],
+    nutrition: { calories: 510, protein: '11g', carbs: '64g', fat: '24g' }
+  },
+  {
+    id: 'rec-52',
+    name: 'Comforting Moong Dal Khichdi with Ghee',
+    description: 'Hearty, nourishing one-pot porridge of yellow lentils and rice tempered with cumin, black pepper, hing, and generous spoonfuls of desi ghee.',
+    image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Rice Dishes',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Rice & Yellow Moong Dal (split)', quantity: '1/2 cup rice, 1/2 cup dal', isOptional: false },
+      { name: 'Desi Ghee', quantity: '3 tbsp', isOptional: false },
+      { name: 'Cumin Seeds (Jeera)', quantity: '1 tbsp', isOptional: false },
+      { name: 'Hing (Asafoetida) & Turmeric', quantity: '1/4 tsp hing, 1/2 tsp turmeric', isOptional: false },
+      { name: 'Whole Black Peppercorns & Cloves', quantity: '6 peppercorns, 2 cloves', isOptional: false },
+      { name: 'Finely Chopped Ginger & Green Chili', quantity: '1 tbsp ginger, 1 chili', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Rinse rice and split moong dal together. Soak in water for 20 minutes, then drain.' },
+      { step: 2, text: 'Heat 1 tbsp ghee in a pressure cooker. Sputter cumin seeds, peppercorns, cloves, ginger, green chili, and hing.' },
+      { step: 3, text: 'Add soaked rice, dal, turmeric, salt, and 4 cups of water.' },
+      { step: 4, text: 'Pressure cook for 4-5 whistles on medium flame until soft, creamy, and porridge-like.' },
+      { step: 5, text: 'In a small tadka pan, heat remaining 2 tbsp ghee until smoking hot, add cumin seeds, and pour over hot khichdi.' },
+      { step: 6, text: 'Serve piping hot with plain curd, crispy papad, and spicy mango pickle.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '15 mins',
+    total_time: '25 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Using a 1:4 ratio of grain to water produces the ultimate soothing, melt-in-mouth khichdi texture.'],
+    nutrition: { calories: 280, protein: '11g', carbs: '46g', fat: '7g' }
+  },
+  {
+    id: 'rec-53',
+    name: 'Classic Baked Macaroni & Cheese',
+    description: 'Elbow macaroni smothered in a creamy sharp cheddar and Gruyère cheese sauce, topped with toasted buttery panko breadcrumbs and baked golden bubbly.',
+    image_url: 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'American',
+    category: 'Dinner',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Elbow Macaroni', quantity: '350g', isOptional: false },
+      { name: 'Sharp Cheddar & Gruyère Cheese', quantity: '2.5 cups shredded', isOptional: false },
+      { name: 'Whole Milk & Butter', quantity: '2.5 cups milk, 3 tbsp butter', isOptional: false },
+      { name: 'All-Purpose Flour', quantity: '3 tbsp', isOptional: false },
+      { name: 'Dijon Mustard & Paprika', quantity: '1 tsp mustard, 1/2 tsp paprika', isOptional: false },
+      { name: 'Panko Breadcrumbs', quantity: '1/2 cup tossed in 1 tbsp butter', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil macaroni in salted water until 2 minutes shy of al dente. Drain and set aside.' },
+      { step: 2, text: 'Melt butter in a saucepan. Whisk in flour and cook for 1-2 minutes until bubbling (roux).' },
+      { step: 3, text: 'Slowly pour in milk while whisking constantly. Simmer until sauce thickens and coats the back of a spoon.' },
+      { step: 4, text: 'Remove from heat. Whisk in Dijon mustard, paprika, and 2 cups of shredded cheese until silky.' },
+      { step: 5, text: 'Fold pasta into the cheese sauce. Transfer to a buttered baking dish, top with remaining cheese and buttered panko.' },
+      { step: 6, text: 'Bake at 375°F (190°C) for 20 minutes until top is golden brown and sauce is bubbling around edges.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '25 mins',
+    total_time: '40 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Grate cheese from blocks; pre-shredded bagged cheese contains anti-caking agents that hinder smooth melting.'],
+    nutrition: { calories: 540, protein: '20g', carbs: '62g', fat: '24g' }
+  },
+  {
+    id: 'rec-54',
+    name: 'Mexican Grilled Chicken Street Tacos',
+    description: 'Warm soft corn tortillas piled with citrus-chipotle marinated charred chicken thighs, diced white onions, fresh cilantro, and tangy tomatillo salsa.',
+    image_url: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Mexican',
+    category: 'Dinner',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Boneless Chicken Thighs', quantity: '450g', isOptional: false },
+      { name: 'Mini Corn Tortillas', quantity: '8 tortillas', isOptional: false },
+      { name: 'Lime Juice & Orange Juice', quantity: '2 tbsp each', isOptional: false },
+      { name: 'Chipotle Chili Powder, Cumin, Oregano', quantity: '1 tsp each', isOptional: false },
+      { name: 'Finely Diced White Onion & Cilantro', quantity: '1/2 cup onion, 1/2 cup cilantro', isOptional: false },
+      { name: 'Cotija Cheese or Queso Fresco & Lime Wedges', quantity: 'For serving', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Marinate chicken thighs in citrus juices, garlic, chili powder, cumin, oregano, and salt for 30 minutes.' },
+      { step: 2, text: 'Grill chicken on high heat for 5-6 minutes per side until nicely charred and cooked to 165°F.' },
+      { step: 3, text: 'Rest chicken for 5 minutes, then chop into juicy bite-sized pieces.' },
+      { step: 4, text: 'Warm corn tortillas on a dry hot skillet until pliable and lightly toasted.' },
+      { step: 5, text: 'Double up tortillas, fill with chopped grilled chicken, diced white onion, and cilantro.' },
+      { step: 6, text: 'Top with crumbled cotija cheese and squeeze fresh lime juice right before eating.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '12 mins',
+    total_time: '32 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Using chicken thighs instead of breasts ensures juicy, flavorful meat that does not dry out on the grill.'],
+    nutrition: { calories: 380, protein: '30g', carbs: '32g', fat: '14g' }
+  },
+  {
+    id: 'rec-55',
+    name: 'Crispy Indian Masala French Fries',
+    description: 'Crisp golden potato batons tossed in a spicy, tangy blend of chaat masala, Kashmiri chili powder, amchur, and served with mint mayo.',
+    image_url: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Fast Food',
+    category: 'Fast Food',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Russet Potatoes (cut into 1/4 inch fries)', quantity: '4 large', isOptional: false },
+      { name: 'Chaat Masala', quantity: '1.5 tsp', isOptional: false },
+      { name: 'Kashmiri Red Chili Powder', quantity: '1 tsp', isOptional: false },
+      { name: 'Dry Mango Powder (Amchur)', quantity: '1/2 tsp', isOptional: false },
+      { name: 'Cornstarch (for extra crunch)', quantity: '2 tbsp', isOptional: false },
+      { name: 'Oil for double frying', quantity: '3 cups', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Soak cut potato batons in ice-cold water for 30 minutes to wash away surface starch. Pat completely dry.' },
+      { step: 2, text: 'Dust lightly with cornstarch.' },
+      { step: 3, text: 'First fry: fry in oil at 325°F (160°C) for 5 minutes until tender but pale. Remove and drain.' },
+      { step: 4, text: 'Second fry: increase oil heat to 375°F (190°C) and fry for 3 minutes until deep golden brown and shatteringly crisp.' },
+      { step: 5, text: 'Transfer immediately to a bowl, toss with chaat masala, chili powder, amchur, and black salt while sizzling hot.' },
+      { step: 6, text: 'Serve hot with spicy mint chutney or garlic mayonnaise.' }
+    ],
+    preparation_time: '20 mins',
+    cooking_time: '15 mins',
+    total_time: '35 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['The two-step frying technique (first at lower heat to cook inside, then high heat to crisp outside) is essential for restaurant-grade fries.'],
+    nutrition: { calories: 290, protein: '4g', carbs: '44g', fat: '12g' }
+  },
+  {
+    id: 'rec-56',
+    name: 'Crispy Buffalo Chicken Wings',
+    description: 'Golden, extra-crispy fried chicken wings drenched in tangy, buttery Louisiana cayenne pepper hot sauce, served with celery and blue cheese dip.',
+    image_url: 'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'American',
+    category: 'Fast Food',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Chicken Wings (split into flats & drumettes)', quantity: '800g', isOptional: false },
+      { name: 'Baking Powder (aluminum free)', quantity: '1 tbsp', isOptional: false },
+      { name: 'Louisiana Cayenne Hot Sauce (Frank’s RedHot)', quantity: '1/2 cup', isOptional: false },
+      { name: 'Melted Butter', quantity: '4 tbsp', isOptional: false },
+      { name: 'Garlic Powder & Salt', quantity: '1 tsp each', isOptional: false },
+      { name: 'Blue Cheese Dressing & Celery Sticks', quantity: 'For serving', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Pat wings bone-dry with paper towels. Toss with aluminum-free baking powder, garlic powder, and salt.' },
+      { step: 2, text: 'Bake at 425°F (220°C) on a wire rack set over a baking sheet for 45 minutes, flipping halfway, until skin is crackly crisp.' },
+      { step: 3, text: 'Whisk hot sauce and melted butter together in a large mixing bowl until smooth and glossy.' },
+      { step: 4, text: 'Transfer piping hot crispy wings directly into the buffalo sauce.' },
+      { step: 5, text: 'Toss wings vigorously until thoroughly coated.' },
+      { step: 6, text: 'Plate immediately alongside chilled celery sticks and thick blue cheese dipping sauce.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '45 mins',
+    total_time: '60 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.9,
+    tips: ['Tossing dry wings in baking powder raises the skin pH, creating micro-bubbles that yield incredible crunch without deep frying.'],
+    nutrition: { calories: 480, protein: '36g', carbs: '2g', fat: '36g' }
+  },
+  {
+    id: 'rec-57',
+    name: 'Indo-Chinese Sweet Corn Vegetable Soup',
+    description: 'Comforting, silky soup made with sweet creamed corn kernels, crunchy finely diced carrots, beans, and seasoned with white pepper and sesame oil.',
+    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Indo-Chinese',
+    category: 'Soups',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Cream Style Sweet Corn (or blended corn)', quantity: '1 cup', isOptional: false },
+      { name: 'Whole Sweet Corn Kernels', quantity: '1/2 cup', isOptional: false },
+      { name: 'Finely Chopped Carrots & French Beans', quantity: '1/2 cup combined', isOptional: false },
+      { name: 'Vegetable Broth', quantity: '3 cups', isOptional: false },
+      { name: 'Cornstarch Slurry', quantity: '2 tbsp cornstarch in 3 tbsp water', isOptional: false },
+      { name: 'Cracked White Pepper & Sugar', quantity: '1/2 tsp each', isOptional: false },
+      { name: 'Spring Onion Greens', quantity: '2 tbsp sliced', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Bring vegetable broth to a simmer in a saucepan.' },
+      { step: 2, text: 'Add creamed corn and whole corn kernels. Simmer for 3 minutes.' },
+      { step: 3, text: 'Add finely diced carrots, beans, salt, sugar, and white pepper.' },
+      { step: 4, text: 'Stir in cornstarch slurry and cook on medium heat for 2 minutes until soup turns translucent and glossy.' },
+      { step: 5, text: 'Drizzle a drop of toasted sesame oil for aroma.' },
+      { step: 6, text: 'Garnish with freshly cut spring onion greens and serve hot with chili vinegar.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '10 mins',
+    total_time: '20 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.7,
+    tips: ['Using a mix of creamed corn and whole kernels gives both velvety body and pleasant crunch.'],
+    nutrition: { calories: 140, protein: '3g', carbs: '28g', fat: '2g' }
+  },
+  {
+    id: 'rec-58',
+    name: 'Classic Italian Minestrone Soup',
+    description: 'Hearty Tuscan vegetable soup brimming with zucchini, tomatoes, cannellini beans, ditalini pasta, and finished with fragrant basil pesto.',
+    image_url: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Italian',
+    category: 'Soups',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Cannellini White Beans (cooked)', quantity: '1 can (400g)', isOptional: false },
+      { name: 'Diced Zucchini, Carrots, Celery', quantity: '1 cup each', isOptional: false },
+      { name: 'Crushed San Marzano Tomatoes', quantity: '1.5 cups', isOptional: false },
+      { name: 'Small Pasta (Ditalini or Shells)', quantity: '1/2 cup', isOptional: false },
+      { name: 'Vegetable Stock', quantity: '4 cups', isOptional: false },
+      { name: 'Parmesan Rind & Basil Pesto', quantity: '1 rind, 2 tbsp pesto', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Heat olive oil in a heavy pot. Sauté diced carrots, celery, and onions for 5 minutes.' },
+      { step: 2, text: 'Add garlic, zucchini, crushed tomatoes, vegetable stock, and parmesan rind. Bring to a boil.' },
+      { step: 3, text: 'Lower heat, cover, and simmer for 15 minutes.' },
+      { step: 4, text: 'Add cannellini beans and small pasta. Cook until pasta is al dente (about 8-10 minutes).' },
+      { step: 5, text: 'Remove parmesan rind, season with salt and freshly ground black pepper.' },
+      { step: 6, text: 'Ladle into bowls, stir in a spoonful of fresh basil pesto, and serve with toasted garlic bread.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '25 mins',
+    total_time: '40 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Simmering an authentic parmesan cheese rind in the soup adds tremendous savory umami depth.'],
+    nutrition: { calories: 240, protein: '9g', carbs: '42g', fat: '5g' }
+  },
+  {
+    id: 'rec-59',
+    name: 'Mumbai Street-Style Bhel Puri',
+    description: 'Crunchy puffed rice tossed with boiled potatoes, raw onions, roasted peanuts, tangy tamarind and spicy mint chutneys, topped with golden sev.',
+    image_url: 'https://images.unsplash.com/photo-1626777552726-4a6b54c97e46?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Street Food',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Crisp Puffed Rice (Kurmura)', quantity: '3 cups', isOptional: false },
+      { name: 'Boiled Potatoes & Kala Chana', quantity: '1/2 cup each (diced)', isOptional: false },
+      { name: 'Finely Chopped Onions & Raw Mango', quantity: '1/2 cup onions, 2 tbsp raw mango', isOptional: false },
+      { name: 'Spicy Green Mint Chutney', quantity: '2 tbsp', isOptional: false },
+      { name: 'Sweet Date-Tamarind Chutney', quantity: '3 tbsp', isOptional: false },
+      { name: 'Fine Besan Sev & Crushed Papdi', quantity: '1/2 cup sev, 6 crushed papdis', isOptional: false },
+      { name: 'Chaat Masala & Fresh Lemon', quantity: '1 tsp masala, 1 tbsp lemon juice', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Ensure puffed rice is completely crisp (dry roast for 2 minutes on low heat if soft).' },
+      { step: 2, text: 'In a large mixing bowl, combine puffed rice, crushed papdi, boiled potatoes, and diced onions.' },
+      { step: 3, text: 'Add green chili chutney, sweet date-tamarind chutney, and tangy raw mango pieces.' },
+      { step: 4, text: 'Sprinkle chaat masala, black salt, and a squeeze of fresh lemon juice.' },
+      { step: 5, text: 'Toss vigorously with a spoon for 15 seconds until evenly mixed.' },
+      { step: 6, text: 'Shower generously with fine besan sev and fresh cilantro, and serve instantly before it loses crunch.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '0 mins',
+    total_time: '10 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.8,
+    tips: ['Assemble and eat immediately; bhel puri tastes best within 2 minutes of mixing before the chutneys soften the puffed rice.'],
+    nutrition: { calories: 260, protein: '6g', carbs: '48g', fat: '6g' }
+  },
+  {
+    id: 'rec-60',
+    name: 'Kolkata Street-Style Egg Kathi Roll',
+    description: 'Flaky pan-fried parotta layered with a crispy egg, rolled tightly around spiced sautéed onions, crunchy capsicum, green chilies, and tangy chaat lime.',
+    image_url: 'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Street Food',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Flaky Parotta or Paratha', quantity: '2 pieces', isOptional: false },
+      { name: 'Eggs (beaten)', quantity: '2 large', isOptional: false },
+      { name: 'Sliced Onions & Green Chilies', quantity: '1 onion, 2 chilies sliced', isOptional: false },
+      { name: 'Chaat Masala & Lemon Juice', quantity: '1 tsp each', isOptional: false },
+      { name: 'Kasundi (Bengali Mustard) or Green Chutney', quantity: '2 tbsp', isOptional: true },
+      { name: 'Tomato Ketchup & Oil', quantity: '1 tbsp ketchup, 2 tbsp oil', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Heat oil on a tawa and pan-fry the paratha until golden brown on both sides.' },
+      { step: 2, text: 'Pour beaten egg directly onto hot tawa, and immediately place paratha flat over the uncooked egg.' },
+      { step: 3, text: 'Press gently so the egg bonds securely with the paratha. Flip and cook for 1 minute until egg is cooked and golden.' },
+      { step: 4, text: 'Transfer paratha egg-side up onto butter paper or parchment.' },
+      { step: 5, text: 'Arrange seasoned onions, green chilies, green chutney, a swirl of ketchup, and a heavy dust of chaat masala down the center.' },
+      { step: 6, text: 'Squeeze fresh lemon, roll tightly into a cylinder, wrap the bottom half in paper, and serve hot.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '10 mins',
+    total_time: '20 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Pressing paratha directly into wet egg creates an inseparable savory crust identical to Kolkata street stalls.'],
+    nutrition: { calories: 370, protein: '14g', carbs: '42g', fat: '17g' }
+  },
+  {
+    id: 'rec-61',
+    name: 'Rich Saffron & Almond Badam Milk',
+    description: 'Traditional restorative Indian drink made by blending blanched almonds with warm whole milk, Kashmiri saffron, crushed green cardamom, and pistachios.',
+    image_url: 'https://images.unsplash.com/photo-1546173159-315724a31696?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Beverages',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Whole Almonds (Badam, blanched & peeled)', quantity: '25-30 almonds', isOptional: false },
+      { name: 'Full Cream Whole Milk', quantity: '3 cups', isOptional: false },
+      { name: 'Kashmiri Saffron Strands', quantity: '15-20 strands', isOptional: false },
+      { name: 'Green Cardamom Powder', quantity: '1/2 tsp', isOptional: false },
+      { name: 'Sugar', quantity: '3 tbsp', isOptional: false },
+      { name: 'Slivered Pistachios & Almonds', quantity: '2 tbsp for garnish', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'Soak almonds in boiling water for 20 minutes. Peel off skins easily.' },
+      { step: 2, text: 'Blend peeled almonds with 1/4 cup warm milk into a fine, smooth almond paste.' },
+      { step: 3, text: 'Soak saffron strands in 2 tablespoons warm milk for 10 minutes to release royal golden color.' },
+      { step: 4, text: 'Bring remaining milk to a boil in a heavy pot. Add almond paste and sugar, stirring constantly to prevent sticking.' },
+      { step: 5, text: 'Simmer on low heat for 5 minutes. Stir in saffron infused milk and cardamom powder.' },
+      { step: 6, text: 'Pour into glasses, garnish with slivered pistachios, and serve piping warm or chilled.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '10 mins',
+    total_time: '25 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Fine almond paste lends a naturally thick, velvety texture without needing any artificial thickeners.'],
+    nutrition: { calories: 260, protein: '9g', carbs: '26g', fat: '14g' }
+  },
+  {
+    id: 'rec-62',
+    name: 'South Indian Degree Filter Coffee',
+    description: 'Rich, frothy, aromatic South Indian coffee brewed from freshly ground chicory-coffee beans in a traditional brass filter, mixed with boiling frothy milk.',
+    image_url: 'https://images.unsplash.com/photo-1576092768241-dec231879fc3?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'South Indian',
+    category: 'Beverages',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'South Indian Filter Coffee Powder (80:20 Coffee-Chicory)', quantity: '3 tbsp', isOptional: false },
+      { name: 'Boiling Hot Water', quantity: '3/4 cup', isOptional: false },
+      { name: 'Full Cream Milk (boiled hot)', quantity: '1.5 cups', isOptional: false },
+      { name: 'Sugar', quantity: '2-3 tsp', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Place coffee powder into upper chamber of a traditional brass filter. Press down lightly with the umbrella plunger.' },
+      { step: 2, text: 'Pour boiling water over the plunger and close lid. Allow decoction to drip slowly into bottom container for 15 minutes.' },
+      { step: 3, text: 'In a davarah (tumbler), add 2-3 tablespoons of thick first-press coffee decoction and sugar.' },
+      { step: 4, text: 'Pour in scalding hot, un-diluted boiled whole milk.' },
+      { step: 5, text: 'Aerate coffee by pouring back and forth between tumbler and davarah in long rhythmic strokes from a height to create thick frothy crema.' },
+      { step: 6, text: 'Serve immediately steaming hot in the brass davarah set.' }
+    ],
+    preparation_time: '5 mins',
+    cooking_time: '15 mins',
+    total_time: '20 mins',
+    difficulty: 'Easy',
+    servings: 2,
+    rating: 4.9,
+    tips: ['Pouring from a height between the tumbler and davarah aerates the milk and creates that signature thick coffee foam.'],
+    nutrition: { calories: 120, protein: '5g', carbs: '14g', fat: '5g' }
+  },
+  {
+    id: 'rec-63',
+    name: 'Cheesy Garlic Bread with Herbs',
+    description: 'Crispy toasted baguette halves brushed with roasted garlic butter, parsley, and smothered in melted stretchy mozzarella cheese.',
+    image_url: 'https://images.unsplash.com/photo-1572695157366-5e585ab2b69f?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Italian',
+    category: 'Appetizers',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'French Baguette or Italian Bread', quantity: '1 large loaf (sliced lengthwise)', isOptional: false },
+      { name: 'Butter (softened)', quantity: '4 tbsp', isOptional: false },
+      { name: 'Fresh Garlic (minced fine)', quantity: '6 cloves', isOptional: false },
+      { name: 'Shredded Mozzarella Cheese', quantity: '1.5 cups', isOptional: false },
+      { name: 'Fresh Parsley & Italian Oregano', quantity: '2 tbsp parsley, 1 tsp oregano', isOptional: false },
+      { name: 'Red Pepper Flakes', quantity: '1/2 tsp', isOptional: true }
+    ],
+    instructions: [
+      { step: 1, text: 'In a bowl, mash softened butter with minced garlic, parsley, oregano, and pinch of salt into a fragrant spread.' },
+      { step: 2, text: 'Spread garlic butter generously across cut sides of the bread loaf.' },
+      { step: 3, text: 'Cover liberally with shredded mozzarella cheese.' },
+      { step: 4, text: 'Bake in preheated oven at 400°F (200°C) for 10-12 minutes until bread is crispy and cheese is completely melted.' },
+      { step: 5, text: 'Broil on high for 1-2 minutes until cheese develops golden toasted bubbles.' },
+      { step: 6, text: 'Sprinkle red pepper flakes, cut into thick diagonal slices, and pull apart while piping hot.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '12 mins',
+    total_time: '22 mins',
+    difficulty: 'Easy',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Broiling for the final 60 seconds toasts the cheese and creates that irresistible golden pizzeria aroma.'],
+    nutrition: { calories: 310, protein: '11g', carbs: '32g', fat: '16g' }
+  },
+  {
+    id: 'rec-64',
+    name: 'Continental Garlic Butter Sautéed Prawns',
+    description: 'Plump succulent king prawns seared in foaming garlic butter, white wine reduction, red chili flakes, and finished with fresh parsley and lemon.',
+    image_url: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'Continental',
+    category: 'Appetizers',
+    food_type: 'NON-VEGETARIAN',
+    ingredients: [
+      { name: 'Large King Prawns (peeled & deveined)', quantity: '400g', isOptional: false },
+      { name: 'Salted Butter', quantity: '3 tbsp', isOptional: false },
+      { name: 'Garlic Cloves (thinly sliced)', quantity: '6 cloves', isOptional: false },
+      { name: 'Olive Oil', quantity: '1 tbsp', isOptional: false },
+      { name: 'Red Chili Flakes & Lemon Juice', quantity: '1 tsp chili flakes, 1 tbsp lemon juice', isOptional: false },
+      { name: 'Fresh Italian Parsley', quantity: '3 tbsp finely chopped', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Pat peeled prawns dry with paper towels. Season with sea salt and black pepper.' },
+      { step: 2, text: 'Heat olive oil and 1 tbsp butter in a wide stainless steel skillet over medium-high heat.' },
+      { step: 3, text: 'Arrange prawns in a single layer. Sear for 1.5 to 2 minutes without moving until pink and curled.' },
+      { step: 4, text: 'Flip prawns. Add remaining butter, sliced garlic, and red chili flakes.' },
+      { step: 5, text: 'Baste prawns with the sizzling garlic butter for 1-2 minutes until cooked through.' },
+      { step: 6, text: 'Remove from heat immediately, squeeze fresh lemon juice, toss in fresh parsley, and serve with crusty bread.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '6 mins',
+    total_time: '16 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.9,
+    tips: ['Do not overcook prawns; 3 to 4 minutes total cooking time ensures they remain juicy and tender.'],
+    nutrition: { calories: 260, protein: '28g', carbs: '3g', fat: '15g' }
+  },
+  {
+    id: 'rec-65',
+    name: 'Royal Awadhi Shahi Tukda',
+    description: 'Crispy ghee-fried bread triangles soaked in fragrant saffron sugar syrup, topped with rich condensed rabdi and slivered dry fruits.',
+    image_url: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Desserts',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'White Bread Slices (crusts removed, cut in triangles)', quantity: '4 slices', isOptional: false },
+      { name: 'Desi Ghee for shallow frying', quantity: '1/2 cup', isOptional: false },
+      { name: 'Full Cream Milk (reduced into Rabdi)', quantity: '3 cups', isOptional: false },
+      { name: 'Sugar', quantity: '1 cup for syrup + 3 tbsp for rabdi', isOptional: false },
+      { name: 'Cardamom Pods & Kashmiri Saffron', quantity: '4 pods crushed, pinch saffron', isOptional: false },
+      { name: 'Slivered Almonds & Pistachios', quantity: '3 tbsp combined', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'Boil milk in a broad pan until reduced to half. Add 3 tbsp sugar, saffron, and cardamom to make thick rabdi. Cool.' },
+      { step: 2, text: 'Boil 1 cup sugar and 1 cup water with cardamom for 5 minutes to make a sticky sugar syrup.' },
+      { step: 3, text: 'Heat ghee in a skillet. Shallow fry bread triangles on medium heat until golden brown and super crisp. Drain.' },
+      { step: 4, text: 'Dip hot fried bread triangles into warm sugar syrup for 30 seconds per side. Remove and arrange on a serving platter.' },
+      { step: 5, text: 'Pour chilled thick saffron rabdi generously over the sweet crisp bread.' },
+      { step: 6, text: 'Garnish with slivered almonds, pistachios, and optional silver vark. Serve warm or chilled.' }
+    ],
+    preparation_time: '15 mins',
+    cooking_time: '25 mins',
+    total_time: '40 mins',
+    difficulty: 'Medium',
+    servings: 4,
+    rating: 4.8,
+    tips: ['Frying bread in pure ghee until deep golden makes it stay crunchy even after absorbing syrup and rabdi.'],
+    nutrition: { calories: 390, protein: '8g', carbs: '54g', fat: '17g' }
+  },
+  {
+    id: 'rec-66',
+    name: 'Crispy Onion Pakoda (Kanda Bhajiya)',
+    description: 'Thinly sliced red onions coated in a spiced gram flour and carom seed batter, fried until delightfully crunchy, golden brown, and fragrant.',
+    image_url: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80',
+    cuisine: 'North Indian',
+    category: 'Snacks',
+    food_type: 'VEGETARIAN',
+    ingredients: [
+      { name: 'Red Onions (thinly sliced)', quantity: '3 large', isOptional: false },
+      { name: 'Besan (Gram Flour)', quantity: '1 cup', isOptional: false },
+      { name: 'Rice Flour (for extra crunch)', quantity: '2 tbsp', isOptional: false },
+      { name: 'Ajwain (Carom Seeds) & Cumin', quantity: '1/2 tsp each', isOptional: false },
+      { name: 'Green Chilies & Fresh Coriander', quantity: '2 chilies chopped, 2 tbsp coriander', isOptional: false },
+      { name: 'Turmeric & Kashmiri Chili Powder', quantity: '1/2 tsp each', isOptional: false },
+      { name: 'Oil for deep frying', quantity: '2 cups', isOptional: false }
+    ],
+    instructions: [
+      { step: 1, text: 'In a bowl, toss thinly sliced onions with salt, green chilies, and coriander. Squeeze firmly with fingers to release onion juices (rest 5 mins).' },
+      { step: 2, text: 'Add ajwain, turmeric, chili powder, rice flour, and besan. Mix without adding extra water; onion moisture is sufficient.' },
+      { step: 3, text: 'Add 1 tablespoon of smoking hot oil from frying pan into batter for extra crispness.' },
+      { step: 4, text: 'Heat oil on medium-high. Drop loose uneven clumps of onion batter into hot oil.' },
+      { step: 5, text: 'Fry for 4-5 minutes, turning occasionally until golden brown and crispy.' },
+      { step: 6, text: 'Drain on paper towels, sprinkle with chaat masala, and serve with hot ginger chai.' }
+    ],
+    preparation_time: '10 mins',
+    cooking_time: '12 mins',
+    total_time: '22 mins',
+    difficulty: 'Easy',
+    servings: 3,
+    rating: 4.8,
+    tips: ['Never add water to the pakoda batter; using only the moisture released by salted onions creates the crispiest bhajiyas.'],
+    nutrition: { calories: 240, protein: '7g', carbs: '32g', fat: '10g' }
   }
 ];
+
