@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic } from 'lucide-react';
+import { Mic, Volume2 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface VoiceMicButtonProps {
-  onTranscript: (text: string) => void;
+  onTranscript: (text: string, isFinal?: boolean) => void;
   className?: string;
   size?: 'sm' | 'md' | 'lg';
   autoSubmit?: boolean;
@@ -13,11 +13,15 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
   onTranscript,
   className = '',
   size = 'md',
+  autoSubmit = true,
 }) => {
   const { language, t } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
+  const [liveTranscript, setLiveTranscript] = useState('');
   const recognitionRef = useRef<any>(null);
+  const silenceTimerRef = useRef<any>(null);
+  const finalAccumulatedRef = useRef<string>('');
 
   useEffect(() => {
     const SpeechRecognition =
@@ -25,9 +29,21 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
     if (!SpeechRecognition) {
       setIsSupported(false);
     }
+
+    return () => {
+      stopListening();
+    };
   }, []);
 
+  const clearSilenceTimer = () => {
+    if (silenceTimerRef.current) {
+      clearTimeout(silenceTimerRef.current);
+      silenceTimerRef.current = null;
+    }
+  };
+
   const stopListening = () => {
+    clearSilenceTimer();
     if (recognitionRef.current) {
       try {
         recognitionRef.current.stop();
@@ -51,8 +67,10 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
     try {
       const recognition = new SpeechRecognition();
       recognitionRef.current = recognition;
+      finalAccumulatedRef.current = '';
+      setLiveTranscript('');
 
-      // Set language according to active app language
+      // Language selection based on active app language
       if (language === 'te') {
         recognition.lang = 'te-IN'; // Telugu (India)
       } else if (language === 'hi') {
@@ -61,8 +79,8 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
         recognition.lang = 'en-IN'; // Indian English
       }
 
-      recognition.continuous = false;
-      recognition.interimResults = false;
+      recognition.continuous = true;
+      recognition.interimResults = true;
       recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
@@ -70,24 +88,50 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
       };
 
       recognition.onresult = (event: any) => {
-        if (event.results && event.results[0] && event.results[0][0]) {
-          const spokenText = event.results[0][0].transcript;
-          if (spokenText && spokenText.trim()) {
-            onTranscript(spokenText.trim());
+        let interim = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          const transcriptChunk = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalAccumulatedRef.current += (finalAccumulatedRef.current ? ', ' : '') + transcriptChunk.trim();
+          } else {
+            interim += transcriptChunk;
           }
         }
-        setIsListening(false);
+
+        const currentFull = (finalAccumulatedRef.current ? finalAccumulatedRef.current + (interim ? ', ' + interim : '') : interim).trim();
+
+        if (currentFull) {
+          setLiveTranscript(currentFull);
+          // Stream live items so input notes them down in real-time
+          onTranscript(currentFull, false);
+        }
+
+        // Reset silence timer on each spoken fragment (1.8s of silence triggers final submission)
+        clearSilenceTimer();
+        silenceTimerRef.current = setTimeout(() => {
+          const finalResult = (finalAccumulatedRef.current || currentFull).trim();
+          if (finalResult) {
+            onTranscript(finalResult, true);
+          }
+          stopListening();
+        }, 1800);
       };
 
       recognition.onerror = (event: any) => {
         console.warn('Speech recognition error:', event.error);
-        setIsListening(false);
         if (event.error === 'not-allowed') {
           alert(t.micPermissionDenied);
+        }
+        if (event.error !== 'no-speech') {
+          stopListening();
         }
       };
 
       recognition.onend = () => {
+        const finalResult = (finalAccumulatedRef.current || liveTranscript).trim();
+        if (finalResult && autoSubmit) {
+          onTranscript(finalResult, true);
+        }
         setIsListening(false);
       };
 
@@ -102,6 +146,10 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
     e.preventDefault();
     e.stopPropagation();
     if (isListening) {
+      const finalResult = (finalAccumulatedRef.current || liveTranscript).trim();
+      if (finalResult) {
+        onTranscript(finalResult, true);
+      }
       stopListening();
     } else {
       startListening();
@@ -113,39 +161,49 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
   }
 
   const sizeClasses = {
-    sm: 'p-1.5 text-xs',
+    sm: 'p-2 text-xs',
     md: 'p-2.5 text-sm',
     lg: 'p-3.5 text-base',
   }[size];
 
   const iconSizes = {
-    sm: 'w-3.5 h-3.5',
+    sm: 'w-4 h-4',
     md: 'w-4 h-4',
     lg: 'w-5 h-5',
   }[size];
 
   return (
-    <button
-      type="button"
-      onClick={toggleListen}
-      title={isListening ? t.micListening : t.micClickToSpeak}
-      aria-label={isListening ? 'Stop voice listening' : 'Start voice input'}
-      className={`relative rounded-xl font-bold transition-all flex items-center justify-center ${sizeClasses} ${
-        isListening
-          ? 'bg-rose-500 text-white ring-4 ring-rose-300 animate-pulse shadow-lg shadow-rose-500/30'
-          : 'bg-stone-100 hover:bg-orange-100 text-stone-600 hover:text-orange-600 border border-stone-200 hover:border-orange-300'
-      } ${className}`}
-    >
-      {isListening ? (
-        <span className="flex items-center gap-1.5">
-          <Mic className={`${iconSizes} animate-bounce`} />
-          <span className="hidden sm:inline text-xs font-black tracking-wide">
-            {language === 'te' ? 'వింటున్నాను...' : language === 'hi' ? 'सुन रहे हैं...' : 'Listening...'}
+    <div className="relative inline-flex items-center">
+      <button
+        type="button"
+        onClick={toggleListen}
+        title={isListening ? t.micListening : t.micClickToSpeak}
+        aria-label={isListening ? 'Stop voice listening' : 'Start voice input'}
+        className={`relative rounded-xl font-bold transition-all flex items-center justify-center cursor-pointer ${sizeClasses} ${
+          isListening
+            ? 'bg-rose-600 text-white ring-4 ring-rose-400/50 animate-pulse shadow-lg shadow-rose-600/30'
+            : 'bg-orange-50 hover:bg-orange-100 text-orange-700 border border-orange-200 hover:border-orange-300'
+        } ${className}`}
+      >
+        {isListening ? (
+          <span className="flex items-center gap-1.5">
+            <Volume2 className={`${iconSizes} animate-bounce`} />
+            <span className="text-xs font-black tracking-wide">
+              {language === 'te' ? 'వింటున్నాను...' : language === 'hi' ? 'सुन रहा हूँ...' : 'Listening...'}
+            </span>
           </span>
-        </span>
-      ) : (
-        <Mic className={iconSizes} />
+        ) : (
+          <Mic className={iconSizes} />
+        )}
+      </button>
+
+      {/* Floating Live Speech Feedback Pill while speaking */}
+      {isListening && liveTranscript && (
+        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-50 px-3 py-1.5 rounded-xl bg-stone-900/95 text-white text-xs font-medium whitespace-nowrap shadow-xl border border-stone-700 animate-fade-in flex items-center gap-1.5 pointer-events-none">
+          <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+          <span>{liveTranscript}</span>
+        </div>
       )}
-    </button>
+    </div>
   );
 };

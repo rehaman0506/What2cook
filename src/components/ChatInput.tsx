@@ -74,11 +74,13 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     onSendMessage(question);
   };
 
-  const handleVoiceTranscript = (spokenText: string) => {
+  const handleVoiceTranscript = (spokenText: string, isFinal?: boolean) => {
     if (!spokenText.trim()) return;
     setInput(spokenText);
-    // Auto-send voice input for a magical hands-free experience!
-    onSendMessage(spokenText.trim());
+    if (isFinal) {
+      onSendMessage(spokenText.trim());
+      setInput('');
+    }
   };
 
   const rawSuggestions = MULTILINGUAL_SUGGESTIONS[language] || MULTILINGUAL_SUGGESTIONS.en;

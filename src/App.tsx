@@ -105,7 +105,7 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-stone-50 font-sans text-stone-900 selection:bg-orange-500 selection:text-white">
+    <div className="min-h-screen flex flex-col kitchen-theme-bg font-sans text-stone-900 selection:bg-orange-500 selection:text-white">
       {/* Top Fixed Header / Navigation */}
       <Navbar
         activeTab={activeTab}

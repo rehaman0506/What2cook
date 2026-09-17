@@ -82,7 +82,7 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
     setIsLoading(true);
 
     try {
-      const result = await generateRecipeFromAI(trimmed, dietaryFilter);
+      const result = await generateRecipeFromAI(trimmed, dietaryFilter, language);
 
       const chefMessage: ChatMessageType = {
         id: `chef-${Date.now()}`,

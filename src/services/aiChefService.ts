@@ -1,3 +1,13 @@
+
+/**
+ * Detects whether prompt is in Telugu, Hindi, or defaults to fallback language.
+ */
+export function detectLanguage(prompt: string, fallback: 'en' | 'te' | 'hi' = 'en'): 'en' | 'te' | 'hi' {
+  if (/[\u0C00-\u0C7F]/.test(prompt)) return 'te'; // Telugu unicode block
+  if (/[\u0900-\u097F]/.test(prompt)) return 'hi'; // Hindi Devanagari unicode block
+  return fallback;
+}
+
 import { Recipe } from '../types';
 import { SAMPLE_RECIPES } from '../data/sampleRecipes';
 
@@ -355,169 +365,291 @@ function capitalizeWords(str: string): string {
  * directly to the user's provided ingredients.
  * Guarantees strict vegetarian compliance when isStrictlyVegetarian is true.
  */
-export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
+export function synthesizeDynamicRecipe(intent: UserIntent, lang: 'en' | 'te' | 'hi' = 'en'): AIChefResponse {
   const { foundIngredients, isStrictlyVegetarian } = intent;
 
   const hasRice = foundIngredients.includes('rice') || foundIngredients.includes('basmati rice');
   const hasSpinach = foundIngredients.includes('spinach');
   const hasTomato = foundIngredients.includes('tomato');
   const hasPotato = foundIngredients.includes('potato');
-  const hasOnion = foundIngredients.includes('onion');
   const hasPaneer = foundIngredients.includes('paneer');
   const hasChicken = foundIngredients.includes('chicken');
-  const hasFish = foundIngredients.includes('fish');
-  const hasPasta = foundIngredients.includes('pasta') || foundIngredients.includes('penne');
-
   const userItemsFormatted = foundIngredients.map(capitalizeWords);
   const now = Date.now();
+
+  // Helper for Telugu/Hindi user ingredients list
+  const localizedUserItems = userItemsFormatted.map(item => {
+    const lower = item.toLowerCase();
+    if (lang === 'te') {
+      if (lower === 'spinach') return 'పాలకూర (Spinach)';
+      if (lower === 'rice') return 'బియ్యం (Rice)';
+      if (lower === 'tomato') return 'టమాటా (Tomato)';
+      if (lower === 'potato') return 'బంగాళాదుంప (Potato)';
+      if (lower === 'onion') return 'ఉల్లిపాయ (Onion)';
+      if (lower === 'paneer') return 'పనీర్ (Paneer)';
+      if (lower === 'chicken') return 'చికెన్ (Chicken)';
+      if (lower === 'fish') return 'చేప (Fish)';
+    } else if (lang === 'hi') {
+      if (lower === 'spinach') return 'पालक (Spinach)';
+      if (lower === 'rice') return 'चावल (Rice)';
+      if (lower === 'tomato') return 'टमाटर (Tomato)';
+      if (lower === 'potato') return 'आलू (Potato)';
+      if (lower === 'onion') return 'प्याज (Onion)';
+      if (lower === 'paneer') return 'पनीर (Paneer)';
+      if (lower === 'chicken') return 'चिकन (Chicken)';
+      if (lower === 'fish') return 'मछली (Fish)';
+    }
+    return item;
+  });
 
   // -------------------------------------------------------------------------
   // CASE A: Spinach + Rice (+ Tomato / other veggies) -> 100% VEGETARIAN Pulao
   // -------------------------------------------------------------------------
   if (hasRice && hasSpinach && isStrictlyVegetarian) {
-    const dishTitle = hasTomato 
-      ? 'Homestyle Spiced Spinach & Tomato Pulao (Palak Tamatar Rice)'
-      : 'Fragrant Garlic Spinach Rice (Palak Pulao)';
+    let dishTitle = 'Homestyle Spiced Spinach & Tomato Pulao (Palak Tamatar Rice)';
+    let description = 'A fragrant, nutritious one-pot spiced rice dish infused with fresh tender spinach leaves, tangy juicy tomatoes, cumin seeds, and aromatic spices.';
+    let intro = `I have designed a 100% vegetarian **${dishTitle}** highlighting your **${userItemsFormatted.join(', ')}**! It is healthy, quick to make in 30 minutes, and completely free of any meat or non-vegetarian ingredients.`;
 
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description: `A fragrant, nutritious one-pot spiced rice dish infused with fresh tender spinach leaves${hasTomato ? ', tangy juicy tomatoes,' : ''} cumin seeds, and aromatic whole spices.`,
-      image_url: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Indian',
-      category: 'Rice Dishes',
-      food_type: 'VEGETARIAN',
-      ingredients: [
-        { name: 'Basmati Rice', quantity: '1.5 cups (rinsed & soaked 20 mins)', isOptional: false },
-        { name: 'Fresh Spinach (Palak)', quantity: '2 cups (washed & roughly chopped)', isOptional: false },
-        ...(hasTomato ? [{ name: 'Ripe Tomatoes', quantity: '2 medium (finely diced)', isOptional: false }] : []),
-        ...(hasOnion ? [{ name: 'Onion', quantity: '1 medium (thinly sliced)', isOptional: false }] : []),
-        ...(hasPaneer ? [{ name: 'Paneer (Cottage Cheese)', quantity: '150g (cubed & lightly toasted)', isOptional: false }] : []),
-        { name: 'Cooking Oil or Desi Ghee', quantity: '2 tbsp', isOptional: false }
-      ],
-      instructions: [
-        { step: 1, text: 'Rinse basmati rice until water runs clear, then soak in water for 20 minutes and drain completely.' },
-        { step: 2, text: 'Heat oil or ghee in a heavy-bottomed pot or pressure cooker. Sputter cumin seeds and add sliced onions (if using), cooking until translucent.' },
-        { step: 3, text: hasTomato ? 'Add diced tomatoes, turmeric powder, and salt. Sauté for 3-4 minutes on medium heat until tomatoes turn soft and pulpy.' : 'Add minced garlic and a green chili, sautéing for 1 minute until fragrant.' },
-        { step: 4, text: 'Add the chopped fresh spinach leaves. Sauté gently for 1-2 minutes until just wilted (do not overcook to preserve bright green vitamins).' },
-        { step: 5, text: 'Add the drained basmati rice and gently toss for 1 minute to coat grains with the fragrant aromatics. Pour in 3 cups of water and garam masala.' },
-        { step: 6, text: 'Bring to a rolling boil, cover tightly, and simmer on low heat for 12-14 minutes until all liquid is absorbed. Rest for 5 minutes, fluff gently with a fork, and serve hot with raita.' }
-      ],
-      preparation_time: '10 mins',
-      cooking_time: '20 mins',
-      total_time: '30 mins',
-      difficulty: 'Easy',
-      servings: 3,
-      rating: 4.9,
-      tips: [
-        'Adding spinach just before pouring water prevents discoloration and keeps the rice vibrant green.',
-        'Use a 1:2 ratio of soaked rice to water for long, fluffy, separate grains.'
-      ],
-      nutrition: { calories: 310, protein: '8g', carbs: '56g', fat: '6g' }
-    };
+    let ingredients = [
+      { name: 'Basmati Rice', quantity: '1.5 cups (rinsed & soaked 20 mins)', isOptional: false },
+      { name: 'Fresh Spinach (Palak)', quantity: '2 cups (washed & roughly chopped)', isOptional: false },
+      { name: 'Ripe Tomatoes', quantity: '2 medium (finely diced)', isOptional: false },
+      { name: 'Cooking Oil or Desi Ghee', quantity: '2 tbsp', isOptional: false },
+      { name: 'Cumin seeds (Jeera)', quantity: '1 tsp', isOptional: false },
+      { name: 'Turmeric & Garam Masala', quantity: '1/2 tsp each', isOptional: false }
+    ];
 
-    const additionalIngredients = [
+    let instructions = [
+      { step: 1, text: 'Rinse basmati rice until water runs clear, soak in water for 20 minutes, then drain completely.' },
+      { step: 2, text: 'Heat oil or ghee in a heavy pot or pressure cooker. Sputter cumin seeds and add sliced onions (if available) until translucent.' },
+      { step: 3, text: 'Add diced tomatoes, turmeric powder, and salt. Sauté for 3-4 minutes on medium heat until tomatoes turn soft and pulpy.' },
+      { step: 4, text: 'Add chopped fresh spinach leaves. Sauté gently for 1-2 minutes until just wilted.' },
+      { step: 5, text: 'Add drained basmati rice, pour in 3 cups of water and garam masala. Bring to a rolling boil.' },
+      { step: 6, text: 'Cover tightly and simmer on low heat for 12-14 minutes until water is absorbed. Rest 5 minutes, fluff, and serve hot.' }
+    ];
+
+    let tips = [
+      'Adding spinach just before pouring water prevents discoloration and keeps the rice vibrant green.',
+      'Use a 1:2 ratio of soaked rice to water for fluffy, separate grains.'
+    ];
+
+    let additionalIngredients = [
       'Cumin seeds (Jeera) - 1 tsp',
       'Turmeric powder - 1/2 tsp',
       'Garam Masala - 1/2 tsp',
-      'Salt to taste',
-      'Water (3 cups for cooking)'
+      'Salt to taste'
     ];
 
-    return {
-      recipe,
-      userIngredients: userItemsFormatted,
-      additionalIngredients,
-      conversationalIntro: `I have designed a 100% vegetarian **${dishTitle}** highlighting your **${userItemsFormatted.join(', ')}**! It is healthy, quick to make in 30 minutes, and completely free of any meat or non-vegetarian ingredients.`
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // CASE B: Potato + Onion + Tomato -> 100% VEGETARIAN Aloo Pyaaz Tamatar Sabzi
-  // -------------------------------------------------------------------------
-  if (hasPotato && hasTomato && isStrictlyVegetarian) {
-    const dishTitle = 'Homestyle Spiced Aloo Tamatar Curry';
+    if (lang === 'te') {
+      dishTitle = 'ఘుమఘుమలాడే పాలకూర & టమాటా పులావ్ (Palak Tamatar Rice)';
+      description = 'తాజా పాలకూర, పండిన టమాటాలు, బాస్మతి బియ్యం మరియు సుగంధ ద్రవ్యాలతో సులభంగా తయారుచేసే రుచికరమైన 100% శాకాహార పులావ్.';
+      intro = `నమస్కారం! మీరు చెప్పిన పాలకూర, బియ్యం, టమాటాతో 100% స్వచ్ఛమైన శాకాహార **${dishTitle}** తయారుచేశాను! ఇది 30 నిమిషాల్లో తయారవుతుంది, పూర్తిగా మాంసాహార రహితం.`;
+      ingredients = [
+        { name: 'బాస్మతి బియ్యం (Basmati Rice)', quantity: '1.5 కప్పులు (కడిగి 20 నిమిషాలు నానబెట్టినవి)', isOptional: false },
+        { name: 'తాజా పాలకూర (Spinach)', quantity: '2 కప్పులు (శుభ్రం చేసి తరిగినవి)', isOptional: false },
+        { name: 'పండిన టమాటాలు (Tomatoes)', quantity: '2 (సన్నగా తరిగిన ముక్కలు)', isOptional: false },
+        { name: 'నెయ్యి లేదా నూనె (Ghee/Oil)', quantity: '2 టేబుల్ స్పూన్లు', isOptional: false },
+        { name: 'జీలకర్ర (Jeera)', quantity: '1 స్పూన్', isOptional: false },
+        { name: 'పసుపు & గరం మసాలా', quantity: 'తగినంత', isOptional: false }
+      ];
+      instructions = [
+        { step: 1, text: 'బాస్మతి బియ్యాన్ని శుభ్రంగా కడిగి 20 నిమిషాలు నానబెట్టి నీటిని వడకట్టండి.' },
+        { step: 2, text: 'కుక్కర్ లేదా బాణలిలో నెయ్యి వేడి చేసి జీలకర్ర మరియు ఉల్లిపాయ ముక్కలు వేసి వేయించండి.' },
+        { step: 3, text: 'తరిగిన టమాటాలు, పసుపు, ఉప్పు వేసి టమాటాలు మెత్తబడే వరకు 3-4 నిమిషాలు మగ్గించండి.' },
+        { step: 4, text: 'తరిగిన తాజా పాలకూర ఆకులు వేసి 1-2 నిమిషాలు మాత్రమే మగ్గించండి.' },
+        { step: 5, text: 'నానబెట్టిన బియ్యం వేసి కలిపి, 3 కప్పుల నీరు మరియు గరం మసాలా కలపండి.' },
+        { step: 6, text: 'మూతపెట్టి చిన్న మంటపై 12-14 నిమిషాలు ఉడికించండి. 5 నిమిషాల తర్వాత పొడిపొడిగా చేసి వేడిగా వడ్డించండి.' }
+      ];
+      tips = [
+        'పాలకూరను ఎక్కువసేపు వేయించకుండా నీరు పోసే ముందు వేస్తే పచ్చటి రంగు అలాగే ఉంటుంది.',
+        'పొడిపొడిగా రావడానికి ఒక కప్పు బియ్యానికి రెండు కప్పుల నీరు వాడండి.'
+      ];
+      additionalIngredients = [
+        'జీలకర్ర - 1 స్పూన్',
+        'పసుపు - 1/2 స్పూన్',
+        'గరం మసాలా - 1/2 స్పూన్',
+        'రుచికి తగినంత ఉప్పు'
+      ];
+    } else if (lang === 'hi') {
+      dishTitle = 'स्वादिष्ट पालक और टमाटर पुलाव (Palak Tamatar Pulao)';
+      description = 'ताजी पालक, पके टमाटर और बासमती चावल से बनी एक अत्यंत पौष्टिक और सुगंधित 100% शाकाहारी डिश।';
+      intro = `नमस्ते! आपकी सामग्री से 100% शुद्ध शाकाहारी **${dishTitle}** तैयार किया गया है! यह स्वादिष्ट और 30 मिनट में तैयार होने वाला व्यंजन है।`;
+      ingredients = [
+        { name: 'बासमती चावल (Basmati Rice)', quantity: '1.5 कप (धोकर 20 मिनट भिगोया हुआ)', isOptional: false },
+        { name: 'ताजी पालक (Spinach)', quantity: '2 कप (बारीक कटी हुई)', isOptional: false },
+        { name: 'टमाटर (Tomatoes)', quantity: '2 मध्यम (बारीक कटे हुए)', isOptional: false },
+        { name: 'घी या तेल (Ghee/Oil)', quantity: '2 बड़े चम्मच', isOptional: false },
+        { name: 'जीरा (Jeera)', quantity: '1 छोटा चम्मच', isOptional: false },
+        { name: 'हल्दी और गरम मसाला', quantity: 'आधा छोटा चम्मच', isOptional: false }
+      ];
+      instructions = [
+        { step: 1, text: 'बासमती चावल को धोकर 20 मिनट के लिए पानी में भिगो दें, फिर पानी निथार लें।' },
+        { step: 2, text: 'कुकर या कड़ाही में घी गरम करें, जीरा और प्याज डालकर सुनहरा होने तक भूनें।' },
+        { step: 3, text: 'कटे हुए टमाटर, हल्दी और नमक डालें और टमाटर के गलने तक 3-4 मिनट पकाएं।' },
+        { step: 4, text: 'ताजी कटी पालक डालें और 1-2 मिनट तक हल्का सा भूनें।' },
+        { step: 5, text: 'भीगे हुए चावल डालें, 3 कप पानी और गरम मसाला डालकर अच्छी तरह मिलाएं।' },
+        { step: 6, text: 'ढककर धीमी आंच पर 12-14 मिनट पकाएं। 5 मिनट भाप में रहने दें और गरमा-गरम परोसें।' }
+      ];
+      tips = [
+        'पालक को ज्यादा देर न पकाएं ताकि उसका प्राकृतिक हरा रंग बना रहे।',
+        'खिले-खिले चावल के लिए 1 कप चावल में 2 कप पानी का अनुपात रखें।'
+      ];
+      additionalIngredients = [
+        'जीरा - 1 चम्मच',
+        'हल्दी पाउडर - 1/2 चम्मच',
+        'गरम मसाला - 1/2 चम्मच',
+        'स्वादानुसार नमक'
+      ];
+    }
 
     const recipe: Recipe = {
       id: `ai-gen-${now}`,
       name: dishTitle,
-      description: 'A comforting, traditional North Indian everyday potato and juicy tomato curry simmered in fragrant cumin, turmeric, and warm ground spices.',
-      image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'North Indian',
-      category: 'Dinner',
+      description,
+      image_url: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80',
+      cuisine: lang === 'te' ? 'భారతీయ' : lang === 'hi' ? 'भारतीय' : 'Indian',
+      category: lang === 'te' ? 'రైస్ వంటకాలు' : lang === 'hi' ? 'चावल व्यंजन' : 'Rice Dishes',
       food_type: 'VEGETARIAN',
-      ingredients: [
-        { name: 'Potatoes (Aloo)', quantity: '3 medium (peeled and diced)', isOptional: false },
-        { name: 'Ripe Tomatoes', quantity: '3 large (finely diced or pureed)', isOptional: false },
-        ...(hasOnion ? [{ name: 'Onion', quantity: '1 large (finely chopped)', isOptional: false }] : []),
-        ...(hasSpinach ? [{ name: 'Fresh Spinach', quantity: '1.5 cups (chopped)', isOptional: false }] : []),
-        { name: 'Cooking Oil', quantity: '2 tbsp', isOptional: false }
-      ],
-      instructions: [
-        { step: 1, text: 'Heat oil in a pan. Sputter cumin seeds and add chopped onions, cooking until soft and golden.' },
-        { step: 2, text: 'Add diced tomatoes with turmeric powder, red chili powder, and salt. Cook for 5 minutes until soft and oil separates.' },
-        { step: 3, text: 'Add diced potatoes and sauté in the spiced tomato masala for 2 minutes.' },
-        { step: 4, text: 'Add 1.5 cups of warm water, bring to a gentle boil, cover, and simmer for 15 minutes until potatoes are fork-tender.' },
-        { step: 5, text: 'Crush 2-3 potato chunks with the back of your ladle to naturally thicken the gravy into a luscious consistency.' },
-        { step: 6, text: 'Sprinkle garam masala and fresh coriander. Serve hot with rotis, pooris, or steamed rice.' }
-      ],
-      preparation_time: '10 mins',
-      cooking_time: '20 mins',
-      total_time: '30 mins',
+      ingredients,
+      instructions,
+      preparation_time: lang === 'te' ? '10 నిమిషాలు' : lang === 'hi' ? '10 मिनट' : '10 mins',
+      cooking_time: lang === 'te' ? '20 నిమిషాలు' : lang === 'hi' ? '20 मिनट' : '20 mins',
+      total_time: lang === 'te' ? '30 నిమిషాలు' : lang === 'hi' ? '30 मिनट' : '30 mins',
+      difficulty: 'Easy',
+      servings: 3,
+      rating: 4.9,
+      tips,
+      nutrition: { calories: 310, protein: '8g', carbs: '56g', fat: '6g' }
+    };
+
+    return {
+      recipe,
+      userIngredients: localizedUserItems,
+      additionalIngredients,
+      conversationalIntro: intro
+    };
+  }
+
+  // -------------------------------------------------------------------------
+  // CASE B: Potato + Tomato -> 100% VEGETARIAN Aloo Tamatar Sabzi
+  // -------------------------------------------------------------------------
+  if (hasPotato && hasTomato && isStrictlyVegetarian) {
+    let dishTitle = 'Homestyle Spiced Aloo Tamatar Curry';
+    let description = 'A comforting, traditional everyday potato and tomato curry simmered in fragrant cumin, turmeric, and warm spices.';
+    let intro = `Here is a comforting, 100% vegetarian **${dishTitle}** crafted around your **${userItemsFormatted.join(', ')}**! Pure plant-rich goodness with zero non-veg ingredients.`;
+
+    let ingredients = [
+      { name: 'Potatoes (Aloo)', quantity: '3 medium (peeled and diced)', isOptional: false },
+      { name: 'Ripe Tomatoes', quantity: '3 large (finely diced)', isOptional: false },
+      { name: 'Cooking Oil', quantity: '2 tbsp', isOptional: false },
+      { name: 'Cumin seeds & Turmeric', quantity: '1 tsp each', isOptional: false }
+    ];
+
+    let instructions = [
+      { step: 1, text: 'Heat oil in a pan. Sputter cumin seeds and add chopped onions (if available) until soft.' },
+      { step: 2, text: 'Add diced tomatoes with turmeric, chili powder, and salt. Cook 5 minutes until oil separates.' },
+      { step: 3, text: 'Add diced potatoes and sauté in the spiced tomato masala for 2 minutes.' },
+      { step: 4, text: 'Add 1.5 cups of warm water, cover, and simmer for 15 minutes until potatoes are fork-tender.' },
+      { step: 5, text: 'Crush 2-3 potato chunks to naturally thicken the gravy. Garnish with fresh coriander.' }
+    ];
+
+    if (lang === 'te') {
+      dishTitle = 'హోమ్‌స్టైల్ ఆలూ టమాటా మసాలా కూర (Aloo Tamatar Curry)';
+      description = 'బంగాళాదుంపలు, పండిన టమాటాలు మరియు ఘుమఘుమలాడే మసాలాలతో సులభంగా చేసుకోగల ఉత్తర భారత శైలి శాకాహార కూర.';
+      intro = `మీ వద్ద ఉన్న బంగాళాదుంప, టమాటాలతో 100% స్వచ్ఛమైన శాకాహార **${dishTitle}** తయారుచేసే విధానం ఇక్కడ ఉంది!`;
+      ingredients = [
+        { name: 'బంగాళాదుంపలు (Potatoes)', quantity: '3 (ముక్కలుగా తరిగినవి)', isOptional: false },
+        { name: 'పండిన టమాటాలు (Tomatoes)', quantity: '3 (సన్నగా తరిగినవి)', isOptional: false },
+        { name: 'వంట నూనె (Cooking Oil)', quantity: '2 టేబుల్ స్పూన్లు', isOptional: false },
+        { name: 'జీలకర్ర మరియు పసుపు', quantity: 'తగినంత', isOptional: false }
+      ];
+      instructions = [
+        { step: 1, text: 'బాణలిలో నూనె వేడి చేసి జీలకర్ర మరియు ఉల్లిపాయ ముక్కలు వేసి వేయించండి.' },
+        { step: 2, text: 'తరిగిన టమాటాలు, పసుపు, కారం, ఉప్పు వేసి టమాటాలు మెత్తబడే వరకు 5 నిమిషాలు ఉడికించండి.' },
+        { step: 3, text: 'తరిగిన బంగాళాదుంప ముక్కలు వేసి మసాలాలో 2 నిమిషాలు వేయించండి.' },
+        { step: 4, text: '1.5 కప్పుల నీరు పోసి, మూతపెట్టి బంగాళాదుంపలు ఉడికే వరకు 15 నిమిషాలు ఉడికించండి.' },
+        { step: 5, text: 'రెండు బంగాళాదుంప ముక్కలను గరిటెతో మెదిపితే గ్రేవీ చిక్కగా వస్తుంది. కొత్తిమీర చల్లుకుని వేడిగా వడ్డించండి.' }
+      ];
+    } else if (lang === 'hi') {
+      dishTitle = 'स्वादिष्ट मसालेदार आलू टमाटर की सब्ज़ी (Aloo Tamatar Sabzi)';
+      description = 'आलू, रसीले टमाटर और खुशबूदार मसालों से बनी पारंपरिक उत्तर भारतीय शाकाहारी सब्ज़ी।';
+      intro = `नमस्ते! आपके आलू और टमाटर से 100% शुद्ध शाकाहारी **${dishTitle}** तैयार की गई है!`;
+      ingredients = [
+        { name: 'आलू (Potatoes)', quantity: '3 मध्यम (कटे हुए)', isOptional: false },
+        { name: 'टमाटर (Tomatoes)', quantity: '3 बड़े (बारीक कटे हुए)', isOptional: false },
+        { name: 'तेल (Cooking Oil)', quantity: '2 बड़े चम्मच', isOptional: false },
+        { name: 'जीरा और हल्दी', quantity: '1 चम्मच', isOptional: false }
+      ];
+      instructions = [
+        { step: 1, text: 'कड़ाही में तेल गरम करें, जीरा और प्याज डालकर सुनहरा होने तक भूनें।' },
+        { step: 2, text: 'टमाटर, हल्दी, मिर्च और नमक डालकर टमाटर के गलने तक भूनें।' },
+        { step: 3, text: 'कटे हुए आलू डालें और मसाले के साथ 2 मिनट भूनें।' },
+        { step: 4, text: 'डेढ़ कप पानी डालकर ढकें और आलू के पकने तक 15 मिनट धीमी आंच पर पकाएं।' },
+        { step: 5, text: 'ग्रेवी को गाढ़ा करने के लिए 2-3 आलू के टुकड़ों को मैश कर दें। हरा धनिया डालकर परोसें।' }
+      ];
+    }
+
+    const recipe: Recipe = {
+      id: `ai-gen-${now}`,
+      name: dishTitle,
+      description,
+      image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
+      cuisine: lang === 'te' ? 'ఉత్తర భారతీయ' : lang === 'hi' ? 'उत्तर भारतीय' : 'North Indian',
+      category: lang === 'te' ? 'కూరలు' : lang === 'hi' ? 'सब्ज़ी' : 'Dinner',
+      food_type: 'VEGETARIAN',
+      ingredients,
+      instructions,
+      preparation_time: lang === 'te' ? '10 నిమిషాలు' : lang === 'hi' ? '10 मिनट' : '10 mins',
+      cooking_time: lang === 'te' ? '20 నిమిషాలు' : lang === 'hi' ? '20 मिनट' : '20 mins',
+      total_time: lang === 'te' ? '30 నిమిషాలు' : lang === 'hi' ? '30 मिनट' : '30 mins',
       difficulty: 'Easy',
       servings: 3,
       rating: 4.8,
-      tips: [
-        'Crushing a couple of cooked potato pieces naturally thickens the gravy without any cream or cornstarch.',
-        'Use ripe red tomatoes for the richest color and sweet-tangy taste.'
-      ],
+      tips: [lang === 'te' ? 'టమాటాలు ఎర్రగా పండినవి వాడితే గ్రేవీ రంగు బాగుంటుంది.' : 'पके हुए लाल टमाटर का इस्तेमाल करने से ग्रेवी का रंग और स्वाद बेहतरीन होता है।'],
       nutrition: { calories: 230, protein: '5g', carbs: '42g', fat: '6g' }
     };
 
-    const additionalIngredients = [
-      'Cumin seeds (Jeera) - 1 tsp',
-      'Turmeric & Red Chili powder - 1/2 tsp each',
-      'Garam Masala - 1/2 tsp',
-      'Salt to taste',
-      'Fresh coriander leaves for garnish'
-    ];
-
     return {
       recipe,
-      userIngredients: userItemsFormatted,
-      additionalIngredients,
-      conversationalIntro: `Here is a comforting, 100% vegetarian **${dishTitle}** crafted around your **${userItemsFormatted.join(', ')}**! Pure plant-rich goodness with zero non-veg ingredients.`
+      userIngredients: localizedUserItems,
+      additionalIngredients: [lang === 'te' ? 'జీలకర్ర, పసుపు, ఉప్పు' : 'जीरा, हल्दी, नमक'],
+      conversationalIntro: intro
     };
   }
 
   // -------------------------------------------------------------------------
-  // CASE C: Spinach + Paneer (+ Tomato) -> 100% VEGETARIAN Palak Paneer
+  // CASE C: Spinach + Paneer -> 100% VEGETARIAN Palak Paneer
   // -------------------------------------------------------------------------
   if (hasSpinach && hasPaneer && isStrictlyVegetarian) {
-    const dishTitle = 'Dhaba-Style Palak Paneer with Fresh Tomatoes';
+    let dishTitle = 'Dhaba-Style Palak Paneer with Fresh Tomatoes';
+    let intro = `Here is a restaurant-worthy 100% vegetarian **${dishTitle}** using your **${userItemsFormatted.join(', ')}**!`;
+
+    if (lang === 'te') {
+      dishTitle = 'ఢాబా-స్టైల్ పాలక్ పనీర్ (Dhaba Palak Paneer)';
+      intro = `మీ వద్ద ఉన్న పాలకూర మరియు పనీర్ తో రెస్టారెంట్ రుచిని తలపించే 100% స్వచ్ఛమైన **${dishTitle}** రూపొందించాను!`;
+    } else if (lang === 'hi') {
+      dishTitle = 'ढाबा-स्टाइल पालक पनीर (Dhaba Palak Paneer)';
+      intro = `नमस्ते! आपकी सामग्री से बेहतरीन 100% शुद्ध शाकाहारी **${dishTitle}** तैयार किया गया है!`;
+    }
 
     const recipe: Recipe = {
       id: `ai-gen-${now}`,
       name: dishTitle,
-      description: 'Tender cottage cheese cubes simmered in a velvety spiced spinach puree balanced with tangy tomatoes, cumin, and garlic butter.',
+      description: lang === 'te' ? 'తాజా పాలకూర ప్యూరీ మరియు పనీర్ ముక్కలతో చేసిన ప్రసిద్ధ శాకాహార వంటకం.' : 'पालक और पनीर से बनी एक लोकप्रिय और पौष्टिक शाकाहारी करी।',
       image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
       cuisine: 'North Indian',
       category: 'Dinner',
       food_type: 'VEGETARIAN',
       ingredients: [
-        { name: 'Fresh Spinach (Palak)', quantity: '300g (washed & blanched)', isOptional: false },
-        { name: 'Paneer (Cottage Cheese)', quantity: '200g (cubed)', isOptional: false },
-        ...(hasTomato ? [{ name: 'Tomatoes', quantity: '2 ripe (finely pureed)', isOptional: false }] : []),
-        ...(hasOnion ? [{ name: 'Onion', quantity: '1 medium (finely chopped)', isOptional: false }] : []),
-        { name: 'Butter or Desi Ghee', quantity: '2 tbsp', isOptional: false }
+        { name: lang === 'te' ? 'తాజా పాలకూర' : 'पालक', quantity: '300g', isOptional: false },
+        { name: lang === 'te' ? 'పనీర్ ముక్కలు' : 'पनीर', quantity: '200g', isOptional: false },
+        { name: lang === 'te' ? 'వెన్న లేదా నెయ్యి' : 'मक्खन या घी', quantity: '2 tbsp', isOptional: false }
       ],
       instructions: [
-        { step: 1, text: 'Blanch spinach leaves in boiling water for 2 minutes, then immediately plunge into cold water to retain vibrant green color. Puree smoothly.' },
-        { step: 2, text: 'Melt butter or ghee in a pan. Sauté cumin seeds, minced garlic, and onions until lightly golden.' },
-        { step: 3, text: 'Stir in tomato puree, turmeric, chili powder, and salt. Cook until tomatoes are fragrant and reduced.' },
-        { step: 4, text: 'Pour in the vibrant spinach puree and simmer gently for 5 minutes.' },
-        { step: 5, text: 'Slide in paneer cubes and a pinch of garam masala. Simmer on low heat for 3 minutes so paneer absorbs the flavors.' },
-        { step: 6, text: 'Finish with a swirl of fresh cream or butter and serve piping hot with garlic naan or roti.' }
+        { step: 1, text: lang === 'te' ? 'పాలకూరను 2 నిమిషాలు వేడి నీటిలో ఉంచి వెంటనే చల్లని నీటిలో వేసి మెత్తగా రుబ్బండి.' : 'पालक को 2 मिनट उबालकर ठंडे पानी में डालें और पीस लें।' },
+        { step: 2, text: lang === 'te' ? 'బాణలిలో నెయ్యి వేడి చేసి వెల్లుల్లి మరియు ఉల్లిపాయ వేయించండి.' : 'कड़ाही में घी गरम करके लहसुन और प्याज भूनें।' },
+        { step: 3, text: lang === 'te' ? 'పాలకూర ప్యూరీ మరియు మసాలాలు వేసి 5 నిమిషాలు ఉడికించండి.' : 'पालक प्यूरी और मसाले डालकर 5 मिनट पकाएं।' },
+        { step: 4, text: lang === 'te' ? 'పనీర్ ముక్కలు వేసి 3 నిమిషాలు ఉడికించి రోటీతో వడ్డించండి.' : 'पनीर के टुकड़े डालकर 3 मिनट पकाएं और गरमा-गरम परोसें।' }
       ],
       preparation_time: '15 mins',
       cooking_time: '15 mins',
@@ -525,57 +657,52 @@ export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
       difficulty: 'Easy',
       servings: 3,
       rating: 4.9,
-      tips: [
-        'Shocking blanched spinach in ice water locks in that signature emerald green color.',
-        'Soak paneer cubes in warm salted water for 5 minutes before cooking for a melt-in-mouth soft texture.'
-      ],
+      tips: [lang === 'te' ? 'పనీర్ మెత్తగా ఉండటానికి వేడి నీటిలో 5 నిమిషాలు నానబెట్టండి.' : 'पनीर को 5 मिनट गुनगुने पानी में रखने से वह बेहद नरम रहता है।'],
       nutrition: { calories: 340, protein: '18g', carbs: '14g', fat: '24g' }
     };
 
-    const additionalIngredients = [
-      'Garlic cloves - 4 (minced)',
-      'Cumin seeds - 1 tsp',
-      'Turmeric & Kashmiri chili - 1/2 tsp each',
-      'Garam Masala - 1/2 tsp',
-      'Salt to taste'
-    ];
-
     return {
       recipe,
-      userIngredients: userItemsFormatted,
-      additionalIngredients,
-      conversationalIntro: `Here is a restaurant-worthy 100% vegetarian **${dishTitle}** using your **${userItemsFormatted.join(', ')}**! Packed with protein and fresh greens.`
+      userIngredients: localizedUserItems,
+      additionalIngredients: [lang === 'te' ? 'వెల్లుల్లి, జీలకర్ర, ఉప్పు' : 'लहसुन, जीरा, नमक'],
+      conversationalIntro: intro
     };
   }
 
   // -------------------------------------------------------------------------
-  // CASE D: Chicken + Rice -> NON-VEGETARIAN Chicken Pulao / Rice
+  // CASE D: Chicken + Rice -> NON-VEGETARIAN Chicken Pulao
   // -------------------------------------------------------------------------
   if (hasChicken && hasRice) {
-    const dishTitle = 'One-Pot Savory Chicken Pulao';
+    let dishTitle = 'One-Pot Savory Chicken Pulao';
+    let intro = `Since you provided chicken and rice, here is a mouth-watering **${dishTitle}** that comes together in a single pot in 40 minutes!`;
+
+    if (lang === 'te') {
+      dishTitle = 'వన్-పాట్ చికెన్ దమ్ పులావ్ (Chicken Pulao)';
+      intro = `మీ వద్ద ఉన్న చికెన్ మరియు బియ్యంతో ఘుమఘుమలాడే **${dishTitle}** సిద్ధం చేశాను! 40 నిమిషాల్లో సులభంగా తయారుచేయవచ్చు!`;
+    } else if (lang === 'hi') {
+      dishTitle = 'स्वादिष्ट वन-पॉट चिकन पुलाव (Savory Chicken Pulao)';
+      intro = `नमस्ते! चिकन और चावल से केवल 40 मिनट में तैयार होने वाला लजीज **${dishTitle}** प्रस्तुत है!`;
+    }
 
     const recipe: Recipe = {
       id: `ai-gen-${now}`,
       name: dishTitle,
-      description: 'Fragrant long-grain basmati rice cooked in a single pot with juicy marinated chicken pieces, caramelized onions, and whole aromatic spices.',
+      description: lang === 'te' ? 'తాజా చికెన్, బాస్మతి బియ్యం మరియు మసాలాలతో ఒకే పాత్రలో సులభంగా చేసుకోగల రుచికరమైన చికెన్ పులావ్.' : 'चिकन, बासमती चावल और खुशबूदार मसालों से बना स्वादिष्ट पुलाव।',
       image_url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
       cuisine: 'Indian',
       category: 'Rice Dishes',
       food_type: 'NON-VEGETARIAN',
       ingredients: [
-        { name: 'Chicken', quantity: '400g (cut into bite-sized pieces)', isOptional: false },
-        { name: 'Basmati Rice', quantity: '1.5 cups (rinsed & soaked 20 mins)', isOptional: false },
-        ...(hasOnion ? [{ name: 'Onions', quantity: '1 large (thinly sliced)', isOptional: false }] : [{ name: 'Onion', quantity: '1 large (sliced)', isOptional: true }]),
-        ...(hasTomato ? [{ name: 'Tomatoes', quantity: '2 medium (chopped)', isOptional: false }] : []),
-        { name: 'Cooking Oil or Ghee', quantity: '2 tbsp', isOptional: false }
+        { name: lang === 'te' ? 'చికెన్ ముక్కలు' : 'चिकन', quantity: '400g', isOptional: false },
+        { name: lang === 'te' ? 'బాస్మతి బియ్యం' : 'बासमती चावल', quantity: '1.5 కప్పులు', isOptional: false },
+        { name: lang === 'te' ? 'ఉల్లిపాయ' : 'प्याज', quantity: '1 పెద్దది', isOptional: false },
+        { name: lang === 'te' ? 'నెయ్యి లేదా నూనె' : 'घी या तेल', quantity: '2 టేబుల్ స్పూన్లు', isOptional: false }
       ],
       instructions: [
-        { step: 1, text: 'Rinse basmati rice and soak in water for 20 minutes, then drain.' },
-        { step: 2, text: 'Heat oil or ghee in a heavy pot. Add whole spices (bay leaf, cardamom, cloves) and fry sliced onions until golden brown.' },
-        { step: 3, text: 'Add chicken pieces with ginger-garlic paste, turmeric, and chili powder. Sauté on medium-high heat for 6-8 minutes until chicken turns white.' },
-        { step: 4, text: 'Add soaked basmati rice and gently sauté with the chicken for 1 minute.' },
-        { step: 5, text: 'Pour in 3 cups of hot water, add salt to taste, bring to a rolling boil, then cover and cook on low heat for 12-15 minutes.' },
-        { step: 6, text: 'Rest for 5 minutes, fluff gently, and serve hot with cooling cucumber raita.' }
+        { step: 1, text: lang === 'te' ? 'బియ్యాన్ని కడిగి 20 నిమిషాలు నానబెట్టండి.' : 'चावल को धोकर 20 मिनट के लिए भिगो दें।' },
+        { step: 2, text: lang === 'te' ? 'కుక్కర్లో నూనె వేసి ఉల్లిపాయలను బంగారు రంగు వచ్చేవరకు వేయించండి.' : 'तेल गरम करके प्याज को सुनहरा होने तक भूनें।' },
+        { step: 3, text: lang === 'te' ? 'చికెన్ ముక్కలు, అల్లం వెల్లుల్లి పేస్ట్ వేసి 6-8 నిమిషాలు వేయించండి.' : 'चिकन और अदरक-लहसुन पेस्ट डालकर 6-8 मिनट भूनें।' },
+        { step: 4, text: lang === 'te' ? 'బియ్యం వేసి, 3 కప్పుల వేడి నీరు పోసి మూతపెట్టి 15 నిమిషాలు ఉడికించండి.' : 'चावल और 3 कप पानी डालकर 15 मिनट धीमी आंच पर पकाएं।' }
       ],
       preparation_time: '15 mins',
       cooking_time: '25 mins',
@@ -583,186 +710,64 @@ export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
       difficulty: 'Easy',
       servings: 3,
       rating: 4.8,
-      tips: [
-        'Searing the chicken pieces before adding rice seals in natural juices so the meat stays succulent.',
-        'Use hot water when covering the rice to ensure even cooking.'
-      ],
+      tips: [lang === 'te' ? 'చికెన్ వేయించిన తర్వాత వేడి నీరు పోస్తే బియ్యం సరిగ్గా ఉడుకుతుంది.' : 'चावल डालते समय गरम पानी का प्रयोग करें।'],
       nutrition: { calories: 510, protein: '34g', carbs: '58g', fat: '14g' }
     };
 
-    const additionalIngredients = [
-      'Ginger-garlic paste - 1.5 tbsp',
-      'Whole spices (bay leaf, cloves, cardamom, cinnamon)',
-      'Garam Masala - 1 tsp',
-      'Salt to taste'
-    ];
-
     return {
       recipe,
-      userIngredients: userItemsFormatted,
-      additionalIngredients,
-      conversationalIntro: `Since you provided chicken and rice, here is a mouth-watering **${dishTitle}** that comes together in a single pot in 40 minutes!`
+      userIngredients: localizedUserItems,
+      additionalIngredients: [lang === 'te' ? 'అల్లం వెల్లుల్లి పేస్ట్, గరం మసాలా' : 'अदरक लहसुन पेस्ट, गरम मसाला'],
+      conversationalIntro: intro
     };
   }
 
   // -------------------------------------------------------------------------
-  // CASE E: Fish + Rice -> NON-VEGETARIAN Coastal Fish Curry with Rice
+  // GENERAL FALLBACK: Vegetarians or Non-Vegetarians arbitrary ingredients
   // -------------------------------------------------------------------------
-  if (hasFish && hasRice) {
-    const dishTitle = 'Coastal Spiced Fish with Steamed Rice';
-
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description: 'Tender fresh fish steaks simmered in a tangy spiced tomato-onion curry, served alongside steaming fluffy white rice.',
-      image_url: 'https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Indian',
-      category: 'Lunch',
-      food_type: 'NON-VEGETARIAN',
-      ingredients: [
-        { name: 'Fresh Fish Steaks / Fillets', quantity: '400g', isOptional: false },
-        { name: 'Rice', quantity: '1.5 cups', isOptional: false },
-        ...(hasTomato ? [{ name: 'Tomatoes', quantity: '2 ripe (pureed)', isOptional: false }] : []),
-        ...(hasOnion ? [{ name: 'Onion', quantity: '1 medium (sliced)', isOptional: false }] : []),
-        { name: 'Cooking Oil', quantity: '2 tbsp', isOptional: false }
-      ],
-      instructions: [
-        { step: 1, text: 'Cook rice in 3 cups of water until fluffy and tender. Keep warm.' },
-        { step: 2, text: 'Marinate fish pieces with turmeric powder, red chili powder, and salt for 10 minutes.' },
-        { step: 3, text: 'Heat oil in a pan. Sputter mustard seeds and curry leaves. Sauté onions and ginger-garlic until soft.' },
-        { step: 4, text: 'Add tomatoes, coriander powder, and 1 cup of water. Bring to a gentle boil.' },
-        { step: 5, text: 'Gently slide in the fish steaks. Cover and simmer on medium-low for 8-10 minutes until fish is cooked through.' },
-        { step: 6, text: 'Squeeze a dash of fresh lemon juice and serve hot over freshly steamed rice.' }
-      ],
-      preparation_time: '15 mins',
-      cooking_time: '20 mins',
-      total_time: '35 mins',
-      difficulty: 'Easy',
-      servings: 3,
-      rating: 4.8,
-      tips: [
-        'Swirl the pan rather than using a hard spatula to avoid breaking the tender fish steaks.',
-        'Fish cooks quickly; 8 to 10 minutes of gentle simmering is ideal.'
-      ],
-      nutrition: { calories: 420, protein: '32g', carbs: '52g', fat: '10g' }
-    };
-
-    const additionalIngredients = [
-      'Mustard seeds & Curry leaves - 1 tsp',
-      'Turmeric & Red Chili powder - 1 tsp each',
-      'Lemon juice - 1 tbsp',
-      'Salt to taste'
-    ];
-
-    return {
-      recipe,
-      userIngredients: userItemsFormatted,
-      additionalIngredients,
-      conversationalIntro: `Based on your fish and rice, here is an appetizing **${dishTitle}** featuring a rich homestyle coastal gravy!`
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // CASE F: Pasta + Veggies / Tomato -> 100% VEGETARIAN Pasta
-  // -------------------------------------------------------------------------
-  if (hasPasta && isStrictlyVegetarian) {
-    const dishTitle = hasTomato 
-      ? 'Rustic Garlic Tomato Basil Pasta' 
-      : 'Creamy Garlic Herb Pasta';
-
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description: 'Al dente pasta tossed in a vibrant garlic, tomato, and extra virgin olive oil sauce, infused with fresh herbs and Italian seasoning.',
-      image_url: 'https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Italian',
-      category: 'Dinner',
-      food_type: 'VEGETARIAN',
-      ingredients: [
-        { name: 'Pasta (Penne, Fusilli, or Spaghetti)', quantity: '300g', isOptional: false },
-        ...(hasTomato ? [{ name: 'Ripe Tomatoes', quantity: '3 large (finely diced or crushed)', isOptional: false }] : []),
-        ...(hasSpinach ? [{ name: 'Baby Spinach', quantity: '1.5 cups', isOptional: false }] : []),
-        ...(hasCheese() ? [{ name: 'Cheese (Mozzarella or Parmesan)', quantity: '1/2 cup grated', isOptional: false }] : []),
-        { name: 'Extra Virgin Olive Oil', quantity: '2 tbsp', isOptional: false }
-      ],
-      instructions: [
-        { step: 1, text: 'Boil pasta in generously salted water until al dente. Reserve 1/2 cup of starchy pasta water, then drain.' },
-        { step: 2, text: 'Heat olive oil in a skillet over medium heat. Sauté minced garlic and red pepper flakes for 1 minute until fragrant.' },
-        { step: 3, text: hasTomato ? 'Add diced tomatoes and salt. Simmer for 8-10 minutes until sauce is glossy and reduced.' : 'Add vegetables and sauté for 3-4 minutes.' },
-        { step: 4, text: hasSpinach ? 'Stir in fresh spinach and toss for 1 minute until wilted into the sauce.' : 'Add herbs and black pepper.' },
-        { step: 5, text: 'Toss cooked pasta directly into the sauce with a splash of reserved pasta water until glossy and coated.' },
-        { step: 6, text: 'Serve immediately topped with grated cheese and fresh basil.' }
-      ],
-      preparation_time: '10 mins',
-      cooking_time: '15 mins',
-      total_time: '25 mins',
-      difficulty: 'Easy',
-      servings: 3,
-      rating: 4.8,
-      tips: [
-        'Always save starchy pasta water; it emulsifies with olive oil into a silky restaurant-quality sauce.',
-        'Cook pasta 1 minute less than package directions so it finishes cooking in the sauce.'
-      ],
-      nutrition: { calories: 380, protein: '12g', carbs: '64g', fat: '9g' }
-    };
-
-    function hasCheese(): boolean {
-      return foundIngredients.includes('cheese') || foundIngredients.includes('mozzarella');
-    }
-
-    const additionalIngredients = [
-      'Garlic cloves - 4 (finely minced)',
-      'Dried oregano & basil - 1 tsp each',
-      'Red chili flakes - 1/2 tsp',
-      'Salt & black pepper to taste'
-    ];
-
-    return {
-      recipe,
-      userIngredients: userItemsFormatted,
-      additionalIngredients,
-      conversationalIntro: `Here is a fast, 100% vegetarian **${dishTitle}** using your **${userItemsFormatted.join(', ')}**!`
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // CASE G: GENERAL INGREDIENT COMBINATION SYNTHESIZER
-  // Handles ANY other arbitrary combination of ingredients dynamically
-  // -------------------------------------------------------------------------
-  const primaryIng = userItemsFormatted.length > 0 ? userItemsFormatted[0] : 'Fresh Market Vegetables';
-  const secondaryIng = userItemsFormatted.length > 1 ? userItemsFormatted[1] : '';
+  const primaryIng = localizedUserItems.length > 0 ? localizedUserItems[0] : (lang === 'te' ? 'తాజా కూరగాయలు' : lang === 'hi' ? 'ताजी सब्जियां' : 'Fresh Vegetables');
+  const secondaryIng = localizedUserItems.length > 1 ? localizedUserItems[1] : '';
   const comboName = secondaryIng ? `${primaryIng} & ${secondaryIng}` : primaryIng;
 
   const foodType = isStrictlyVegetarian ? 'VEGETARIAN' : 'NON-VEGETARIAN';
-  const dishTitle = isStrictlyVegetarian 
-    ? `Homestyle Spiced ${comboName} Medley` 
-    : `Homestyle Savory ${comboName} Special`;
+  let dishTitle = isStrictlyVegetarian ? `Homestyle Spiced ${comboName} Medley` : `Homestyle Savory ${comboName} Special`;
+  let intro = `I have designed an authentic **${dishTitle}** specifically incorporating your **${userItemsFormatted.join(', ')}**! ${isStrictlyVegetarian ? 'It is 100% vegetarian with zero meat or eggs.' : ''}`;
+
+  if (lang === 'te') {
+    dishTitle = isStrictlyVegetarian ? `హోమ్‌స్టైల్ స్పెషల్ శాకాహార ${comboName} కూర` : `హోమ్‌స్టైల్ స్పెషల్ ${comboName}`;
+    intro = `నమస్కారం! మీ వద్ద ఉన్న ${localizedUserItems.join(', ')} పదార్థాలతో ${isStrictlyVegetarian ? '100% స్వచ్ఛమైన శాకాహార' : ''} **${dishTitle}** తయారుచేశాను! ఆనందంగా వండుకోండి!`;
+  } else if (lang === 'hi') {
+    dishTitle = isStrictlyVegetarian ? `स्वादिष्ट घरेलू ${comboName} सब्ज़ी` : `स्वादिष्ट घरेलू ${comboName} स्पेशल`;
+    intro = `नमस्ते! आपकी सामग्री ${localizedUserItems.join(', ')} से ${isStrictlyVegetarian ? '100% शुद्ध शाकाहारी' : ''} **${dishTitle}** तैयार की गई है!`;
+  }
 
   const recipe: Recipe = {
     id: `ai-gen-${now}`,
     name: dishTitle,
-    description: `A delicious, homestyle preparation crafted around ${userItemsFormatted.join(', ')}, tempered with aromatic cumin, garlic, and balanced spices.`,
+    description: lang === 'te'
+      ? `మీ కిచెన్ లోని పదార్థాలతో సులభంగా తయారుచేసే రుచికరమైన మరియు ఆరోగ్యకరమైన వంటకం.`
+      : lang === 'hi'
+      ? `आपकी रसोई की सामग्री से झटपट तैयार होने वाला स्वादिष्ट और पौष्टिक भोजन।`
+      : `A delicious, homestyle preparation crafted around ${userItemsFormatted.join(', ')}, tempered with aromatic cumin and spices.`,
     image_url: isStrictlyVegetarian 
       ? 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80'
       : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'Indian',
-    category: 'Dinner',
+    cuisine: lang === 'te' ? 'భారతీయ' : lang === 'hi' ? 'भारतीय' : 'Indian',
+    category: isStrictlyVegetarian ? (lang === 'te' ? 'శాకాహారం' : 'शाकाहारी') : (lang === 'te' ? 'మాంసాహారం' : 'मांसाहारी'),
     food_type: foodType,
     ingredients: [
-      ...userItemsFormatted.map(ing => ({
+      ...localizedUserItems.map(ing => ({
         name: ing,
-        quantity: 'Main portion as available in your kitchen',
+        quantity: lang === 'te' ? 'మీ వద్ద ఉన్నంత' : lang === 'hi' ? 'आवश्यकतानुसार' : 'Main portion as available',
         isOptional: false
       })),
-      { name: 'Cooking Oil or Butter', quantity: '2 tbsp', isOptional: false }
+      { name: lang === 'te' ? 'వంట నూనె' : 'तेल', quantity: '2 tbsp', isOptional: false }
     ],
     instructions: [
-      { step: 1, text: 'Wash, trim, and cut your ingredients into even bite-sized pieces for uniform cooking.' },
-      { step: 2, text: 'Heat 2 tbsp cooking oil in a wide pan or wok. Sauté cumin seeds and minced aromatics (onion/garlic if available) until fragrant.' },
-      { step: 3, text: 'Add the firmer ingredients first and sauté for 4-5 minutes on medium heat.' },
-      { step: 4, text: 'Add any tender leafy greens, tomatoes, or delicate ingredients along with basic spices (turmeric, chili, salt).' },
-      { step: 5, text: 'Add a small splash of water if needed, cover, and simmer for 6-8 minutes until all ingredients are tender and well combined.' },
-      { step: 6, text: 'Uncover, taste and adjust seasoning, garnish with fresh herbs, and serve hot.' }
+      { step: 1, text: lang === 'te' ? 'పదార్థాలను శుభ్రంగా కడిగి ముక్కలుగా కోయండి.' : 'सामग्री को अच्छी तरह धोकर टुकड़ों में काट लें।' },
+      { step: 2, text: lang === 'te' ? 'బాణలిలో నూనె వేడి చేసి పోపు గింజలు వేయించండి.' : 'कड़ाही में तेल गरम करके जीरा और मसाले भूनें।' },
+      { step: 3, text: lang === 'te' ? 'పదార్థాలను వేసి మసాలాలు, ఉప్పు కలిపి మూతపెట్టి ఉడికించండి.' : 'सामग्री और मसाले डालकर धीमी आंच पर पकाएं।' },
+      { step: 4, text: lang === 'te' ? 'ఉడికిన తర్వాత కొత్తిమీర చల్లుకుని వేడిగా వడ్డించండి.' : 'पकने के बाद हरा धनिया डालकर गरमा-गरम परोसें।' }
     ],
     preparation_time: '10 mins',
     cooking_time: '18 mins',
@@ -770,10 +775,7 @@ export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
     difficulty: 'Easy',
     servings: 2,
     rating: 4.8,
-    tips: [
-      'Staggering ingredient addition (firmer ingredients first, tender ingredients later) ensures optimal texture.',
-      'A final dash of lemon juice or fresh herbs brings out natural flavors.'
-    ],
+    tips: [lang === 'te' ? 'తాజా మసాలాలు వాడితే రుచి బాగుంటుంది.' : 'ताजे मसालों का उपयोग करने से स्वाद बढ़ता है।'],
     nutrition: { 
       calories: isStrictlyVegetarian ? 260 : 420, 
       protein: isStrictlyVegetarian ? '8g' : '28g', 
@@ -782,20 +784,14 @@ export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
     }
   };
 
-  const additionalIngredients = [
-    'Cooking Oil / Butter - 2 tbsp',
-    'Cumin seeds - 1 tsp',
-    'Turmeric & Red Chili powder - 1/2 tsp each',
-    'Salt to taste'
-  ];
-
   return {
     recipe,
-    userIngredients: userItemsFormatted,
-    additionalIngredients,
-    conversationalIntro: `I have designed an authentic **${dishTitle}** specifically incorporating your **${userItemsFormatted.join(', ')}**! ${isStrictlyVegetarian ? 'It is 100% vegetarian with zero meat or eggs.' : ''}`
+    userIngredients: localizedUserItems,
+    additionalIngredients: [lang === 'te' ? 'నూనె, జీలకర్ర, ఉప్పు' : 'तेल, जीरा, नमक'],
+    conversationalIntro: intro
   };
 }
+
 
 /**
  * Intelligent AI culinary recipe engine.
@@ -804,13 +800,15 @@ export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
  */
 export async function generateRecipeFromAI(
   prompt: string,
-  dietaryFilter?: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'
+  dietaryFilter?: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN',
+  appLanguage: 'en' | 'te' | 'hi' = 'en'
 ): Promise<AIChefResponse> {
   const trimmed = prompt.trim();
   if (!trimmed) {
     throw new Error("Empty query");
   }
 
+  const lang = detectLanguage(trimmed, appLanguage);
   const intent = extractIngredientsAndIntent(trimmed, dietaryFilter);
 
   // Check if live Google Gemini API key is configured
@@ -850,17 +848,23 @@ export async function generateRecipeFromAI(
     });
 
     if (matchedSample) {
+      const introText = lang === 'te'
+        ? `ఇక్కడ మీకు సరిపోయే అసలైన **${matchedSample.name}** వంటకం ఉంది! ఆనందంగా వండుకోండి!`
+        : lang === 'hi'
+        ? `यहाँ आपके लिए प्रामाणिक **${matchedSample.name}** की रेसिपी है! बनाने का आनंद लें!`
+        : `Here is the authentic recipe for **${matchedSample.name}**! Enjoy cooking!`;
+
       return {
         recipe: { ...matchedSample, id: `ai-gen-${Date.now()}` },
-        userIngredients: ['Recipe Request'],
-        additionalIngredients: ['Standard pantry spices and ingredients as listed in recipe'],
-        conversationalIntro: `Here is the authentic recipe for **${matchedSample.name}**! Enjoy cooking!`
+        userIngredients: [lang === 'te' ? 'వంటకం అభ్యర్థన' : lang === 'hi' ? 'रेसिपी अनुरोध' : 'Recipe Request'],
+        additionalIngredients: [lang === 'te' ? 'వంటకంలో పేర్కొన్న ప్రామాణిక కిచెన్ మసాలాలు' : lang === 'hi' ? 'रेसिपी में बताई गई सामान्य सामग्री' : 'Standard pantry spices and ingredients as listed in recipe'],
+        conversationalIntro: introText
       };
     }
   }
 
-  // Generate dynamic, guaranteed-safe recipe tailored to user ingredients
-  return synthesizeDynamicRecipe(intent);
+  // Generate dynamic, guaranteed-safe recipe tailored to user ingredients in requested language
+  return synthesizeDynamicRecipe(intent, lang);
 }
 
 /**

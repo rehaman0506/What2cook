@@ -72,13 +72,20 @@ export const HomePage: React.FC<HomePageProps> = ({
     }
   };
 
-  const handleVoiceIngredient = (spoken: string) => {
+  const handleVoiceIngredient = (spoken: string, isFinal?: boolean) => {
     if (!spoken.trim()) return;
+    setCustomIngredient(spoken);
     const parts = spoken.split(/[,+]/).map(s => s.trim()).filter(Boolean);
     setSelectedIngredients(prev => {
       const combined = new Set([...prev, ...parts]);
       return Array.from(combined);
     });
+    if (isFinal) {
+      const promptText = selectedDiet === 'VEGETARIAN'
+        ? `Suggest a 100% vegetarian recipe using ${spoken}`
+        : `What can I make with ${spoken}?`;
+      onNavigateToChat(promptText);
+    }
   };
 
   const handleVoiceSearch = (spoken: string) => {
