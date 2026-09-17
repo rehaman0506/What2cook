@@ -27,11 +27,23 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
   };
 
   const [messages, setMessages] = useState<ChatMessageType[]>(() => {
-    const saved = localStorage.getItem('recipemate_chat_history');
+    const saved = localStorage.getItem('what2cook_chat_history') || localStorage.getItem('recipemate_chat_history');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // Always ensure the welcome message matches the currently active language
+          return parsed.map((msg: ChatMessageType) => {
+            if (msg.id === 'msg-welcome' || (!msg.recipe && msg.sender === 'chef' && parsed.length === 1)) {
+              return {
+                ...msg,
+                id: 'msg-welcome',
+                text: t.chatWelcomeIntro || "Hello! I am your AI Chef. 👨‍🍳 Tell me what ingredients you have in your kitchen (type or click the microphone), and I'll create the perfect recipe for you!"
+              };
+            }
+            return msg;
+          });
+        }
       } catch {}
     }
     return [defaultWelcomeMessage];
@@ -42,9 +54,31 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasSentInitialRef = useRef(false);
 
+  // Automatically update welcome message immediately when language selection changes!
+  useEffect(() => {
+    setMessages(prev => {
+      let hasChanged = false;
+      const updated = prev.map(msg => {
+        if (msg.id === 'msg-welcome' || (!msg.recipe && msg.sender === 'chef' && prev.length === 1)) {
+          const newIntro = t.chatWelcomeIntro || "Hello! I am your AI Chef. 👨‍🍳 Tell me what ingredients you have in your kitchen (type or click the microphone), and I'll create the perfect recipe for you!";
+          if (msg.text !== newIntro) {
+            hasChanged = true;
+            return {
+              ...msg,
+              id: 'msg-welcome',
+              text: newIntro
+            };
+          }
+        }
+        return msg;
+      });
+      return hasChanged ? updated : prev;
+    });
+  }, [language, t.chatWelcomeIntro]);
+
   // Sync chat messages to localStorage
   useEffect(() => {
-    localStorage.setItem('recipemate_chat_history', JSON.stringify(messages));
+    localStorage.setItem('what2cook_chat_history', JSON.stringify(messages));
   }, [messages]);
 
   // Auto-scroll to bottom
@@ -118,11 +152,13 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
   const handleClearChat = () => {
     const freshWelcome: ChatMessageType = {
       ...defaultWelcomeMessage,
-      id: `msg-${Date.now()}`,
+      id: 'msg-welcome',
+      text: t.chatWelcomeIntro,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     };
     setMessages([freshWelcome]);
     setErrorMessage(null);
+    localStorage.removeItem('what2cook_chat_history');
     localStorage.removeItem('recipemate_chat_history');
   };
 
