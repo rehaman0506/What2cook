@@ -1,7 +1,8 @@
 import React from 'react';
-import { Clock, Flame, Star, Heart, ArrowRight, Leaf, Drumstick } from 'lucide-react';
+import { Clock, Flame, Star, Heart, ArrowRight } from 'lucide-react';
 import { Recipe } from '../types';
 import { useFavorites } from '../context/FavoritesContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface RecipeCardProps {
   recipe: Recipe;
@@ -10,6 +11,7 @@ interface RecipeCardProps {
 
 export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { t } = useLanguage();
   const favorite = isFavorite(recipe.id);
 
   const isVeg = recipe.food_type === 'VEGETARIAN';
@@ -32,7 +34,6 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
           loading="lazy"
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
           onError={(e) => {
-            // Fallback image if unsplash link fails
             (e.target as HTMLImageElement).src =
               'https://images.unsplash.com/photo-1495521821757-a1efb6729352?w=800&auto=format&fit=crop&q=80';
           }}
@@ -41,17 +42,23 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
         {/* Gradient Shadow Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
 
-        {/* Top Badges: Veg/Non-Veg + Cuisine */}
+        {/* Top Badges: Indian FSSAI Veg/Non-Veg Indicator + Label + Cuisine */}
         <div className="absolute top-3 left-3 flex flex-wrap items-center gap-1.5 z-10">
           {isVeg ? (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-600 text-white shadow-md tracking-wider">
-              <Leaf className="w-3 h-3 fill-white" />
-              VEGETARIAN
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-emerald-600 text-white shadow-md tracking-wider">
+              {/* Official Indian Green Veg Dot in Square */}
+              <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-white bg-emerald-700 flex items-center justify-center shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+              </span>
+              {t.pureVegBadge}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-rose-600 text-white shadow-md tracking-wider">
-              <Drumstick className="w-3 h-3 fill-white" />
-              NON-VEGETARIAN
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-extrabold bg-rose-600 text-white shadow-md tracking-wider">
+              {/* Official Indian Red Non-Veg Dot in Square */}
+              <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-white bg-rose-700 flex items-center justify-center shrink-0">
+                <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+              </span>
+              {t.nonVegBadge}
             </span>
           )}
 
@@ -111,13 +118,13 @@ export const RecipeCard: React.FC<RecipeCardProps> = ({ recipe, onSelect }) => {
         {/* View Recipe Button */}
         <div className="pt-4 mt-4 border-t border-stone-100 flex items-center justify-between">
           <span className="text-xs text-stone-500 font-medium">
-            {recipe.ingredients.length} ingredients
+            {recipe.ingredients.length} {t.ingredientsCount}
           </span>
           <button
             type="button"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-orange-600 group-hover:text-orange-700 group-hover:translate-x-0.5 transition-all"
           >
-            View Recipe
+            {t.viewRecipe}
             <ArrowRight className="w-3.5 h-3.5" />
           </button>
         </div>

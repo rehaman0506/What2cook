@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { 
   X, ArrowLeft, Clock, Flame, Users, Star, Heart, 
-  CheckCircle2, Circle, Lightbulb, Share2, Printer, 
-  Leaf, Drumstick, Sparkles 
+  CheckCircle2, Circle, Lightbulb, Share2, Printer, Sparkles 
 } from 'lucide-react';
 import { Recipe } from '../types';
 import { useFavorites } from '../context/FavoritesContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface RecipeDetailsModalProps {
   recipe: Recipe | null;
@@ -19,6 +19,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
   onAskAIChef,
 }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { t } = useLanguage();
   const [checkedIngredients, setCheckedIngredients] = useState<Record<number, boolean>>({});
   const [copiedShare, setCopiedShare] = useState(false);
 
@@ -65,21 +66,21 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
             className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-stone-600 hover:text-stone-900 transition-colors py-1.5 px-2.5 rounded-xl hover:bg-stone-200/60"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back to Recipes
+            {t.backToRecipes}
           </button>
 
           <div className="flex items-center gap-2">
             <button
               onClick={handleShare}
               className="p-2 rounded-xl border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors"
-              title="Share Recipe"
+              title={t.shareRecipe}
             >
               <Share2 className="w-4 h-4" />
             </button>
             <button
               onClick={handlePrint}
               className="p-2 rounded-xl border border-stone-200 text-stone-600 hover:text-stone-900 hover:bg-stone-100 transition-colors hidden sm:block"
-              title="Print Recipe"
+              title={t.printRecipe}
             >
               <Printer className="w-4 h-4" />
             </button>
@@ -90,7 +91,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                   ? 'bg-rose-50 border-rose-200 text-rose-600'
                   : 'border-stone-200 text-stone-600 hover:text-rose-600 hover:bg-stone-100'
               }`}
-              title={favorite ? "Saved in Favorites" : "Save to Favorites"}
+              title={favorite ? t.savedFavorite : t.saveFavorite}
             >
               <Heart className={`w-4 h-4 ${favorite ? 'fill-rose-500 text-rose-500' : ''}`} />
             </button>
@@ -125,19 +126,25 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
 
-            {/* Badges on Hero Image */}
+            {/* Badges on Hero Image: Official Indian FSSAI Veg / Non-Veg Indicator */}
             <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-end justify-between gap-3 text-white">
               <div className="space-y-1.5">
                 <div className="flex items-center gap-2">
                   {isVeg ? (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-600 text-white shadow-md">
-                      <Leaf className="w-3.5 h-3.5 fill-white" />
-                      VEGETARIAN
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-emerald-600 text-white shadow-md">
+                      {/* FSSAI Green Square with Dot */}
+                      <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-white bg-emerald-700 flex items-center justify-center shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                      </span>
+                      {t.pureVegBadge}
                     </span>
                   ) : (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-600 text-white shadow-md">
-                      <Drumstick className="w-3.5 h-3.5 fill-white" />
-                      NON-VEGETARIAN
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-600 text-white shadow-md">
+                      {/* FSSAI Red Square with Dot */}
+                      <span className="w-3.5 h-3.5 rounded-[3px] border-2 border-white bg-rose-700 flex items-center justify-center shrink-0">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
+                      </span>
+                      {t.nonVegBadge}
                     </span>
                   )}
                   <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/20 backdrop-blur-md text-white border border-white/20">
@@ -170,7 +177,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                   <Clock className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">Prep Time</div>
+                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">{t.prepTime}</div>
                   <div className="text-sm font-extrabold text-stone-900">{recipe.preparation_time}</div>
                 </div>
               </div>
@@ -180,7 +187,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                   <Flame className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">Cook Time</div>
+                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">{t.cookTime}</div>
                   <div className="text-sm font-extrabold text-stone-900">{recipe.cooking_time}</div>
                 </div>
               </div>
@@ -190,8 +197,8 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                   <Users className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">Servings</div>
-                  <div className="text-sm font-extrabold text-stone-900">{recipe.servings} people</div>
+                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">{t.servings}</div>
+                  <div className="text-sm font-extrabold text-stone-900">{recipe.servings}</div>
                 </div>
               </div>
 
@@ -200,7 +207,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                   <Sparkles className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">Difficulty</div>
+                  <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">{t.difficulty}</div>
                   <div className="text-sm font-extrabold text-stone-900">{recipe.difficulty}</div>
                 </div>
               </div>
@@ -237,10 +244,10 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
             <div className="lg:col-span-1 space-y-4">
               <div className="flex items-center justify-between pb-2 border-b border-stone-200">
                 <h3 className="font-extrabold text-stone-900 text-lg sm:text-xl">
-                  Ingredients
+                  {t.ingredientsTitle}
                 </h3>
                 <span className="text-xs font-semibold text-stone-500">
-                  {recipe.ingredients.length} items
+                  {recipe.ingredients.length} {t.ingredientsCount}
                 </span>
               </div>
               <p className="text-xs text-stone-500">Click to check off ingredients as you prep:</p>
@@ -271,7 +278,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                           {ing.quantity}
                           {ing.isOptional && (
                             <span className="ml-1.5 px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">
-                              Optional
+                              {t.optionalTag}
                             </span>
                           )}
                         </div>
@@ -285,23 +292,23 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
               {recipe.nutrition && (
                 <div className="p-4 rounded-2xl bg-stone-50 border border-stone-200 space-y-2.5 mt-6">
                   <h4 className="text-xs font-bold uppercase tracking-wider text-stone-700">
-                    Nutrition Facts (Per Serving)
+                    {t.nutritionFacts}
                   </h4>
                   <div className="grid grid-cols-2 gap-2 text-xs">
                     <div className="p-2 rounded-lg bg-white border border-stone-200">
-                      <span className="text-stone-500">Calories:</span>
+                      <span className="text-stone-500">{t.calories}:</span>
                       <strong className="block text-stone-900 font-bold">{recipe.nutrition.calories} kcal</strong>
                     </div>
                     <div className="p-2 rounded-lg bg-white border border-stone-200">
-                      <span className="text-stone-500">Protein:</span>
+                      <span className="text-stone-500">{t.protein}:</span>
                       <strong className="block text-stone-900 font-bold">{recipe.nutrition.protein}</strong>
                     </div>
                     <div className="p-2 rounded-lg bg-white border border-stone-200">
-                      <span className="text-stone-500">Carbs:</span>
+                      <span className="text-stone-500">{t.carbs}:</span>
                       <strong className="block text-stone-900 font-bold">{recipe.nutrition.carbs}</strong>
                     </div>
                     <div className="p-2 rounded-lg bg-white border border-stone-200">
-                      <span className="text-stone-500">Fats:</span>
+                      <span className="text-stone-500">{t.fat}:</span>
                       <strong className="block text-stone-900 font-bold">{recipe.nutrition.fat}</strong>
                     </div>
                   </div>
@@ -313,7 +320,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
             <div className="lg:col-span-2 space-y-6">
               <div className="flex items-center justify-between pb-2 border-b border-stone-200">
                 <h3 className="font-extrabold text-stone-900 text-lg sm:text-xl">
-                  Step-by-Step Instructions
+                  {t.instructionsTitle}
                 </h3>
                 <span className="text-xs font-semibold text-stone-500">
                   {recipe.instructions.length} steps
@@ -341,7 +348,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                 <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 space-y-2.5">
                   <div className="flex items-center gap-2 text-amber-900 font-bold text-sm">
                     <Lightbulb className="w-4 h-4 text-amber-600" />
-                    <span>Chef's Secret Tips & Tricks</span>
+                    <span>{t.chefTipsTitle}</span>
                   </div>
                   <ul className="space-y-2">
                     {recipe.tips.map((tip, idx) => (
@@ -374,7 +381,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
             }`}
           >
             <Heart className={`w-4 h-4 ${favorite ? 'fill-white' : ''}`} />
-            {favorite ? 'Saved in Favorites' : 'Save to My Favorites'}
+            {favorite ? t.savedFavorite : t.saveFavorite}
           </button>
         </div>
       </div>

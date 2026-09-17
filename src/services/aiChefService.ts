@@ -66,8 +66,87 @@ export const NON_VEG_KEYWORDS: string[] = [
   'clam',
   'clams',
   'oyster',
-  'oysters'
+  'oysters',
+  // Telugu non-vegetarian keywords
+  'చికెన్', 'మటన్', 'మేకమాంసం', 'కోడి', 'కోడిమాంసం', 'చేప', 'చేపలు', 'రొయ్యలు', 'గుడ్డు', 'గుడ్లు', 'మాంసం',
+  // Hindi non-vegetarian keywords
+  'चिकन', 'मटन', 'गोश्त', 'मुर्ग', 'मछली', 'झींगा', 'अंडा', 'अंडे', 'मांस'
 ];
+
+/**
+ * Multilingual ingredient dictionary mapping Telugu & Hindi words to standard culinary ingredients.
+ */
+export const MULTILINGUAL_INGREDIENT_MAP: Record<string, string> = {
+  // Telugu
+  'పాలకూర': 'spinach',
+  'టమాటా': 'tomato',
+  'టమాట': 'tomato',
+  'బియ్యం': 'rice',
+  'అన్నం': 'rice',
+  'ఉల్లిపాయ': 'onion',
+  'ఉల్లిగడ్డ': 'onion',
+  'బంగాళాదుంప': 'potato',
+  'ఆలూ': 'potato',
+  'క్యారెట్': 'carrot',
+  'పనీర్': 'paneer',
+  'చికెన్': 'chicken',
+  'కోడి': 'chicken',
+  'కోడిమాంసం': 'chicken',
+  'మటన్': 'mutton',
+  'మేకమాంసం': 'mutton',
+  'చేప': 'fish',
+  'చేపలు': 'fish',
+  'రొయ్యలు': 'prawns',
+  'గుడ్డు': 'egg',
+  'గుడ్లు': 'egg',
+  'వెల్లుల్లి': 'garlic',
+  'అల్లం': 'ginger',
+  'పప్పు': 'dal',
+  'కొత్తిమీర': 'coriander',
+  'పుదీనా': 'mint',
+  'పచ్చిమిర్చి': 'green chili',
+  'మిరపకాయ': 'chili',
+  'పెరుగు': 'curd',
+  'నెయ్యి': 'ghee',
+  'నూనె': 'oil',
+  'పాలు': 'milk',
+  'గోబీ': 'cauliflower',
+  'కాలీఫ్లవర్': 'cauliflower',
+  'బఠానీలు': 'peas',
+  'పుట్టగొడుగులు': 'mushroom',
+
+  // Hindi
+  'पालक': 'spinach',
+  'टमाटर': 'tomato',
+  'चावल': 'rice',
+  'प्याज': 'onion',
+  'आलू': 'potato',
+  'गाजर': 'carrot',
+  'पनीर': 'paneer',
+  'चिकन': 'chicken',
+  'मुर्ग': 'chicken',
+  'मटन': 'mutton',
+  'गोश्त': 'mutton',
+  'मछली': 'fish',
+  'झींगा': 'prawns',
+  'अंडा': 'egg',
+  'अंडे': 'egg',
+  'लहसुन': 'garlic',
+  'अदरक': 'ginger',
+  'दाल': 'dal',
+  'धनिया': 'coriander',
+  'पुदीना': 'mint',
+  'हरी मिर्च': 'green chili',
+  'मिर्च': 'chili',
+  'दही': 'curd',
+  'घी': 'ghee',
+  'तेल': 'oil',
+  'दूध': 'milk',
+  'मटर': 'peas',
+  'गोभी': 'cauliflower',
+  'फूलगोभी': 'cauliflower',
+  'मशरूम': 'mushroom'
+};
 
 /**
  * Checks if a word or string contains any non-vegetarian keyword.
@@ -76,10 +155,15 @@ export const NON_VEG_KEYWORDS: string[] = [
 export function isNonVegWord(text?: string | null): boolean {
   if (!text) return false;
   const lower = text.toLowerCase();
-  return NON_VEG_KEYWORDS.some(kw => {
-    const regex = new RegExp(`\\b${kw}s?\\b`, 'i');
-    return regex.test(lower);
-  });
+  for (const kw of NON_VEG_KEYWORDS) {
+    if (/[a-z]/.test(kw)) {
+      const regex = new RegExp(`\\b${kw}s?\\b`, 'i');
+      if (regex.test(lower)) return true;
+    } else {
+      if (lower.includes(kw)) return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -126,22 +210,34 @@ export function normalizeIngredientName(name: string): string {
  * If the user's ingredients contain no non-vegetarian ingredient and the user
  * has not explicitly requested non-veg, then vegetarian = true.
  */
-export function extractIngredientsAndIntent(prompt: string): UserIntent {
+export function extractIngredientsAndIntent(
+  prompt: string, 
+  forcedDiet?: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'
+): UserIntent {
   const lower = prompt.toLowerCase();
-
-  // 1. Direct phrase separation (commas, '+', ' and ', '&')
-  const directChunks = prompt
-    .split(/[,+&]|\band\b/i)
-    .map(c => c.replace(/^(i have|what can i make with|suggest|a recipe with|recipe using|how to cook|ingredients?:?)\s*/i, '').trim())
-    .map(c => c.replace(/[^a-zA-Z\s-]/g, '').trim())
-    .filter(c => c.length > 1 && !['i', 'have', 'with', 'using', 'want', 'food', 'recipe', 'make', 'cook', 'the', 'some'].includes(c.toLowerCase()));
-
   const foundIngredients: string[] = [];
+
+  // 0. Check for multilingual Telugu and Hindi ingredients first
+  for (const [nativeWord, engIng] of Object.entries(MULTILINGUAL_INGREDIENT_MAP)) {
+    if (prompt.includes(nativeWord)) {
+      const norm = normalizeIngredientName(engIng);
+      if (!foundIngredients.includes(norm)) {
+        foundIngredients.push(norm);
+      }
+    }
+  }
+
+  // 1. Direct phrase separation (commas, '+', ' and ', '&', Hindi/Telugu punctuation)
+  const directChunks = prompt
+    .split(/[,+&|、।]/i)
+    .map(c => c.replace(/^(i have|what can i make with|suggest|a recipe with|recipe using|how to cook|ingredients?:?|నా దగ్గర|నేను|నాకు|నా దగ్గర ఉన్నవి|నాకు వంట కావాలి|मुझे|मेरे पास|बनाना है)\s*/i, '').trim())
+    .map(c => c.replace(/[^\p{L}\p{N}\s-]/gu, '').trim())
+    .filter(c => c.length > 1 && !['i', 'have', 'with', 'using', 'want', 'food', 'recipe', 'make', 'cook', 'the', 'some'].includes(c.toLowerCase()));
 
   // Add recognized direct chunks
   for (const chunk of directChunks) {
     const norm = normalizeIngredientName(chunk);
-    if (!foundIngredients.includes(norm)) {
+    if (norm.length > 1 && !foundIngredients.includes(norm)) {
       foundIngredients.push(norm);
     }
   }
@@ -163,13 +259,35 @@ export function extractIngredientsAndIntent(prompt: string): UserIntent {
 
   // Check explicit dietary keywords in the prompt
   const hasNonVegWordInPrompt = isNonVegWord(prompt);
-  const isExplicitNonVegRequest = /\b(non-veg|non veg|meat)\b/i.test(lower) || hasNonVegWordInPrompt;
-  const isExplicitVegRequest = /\b(veg|vegetarian|vegan|pure veg)\b/i.test(lower);
+  const isExplicitNonVegRequest = (
+    forcedDiet === 'NON-VEGETARIAN' ||
+    /\b(non-veg|non veg|meat)\b/i.test(lower) ||
+    prompt.includes('మాంసాహారం') ||
+    prompt.includes('నాన్ వెజ్') ||
+    prompt.includes('मांसाहारी') ||
+    prompt.includes('नॉनवेज') ||
+    prompt.includes('नॉन वेज') ||
+    hasNonVegWordInPrompt
+  );
+
+  const isExplicitVegRequest = (
+    forcedDiet === 'VEGETARIAN' ||
+    /\b(veg|vegetarian|vegan|pure veg)\b/i.test(lower) ||
+    prompt.includes('శాకాహారం') ||
+    prompt.includes('ప్యూర్ వెజ్') ||
+    prompt.includes('వెజ్') ||
+    prompt.includes('शाकाहारी') ||
+    prompt.includes('प्योर वेज') ||
+    prompt.includes('वेज')
+  );
 
   // VEGETARIAN SAFETY RULE:
-  // If user provided NO non-vegetarian ingredients and did NOT explicitly ask for non-veg:
+  // If forcedDiet is VEGETARIAN OR user provided NO non-vegetarian ingredients and did NOT explicitly ask for non-veg:
   // vegetarian = true
-  const isStrictlyVegetarian = !isExplicitNonVegRequest && userNonVegIngredients.length === 0;
+  const isStrictlyVegetarian = (
+    forcedDiet === 'VEGETARIAN' ||
+    (!isExplicitNonVegRequest && userNonVegIngredients.length === 0)
+  );
 
   const isQuickRequest = /\b(quick|fast|20-minute|20 min|15 min|10 min)\b/i.test(lower);
   const isBreakfast = /\b(breakfast|morning)\b/i.test(lower);
@@ -684,13 +802,16 @@ export function synthesizeDynamicRecipe(intent: UserIntent): AIChefResponse {
  * Prioritizes user's given ingredients, strictly enforces dietary rules,
  * validates responses, and falls back safely to dynamic recipe synthesis.
  */
-export async function generateRecipeFromAI(prompt: string): Promise<AIChefResponse> {
+export async function generateRecipeFromAI(
+  prompt: string,
+  dietaryFilter?: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'
+): Promise<AIChefResponse> {
   const trimmed = prompt.trim();
   if (!trimmed) {
     throw new Error("Empty query");
   }
 
-  const intent = extractIngredientsAndIntent(trimmed);
+  const intent = extractIngredientsAndIntent(trimmed, dietaryFilter);
 
   // Check if live Google Gemini API key is configured
   const geminiApiKey = (typeof import.meta !== 'undefined' && import.meta.env)
