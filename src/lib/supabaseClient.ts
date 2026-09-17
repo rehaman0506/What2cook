@@ -16,7 +16,7 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 
 if (!isSupabaseConfigured) {
   console.info(
-    '%c[RecipeMate AI] Running in Offline & Local Storage Mode. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env to connect to your live Supabase database.',
+    '%c[What2Cook] Running in Offline & Local Storage Mode. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to .env to connect to your live Supabase database.',
     'color: #f97316; font-weight: bold;'
   );
 }

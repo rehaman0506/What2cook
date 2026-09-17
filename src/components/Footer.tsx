@@ -28,7 +28,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
                 <ChefHat className="w-6 h-6 stroke-[2.2]" />
               </div>
               <span className="text-2xl font-black tracking-tight text-white">
-                RecipeMate <span className="text-orange-500 text-sm font-bold bg-orange-500/20 px-1.5 py-0.5 rounded">AI</span>
+                What2Cook <span className="text-orange-500 text-sm font-bold bg-orange-500/20 px-1.5 py-0.5 rounded">AI</span>
               </span>
             </div>
             <p className="text-stone-400 text-sm leading-relaxed">
@@ -106,7 +106,7 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
 
         {/* Bottom copyright */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-stone-500">
-          <p>© {new Date().getFullYear()} RecipeMate AI. Designed with modern web standards.</p>
+          <p>© {new Date().getFullYear()} What2Cook AI. Designed with modern web standards.</p>
           <p className="flex items-center gap-1">
             Made with <Heart className="w-3.5 h-3.5 text-rose-500 fill-rose-500" /> for hungry students & food lovers
           </p>

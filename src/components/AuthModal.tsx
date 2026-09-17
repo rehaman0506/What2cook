@@ -49,7 +49,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         if (res.error) {
           setErrorMsg(res.error);
         } else {
-          setSuccessMsg('Account ready! Welcome to RecipeMate AI.');
+          setSuccessMsg('Account ready! Welcome to What2Cook.');
           setTimeout(() => {
             setActiveTab('profile');
           }, 800);
@@ -90,7 +90,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
               <ChefHat className="w-4 h-4" />
             </div>
             <h3 className="font-extrabold text-stone-900 text-base">
-              {activeTab === 'favorites' ? 'My Saved Favorites' : 'RecipeMate Chef Account'}
+              {activeTab === 'favorites' ? 'My Saved Favorites' : 'What2Cook Chef Account'}
             </h3>
           </div>
 

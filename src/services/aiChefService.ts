@@ -887,7 +887,7 @@ Do NOT return chicken biryani or any meat dish when vegetarian ingredients are g
 Set "vegetarian": true in your JSON.`
       : `The user provided non-vegetarian ingredients or requested a non-vegetarian dish. You may include non-vegetarian ingredients.`;
 
-    const systemInstruction = `You are RecipeMate AI Chef, an expert culinary assistant.
+    const systemInstruction = `You are What2Cook AI Chef, an expert culinary assistant.
 Create a complete, realistic, delicious recipe response based on the user's prompt and ingredients.
 
 Follow these strict rules:

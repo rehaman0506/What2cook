@@ -550,12 +550,12 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 5. WHY RECIPEMATE AI */}
+      {/* 5. WHY WHAT2COOK */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="p-8 sm:p-12 rounded-3xl bg-stone-900 text-white space-y-8">
           <div className="max-w-2xl space-y-2">
             <span className="text-xs font-bold text-orange-400 uppercase tracking-widest">
-              Why RecipeMate AI?
+              Why What2Cook?
             </span>
             <h3 className="text-2xl sm:text-3xl font-black">
               Built for Students, Food Lovers, and Zero-Waste Kitchens

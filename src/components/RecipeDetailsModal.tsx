@@ -39,7 +39,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
     if (navigator.share) {
       navigator.share({
         title: recipe.name,
-        text: `Check out this recipe for ${recipe.name} on RecipeMate AI!`,
+        text: `Check out this recipe for ${recipe.name} on What2Cook!`,
         url: window.location.href,
       }).catch(() => {});
     } else {

@@ -49,7 +49,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="text-xl sm:text-2xl font-black tracking-tight text-stone-900 group-hover:text-orange-600 transition-colors">
-                  RecipeMate
+                  What2Cook
                 </span>
                 <span className="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
                   AI

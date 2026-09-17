@@ -26,7 +26,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           if (session?.user) {
             setUser({
               id: session.user.id,
-              email: session.user.email || 'chef@recipemate.ai',
+              email: session.user.email || 'chef@what2cook.ai',
               created_at: session.user.created_at,
               isGuest: false,
             });
@@ -39,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             if (session?.user) {
               setUser({
                 id: session.user.id,
-                email: session.user.email || 'chef@recipemate.ai',
+                email: session.user.email || 'chef@what2cook.ai',
                 created_at: session.user.created_at,
                 isGuest: false,
               });
@@ -74,7 +74,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const setDefaultGuest = () => {
       const guestUser: UserProfile = {
         id: 'guest-' + Math.random().toString(36).substring(2, 9),
-        email: 'student.chef@recipemate.ai',
+        email: 'student.chef@what2cook.ai',
         created_at: new Date().toISOString(),
         isGuest: true,
       };
@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
     const guestUser: UserProfile = {
       id: 'guest-' + Math.random().toString(36).substring(2, 9),
-      email: 'student.chef@recipemate.ai',
+      email: 'student.chef@what2cook.ai',
       created_at: new Date().toISOString(),
       isGuest: true,
     };
@@ -129,7 +129,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const continueAsGuest = () => {
     const guestUser: UserProfile = {
       id: 'guest-' + Math.random().toString(36).substring(2, 9),
-      email: 'student.chef@recipemate.ai',
+      email: 'student.chef@what2cook.ai',
       created_at: new Date().toISOString(),
       isGuest: true,
     };

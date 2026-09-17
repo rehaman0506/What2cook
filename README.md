@@ -1,9 +1,9 @@
-# RecipeMate AI 👨‍🍳🥗
+# What2Cook 👨‍🍳🥗
 
 > **Turn Your Ingredients Into Delicious Recipes**  
 > *Tell our AI what you have in your kitchen and discover what you can cook.*
 
-RecipeMate AI is a modern, responsive, student-friendly AI-powered Food & Recipe platform featuring an intelligent conversational AI Chef, searchable recipe catalog, categorized browsing, interactive step-by-step preparation checklists, and user authentication with saved favorites.
+What2Cook is a modern, responsive, student-friendly AI-powered Food & Recipe platform featuring an intelligent conversational AI Chef, searchable recipe catalog, categorized browsing, interactive step-by-step preparation checklists, and user authentication with saved favorites.
 
 ---
 
@@ -55,7 +55,7 @@ VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 VITE_GEMINI_API_KEY=your-gemini-api-key
 ```
-*(Note: RecipeMate AI runs completely offline in demo mode if keys are not provided!)*
+*(Note: What2Cook runs completely offline in demo mode if keys are not provided!)*
 
 ### 4. Start the development server
 ```bash
