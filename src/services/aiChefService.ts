@@ -324,396 +324,408 @@ function capitalizeWords(str: string): string {
  * Languages supported in Chatbot: English ('en') and Telugu ('te').
  * Hindi is totally removed from this chatbot.
  */
+/**
+ * Intelligently searches SAMPLE_RECIPES for an authentic match based on:
+ * 1. Direct dish title in prompt (e.g., "Chicken Biryani", "Palak Paneer", "Pasta", "Dosa")
+ * 2. Popular dish keyword and alias mappings across 66 dishes
+ * 3. High-confidence ingredient overlap
+ */
+export function matchSampleRecipe(
+  prompt: string,
+  intent: UserIntent,
+  targetServings: number = 2
+): AIChefResponse | null {
+  const { foundIngredients, isStrictlyVegetarian } = intent;
+  const lowerPrompt = prompt.toLowerCase();
+
+  // 1. Direct Dish Title Match
+  for (const recipe of SAMPLE_RECIPES) {
+    if (isStrictlyVegetarian && recipe.food_type !== 'VEGETARIAN') continue;
+    if (isStrictlyVegetarian && isNonVegWord(recipe.name)) continue;
+
+    const lowerName = recipe.name.toLowerCase();
+    if (lowerPrompt.includes(lowerName)) {
+      return buildSampleResponse(recipe, foundIngredients, targetServings);
+    }
+
+    // Core words matching (e.g. "Chicken Dum Biryani" in "how to make chicken dum biryani")
+    const coreWords = lowerName
+      .replace(/[^a-z0-9\s]/g, '')
+      .split(/\s+/)
+      .filter(w => !['and', 'with', 'the', 'indian', 'style', 'classic', 'royal', 'south', 'north', 'street', 'homestyle', 'fragrant', 'crispy', 'steamed'].includes(w));
+
+    if (coreWords.length >= 2) {
+      const matchCount = coreWords.filter(w => lowerPrompt.includes(w)).length;
+      if (matchCount >= 2 && matchCount === coreWords.length) {
+        return buildSampleResponse(recipe, foundIngredients, targetServings);
+      }
+    }
+  }
+
+  // 2. Keyword & Alias Mapping to authentic sample recipes
+  const KEYWORD_MAP: Array<{ keywords: string[]; recipeId: string }> = [
+    // Biryanis & Rice
+    { keywords: ['chicken biryani', 'murgh biryani'], recipeId: 'rec-01' },
+    { keywords: ['mutton biryani', 'gosht biryani'], recipeId: 'rec-45' },
+    { keywords: ['veg biryani', 'vegetable biryani', 'dum biryani'], recipeId: isStrictlyVegetarian ? 'rec-02' : 'rec-01' },
+    { keywords: ['biryani'], recipeId: isStrictlyVegetarian ? 'rec-02' : 'rec-01' },
+    { keywords: ['chicken fried rice', 'fried rice'], recipeId: isStrictlyVegetarian ? 'rec-03' : 'rec-06' },
+    { keywords: ['jeera rice', 'cumin rice'], recipeId: 'rec-03' },
+    { keywords: ['curd rice'], recipeId: 'rec-04' },
+    { keywords: ['lemon rice'], recipeId: 'rec-05' },
+
+    // Indian Curries & Gravies
+    { keywords: ['butter chicken', 'murgh makhani'], recipeId: 'rec-14' },
+    { keywords: ['chettinad chicken', 'pepper chicken'], recipeId: 'rec-15' },
+    { keywords: ['paneer butter masala', 'paneer butter', 'paneer makhani'], recipeId: 'rec-13' },
+    { keywords: ['palak paneer', 'spinach paneer'], recipeId: 'rec-47' },
+    { keywords: ['dal makhani', 'dal', 'daal', 'dal tadka'], recipeId: 'rec-16' },
+    { keywords: ['chana masala', 'chole', 'chickpea'], recipeId: 'rec-17' },
+    { keywords: ['fish curry', 'malabar fish'], recipeId: 'rec-18' },
+    { keywords: ['rogan josh', 'kashmiri rogan josh'], recipeId: 'rec-19' },
+    { keywords: ['gongura mutton', 'andhra mutton'], recipeId: 'rec-46' },
+    { keywords: ['prawns', 'shrimp', 'garlic prawns'], recipeId: 'rec-64' },
+    { keywords: ['khichdi', 'moong dal khichdi'], recipeId: 'rec-52' },
+    { keywords: ['kurma', 'vegetable kurma', 'parotta'], recipeId: 'rec-51' },
+    { keywords: ['thai green curry', 'thai curry'], recipeId: 'rec-23' },
+
+    // Indo-Chinese
+    { keywords: ['chili chicken', 'chilli chicken'], recipeId: 'rec-49' },
+    { keywords: ['veg manchurian', 'manchurian'], recipeId: 'rec-48' },
+    { keywords: ['noodles', 'hakka noodles', 'chowmein'], recipeId: 'rec-50' },
+
+    // Breakfast Specialties
+    { keywords: ['masala dosa', 'dosa'], recipeId: 'rec-07' },
+    { keywords: ['idli', 'medu vada', 'vada'], recipeId: 'rec-08' },
+    { keywords: ['poha', 'kanda poha'], recipeId: 'rec-09' },
+    { keywords: ['aloo paratha', 'paratha'], recipeId: 'rec-10' },
+    { keywords: ['masala omelette', 'omelette', 'egg omelette'], recipeId: 'rec-11' },
+    { keywords: ['pancakes', 'blueberry pancakes'], recipeId: 'rec-12' },
+
+    // Continental & Italian
+    { keywords: ['pizza', 'margherita'], recipeId: 'rec-20' },
+    { keywords: ['pasta', 'fettuccine alfredo', 'alfredo'], recipeId: 'rec-21' },
+    { keywords: ['mac and cheese', 'macaroni', 'mac & cheese'], recipeId: 'rec-53' },
+    { keywords: ['bruschetta', 'tomato bruschetta'], recipeId: 'rec-28' },
+    { keywords: ['salmon', 'grilled salmon'], recipeId: 'rec-24' },
+    { keywords: ['garlic bread'], recipeId: 'rec-63' },
+    { keywords: ['caesar salad'], recipeId: 'rec-36' },
+    { keywords: ['greek salad', 'salad'], recipeId: 'rec-35' },
+
+    // Mexican
+    { keywords: ['tacos', 'street tacos', 'taco'], recipeId: 'rec-54' },
+    { keywords: ['quesadillas', 'quesadilla'], recipeId: 'rec-22' },
+
+    // Fast Food & Snacks
+    { keywords: ['burger', 'cheeseburger', 'smash burger'], recipeId: isStrictlyVegetarian ? 'rec-32' : 'rec-31' },
+    { keywords: ['french fries', 'potato fries', 'fries'], recipeId: 'rec-55' },
+    { keywords: ['chicken 65'], recipeId: 'rec-26' },
+    { keywords: ['buffalo wings', 'chicken wings', 'wings'], recipeId: 'rec-56' },
+    { keywords: ['paneer tikka', 'tandoori paneer'], recipeId: 'rec-27' },
+    { keywords: ['samosa'], recipeId: 'rec-25' },
+    { keywords: ['pav bhaji'], recipeId: 'rec-29' },
+    { keywords: ['pani puri', 'golgappa', 'golgappe'], recipeId: 'rec-30' },
+    { keywords: ['bhel puri', 'chaat'], recipeId: 'rec-59' },
+    { keywords: ['egg roll', 'kathi roll', 'egg kathi roll'], recipeId: 'rec-60' },
+    { keywords: ['onion pakoda', 'pakoda', 'bhajiya'], recipeId: 'rec-66' },
+
+    // Soups
+    { keywords: ['tomato soup', 'cream of tomato'], recipeId: 'rec-33' },
+    { keywords: ['hot and sour', 'chicken soup'], recipeId: 'rec-34' },
+    { keywords: ['sweet corn soup', 'corn soup'], recipeId: 'rec-57' },
+    { keywords: ['minestrone', 'vegetable soup'], recipeId: 'rec-58' },
+
+    // Desserts & Beverages
+    { keywords: ['gulab jamun'], recipeId: 'rec-37' },
+    { keywords: ['rasmalai'], recipeId: 'rec-38' },
+    { keywords: ['gajar ka halwa', 'gajar halwa', 'carrot halwa'], recipeId: 'rec-39' },
+    { keywords: ['chocolate lava cake', 'lava cake', 'cake'], recipeId: 'rec-40' },
+    { keywords: ['tiramisu'], recipeId: 'rec-41' },
+    { keywords: ['shahi tukda'], recipeId: 'rec-65' },
+    { keywords: ['mango lassi', 'lassi'], recipeId: 'rec-42' },
+    { keywords: ['masala chai', 'chai', 'tea'], recipeId: 'rec-43' },
+    { keywords: ['filter coffee', 'degree filter coffee', 'coffee'], recipeId: 'rec-62' },
+    { keywords: ['badam milk', 'almond milk'], recipeId: 'rec-61' },
+    { keywords: ['mojito', 'virgin mojito'], recipeId: 'rec-44' }
+  ];
+
+  for (const mapping of KEYWORD_MAP) {
+    if (mapping.keywords.some(k => lowerPrompt.includes(k))) {
+      const matched = SAMPLE_RECIPES.find(r => r.id === mapping.recipeId);
+      if (matched) {
+        if (!isStrictlyVegetarian || (matched.food_type === 'VEGETARIAN' && !isNonVegWord(matched.name))) {
+          return buildSampleResponse(matched, foundIngredients, targetServings);
+        }
+      }
+    }
+  }
+
+  // 3. High-Confidence Ingredient Overlap Matching
+  if (foundIngredients.length > 0) {
+    let highestScore = 0;
+    let topRecipe: Recipe | null = null;
+
+    for (const recipe of SAMPLE_RECIPES) {
+      if (isStrictlyVegetarian && recipe.food_type !== 'VEGETARIAN') continue;
+      if (isStrictlyVegetarian && isNonVegWord(recipe.name)) continue;
+
+      let score = 0;
+      const lowerRecName = recipe.name.toLowerCase();
+      const lowerRecIngs = recipe.ingredients.map(i => i.name.toLowerCase());
+
+      for (const userIng of foundIngredients) {
+        const u = userIng.toLowerCase();
+        if (lowerRecName.includes(u)) score += 20;
+        if (lowerRecIngs.some(ri => ri.includes(u))) score += 10;
+      }
+
+      if (score > highestScore) {
+        highestScore = score;
+        topRecipe = recipe;
+      }
+    }
+
+    if (highestScore >= 15 && topRecipe) {
+      return buildSampleResponse(topRecipe, foundIngredients, targetServings);
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Builds a rich, scaled AIChefResponse from an authentic sample recipe.
+ */
+function buildSampleResponse(
+  recipe: Recipe,
+  foundIngredients: string[],
+  targetServings: number
+): AIChefResponse {
+  const originalServings = recipe.servings || 2;
+  const scaledIngredients = recipe.ingredients.map(ing => ({
+    ...ing,
+    quantity: scaleQuantity(ing.quantity, originalServings, targetServings)
+  }));
+
+  const userMatchedItems = foundIngredients.map(capitalizeWords);
+  const additionalItems = recipe.ingredients
+    .filter(i => !foundIngredients.some(u => i.name.toLowerCase().includes(u.toLowerCase())))
+    .map(i => `${i.name} (${scaleQuantity(i.quantity, originalServings, targetServings)})`);
+
+  const introText = userMatchedItems.length > 0
+    ? `I have crafted the authentic recipe for **${recipe.name}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} featuring your **${userMatchedItems.join(', ')}**! Follow the full ingredients checklist and step-by-step cooking instructions below.`
+    : `Here is the authentic, chef-tested recipe for **${recipe.name}** scaled for ${targetServings} ${targetServings === 1 ? 'person' : 'people'}. Enjoy cooking!`;
+
+  return {
+    recipe: {
+      ...recipe,
+      id: `ai-gen-${Date.now()}`,
+      servings: targetServings,
+      ingredients: scaledIngredients
+    },
+    userIngredients: userMatchedItems.length > 0 ? userMatchedItems : ['Recipe Request'],
+    additionalIngredients: additionalItems.length > 0 ? additionalItems : ['Pantry spices and seasoning'],
+    conversationalIntro: introText
+  };
+}
+
+/**
+ * Intelligently constructs an authentic, complete culinary recipe tailored
+ * directly to the user's provided ingredients and chosen servings count.
+ * Generates 10-12 complete ingredients and 6 detailed, dish-specific instructions.
+ */
 export function synthesizeDynamicRecipe(
   intent: UserIntent, 
   _lang: 'en' = 'en',
   targetServings: number = 2
 ): AIChefResponse {
   const { foundIngredients, isStrictlyVegetarian } = intent;
-
-  const hasRice = foundIngredients.includes('rice') || foundIngredients.includes('basmati rice');
-  const hasSpinach = foundIngredients.includes('spinach');
-  const hasTomato = foundIngredients.includes('tomato');
-  const hasPotato = foundIngredients.includes('potato');
-  const hasPaneer = foundIngredients.includes('paneer');
-  const hasChicken = foundIngredients.includes('chicken');
   const userItemsFormatted = foundIngredients.map(capitalizeWords);
   const now = Date.now();
 
-  const localizedUserItems = userItemsFormatted;
-
-  // -------------------------------------------------------------------------
-  // CASE A: Spinach + Rice (+ Tomato / other veggies) -> 100% VEGETARIAN Rice
-  // -------------------------------------------------------------------------
-  if (hasRice && hasSpinach && isStrictlyVegetarian) {
-    let dishTitle = 'Homestyle Spiced Spinach & Tomato Rice';
-    let description = 'A fragrant, nutritious one-pot spiced rice dish infused with fresh tender spinach leaves, juicy tomatoes, cumin seeds, and aromatic spices.';
-    let intro = `I have designed a 100% vegetarian **${dishTitle}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} highlighting your **${userItemsFormatted.join(', ')}**! It is healthy, quick to make in 30 minutes, and completely free of any meat or non-vegetarian ingredients.`;
-
-    // Base ingredients for 2 servings
-    let baseIngredients = [
-      { name: 'Basmati Rice', quantity: '1.5 cups (rinsed & soaked 20 mins)', isOptional: false },
-      { name: 'Fresh Spinach', quantity: '2 cups (washed & chopped)', isOptional: false },
-      { name: 'Ripe Tomatoes', quantity: '2 medium (finely diced)', isOptional: false },
-      { name: 'Cooking Oil or Butter', quantity: '2 tbsp', isOptional: false },
-      { name: 'Cumin Seeds', quantity: '1 tsp', isOptional: false },
-      { name: 'Turmeric Powder & Warm Spices', quantity: '0.5 tsp each', isOptional: false }
-    ];
-
-    let instructions = [
-      { step: 1, text: 'Rinse basmati rice until water runs clear, soak in water for 20 minutes, then drain completely.' },
-      { step: 2, text: 'Heat cooking oil or butter in a heavy pot or pressure cooker. Sputter cumin seeds and add sliced onions (if available) until translucent.' },
-      { step: 3, text: 'Add diced tomatoes, turmeric powder, and salt. Sauté for 3-4 minutes on medium heat until tomatoes turn soft and pulpy.' },
-      { step: 4, text: 'Add chopped fresh spinach leaves. Sauté gently for 1-2 minutes until just wilted.' },
-      { step: 5, text: 'Add drained basmati rice, pour in water, and stir in warm spices. Bring to a rolling boil.' },
-      { step: 6, text: 'Cover tightly and simmer on low heat for 12-14 minutes until water is absorbed. Rest 5 minutes, fluff gently, and serve hot.' }
-    ];
-
-    let tips = [
-      'Adding spinach just before pouring water prevents discoloration and keeps the rice vibrant green.',
-      'Use a 1:2 ratio of soaked rice to water for fluffy, separate grains.'
-    ];
-
-    let additionalIngredients = [
-      'Cumin seeds - 1 tsp',
-      'Turmeric powder - 0.5 tsp',
-      'Warm spice blend - 0.5 tsp',
-      'Salt to taste'
-    ];
-
-    const scaledIngredients = baseIngredients.map(ing => ({
-      ...ing,
-      quantity: scaleQuantity(ing.quantity, 2, targetServings)
-    }));
-
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description,
-      image_url: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Indian',
-      category: 'Rice Dishes',
-      food_type: 'VEGETARIAN',
-      ingredients: scaledIngredients,
-      instructions,
-      preparation_time: '10 mins',
-      cooking_time: '20 mins',
-      total_time: '30 mins',
-      difficulty: 'Easy',
-      servings: targetServings,
-      rating: 4.9,
-      tips,
-      nutrition: { 
-        calories: 310, 
-        protein: '8g', 
-        carbs: '56g', 
-        fat: '6g' 
-      }
-    };
-
-    return {
-      recipe,
-      userIngredients: localizedUserItems,
-      additionalIngredients,
-      conversationalIntro: intro
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // CASE B: Potato + Tomato -> 100% VEGETARIAN Potato Tomato Curry
-  // -------------------------------------------------------------------------
-  if (hasPotato && hasTomato && isStrictlyVegetarian) {
-    let dishTitle = 'Homestyle Spiced Potato & Tomato Curry';
-    let description = 'A comforting everyday potato and tomato curry simmered in fragrant cumin seeds, turmeric, and warm spices.';
-    let intro = `Here is a comforting, 100% vegetarian **${dishTitle}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} crafted around your **${userItemsFormatted.join(', ')}**! Pure plant-rich goodness with zero non-veg ingredients.`;
-
-    let baseIngredients = [
-      { name: 'Potatoes', quantity: '2 medium (peeled and diced)', isOptional: false },
-      { name: 'Ripe Tomatoes', quantity: '2 large (finely diced)', isOptional: false },
-      { name: 'Cooking Oil', quantity: '2 tbsp', isOptional: false },
-      { name: 'Cumin Seeds & Turmeric Powder', quantity: '1 tsp each', isOptional: false }
-    ];
-
-    let instructions = [
-      { step: 1, text: 'Heat cooking oil in a pan. Sputter cumin seeds and add chopped onions until soft.' },
-      { step: 2, text: 'Add diced tomatoes with turmeric powder, chili powder, and salt. Cook 5 minutes until soft and fragrant.' },
-      { step: 3, text: 'Add diced potatoes and sauté in the spiced tomato masala for 2 minutes.' },
-      { step: 4, text: 'Add warm water, cover, and simmer for 15 minutes until potatoes are fork-tender.' },
-      { step: 5, text: 'Gently crush a few potato chunks to naturally thicken the gravy. Garnish with fresh coriander and serve hot.' }
-    ];
-
-    let tips = [
-      'Using ripe red tomatoes gives the curry a rich color and naturally balanced flavor.',
-      'Mash a couple of cooked potato cubes with the back of your spoon to thicken the gravy naturally.'
-    ];
-
-    let additionalIngredients = [
-      'Cumin seeds - 1 tsp',
-      'Turmeric powder - 0.5 tsp',
-      'Salt to taste',
-      'Fresh coriander leaves'
-    ];
-
-    const scaledIngredients = baseIngredients.map(ing => ({
-      ...ing,
-      quantity: scaleQuantity(ing.quantity, 2, targetServings)
-    }));
-
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description,
-      image_url: 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Indian',
-      category: 'Curry',
-      food_type: 'VEGETARIAN',
-      ingredients: scaledIngredients,
-      instructions,
-      preparation_time: '10 mins',
-      cooking_time: '20 mins',
-      total_time: '30 mins',
-      difficulty: 'Easy',
-      servings: targetServings,
-      rating: 4.8,
-      tips,
-      nutrition: { 
-        calories: 230, 
-        protein: '5g', 
-        carbs: '42g', 
-        fat: '6g' 
-      }
-    };
-
-    return {
-      recipe,
-      userIngredients: localizedUserItems,
-      additionalIngredients,
-      conversationalIntro: intro
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // CASE C: Spinach + Paneer -> 100% VEGETARIAN Palak Paneer
-  // -------------------------------------------------------------------------
-  if (hasSpinach && hasPaneer && isStrictlyVegetarian) {
-    let dishTitle = 'Creamy Garlic Spinach & Cottage Cheese Curry';
-    let description = 'A classic rich cottage cheese curry in a velvety spiced spinach puree with garlic and cream.';
-    let intro = `Here is a restaurant-style 100% vegetarian **${dishTitle}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} using your **${userItemsFormatted.join(', ')}**!`;
-
-    let baseIngredients = [
-      { name: 'Fresh Spinach Leaves', quantity: '300g', isOptional: false },
-      { name: 'Paneer (Cottage Cheese) Cubes', quantity: '200g', isOptional: false },
-      { name: 'Butter or Cooking Oil', quantity: '2 tbsp', isOptional: false },
-      { name: 'Minced Garlic', quantity: '1 tbsp', isOptional: false }
-    ];
-
-    let instructions = [
-      { step: 1, text: 'Blanch fresh spinach in boiling water for 2 minutes, plunge into cold water, and blend to a smooth green puree.' },
-      { step: 2, text: 'Heat butter or oil in a pan; sauté minced garlic and onions until golden.' },
-      { step: 3, text: 'Pour in the vibrant spinach puree with cumin, turmeric, and salt. Simmer covered for 5 minutes.' },
-      { step: 4, text: 'Gently fold in fresh paneer cubes and a swirl of cream. Simmer for 3 minutes and serve hot with flatbreads or rice.' }
-    ];
-
-    let tips = [
-      'Soak paneer cubes in warm water for 5 minutes before cooking to keep them pillow-soft.',
-      'Do not overcook spinach puree to retain its bright green vibrant color.'
-    ];
-
-    let additionalIngredients = [
-      'Minced garlic - 1 tbsp',
-      'Cumin seeds - 1 tsp',
-      'Turmeric powder - 0.5 tsp',
-      'Salt to taste',
-      'Fresh cream - 2 tbsp'
-    ];
-
-    const scaledIngredients = baseIngredients.map(ing => ({
-      ...ing,
-      quantity: scaleQuantity(ing.quantity, 2, targetServings)
-    }));
-
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description,
-      image_url: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Indian',
-      category: 'Dinner',
-      food_type: 'VEGETARIAN',
-      ingredients: scaledIngredients,
-      instructions,
-      preparation_time: '15 mins',
-      cooking_time: '15 mins',
-      total_time: '30 mins',
-      difficulty: 'Easy',
-      servings: targetServings,
-      rating: 4.9,
-      tips,
-      nutrition: { 
-        calories: 340, 
-        protein: '18g', 
-        carbs: '14g', 
-        fat: '24g' 
-      }
-    };
-
-    return {
-      recipe,
-      userIngredients: localizedUserItems,
-      additionalIngredients,
-      conversationalIntro: intro
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // CASE D: Chicken + Rice -> NON-VEGETARIAN Chicken Pulao / Rice
-  // -------------------------------------------------------------------------
-  if (hasChicken && hasRice) {
-    let dishTitle = 'One-Pot Savory Spiced Chicken Rice';
-    let description = 'A fragrant single-pot spiced rice dish cooked with tender chicken pieces, caramelized onions, and whole aromatic spices.';
-    let intro = `Since you provided chicken and rice, here is a delicious **${dishTitle}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} that comes together in a single pot in 40 minutes!`;
-
-    let baseIngredients = [
-      { name: 'Chicken Pieces', quantity: '400g', isOptional: false },
-      { name: 'Basmati Rice', quantity: '1.5 cups (rinsed & soaked 20 mins)', isOptional: false },
-      { name: 'Onion', quantity: '1 large (sliced)', isOptional: false },
-      { name: 'Cooking Oil or Butter', quantity: '2 tbsp', isOptional: false }
-    ];
-
-    let instructions = [
-      { step: 1, text: 'Rinse basmati rice thoroughly and soak in water for 20 minutes; drain completely.' },
-      { step: 2, text: 'Heat cooking oil in a deep pot; sauté sliced onions and whole spices until caramelized and fragrant.' },
-      { step: 3, text: 'Add chicken pieces, ginger-garlic paste, and turmeric. Sauté on medium-high heat for 6-8 minutes until seared.' },
-      { step: 4, text: 'Add drained basmati rice and hot water. Cover tightly and cook on low heat for 14-16 minutes until fluffy.' }
-    ];
-
-    let tips = [
-      'Always use hot water when pouring over rice to ensure even cooking and unbroken grains.',
-      'Searing chicken on medium-high heat locks in juices for tender results.'
-    ];
-
-    let additionalIngredients = [
-      'Ginger-garlic paste - 1 tbsp',
-      'Whole spice mix - 1 tsp',
-      'Turmeric powder - 0.5 tsp',
-      'Salt to taste'
-    ];
-
-    const scaledIngredients = baseIngredients.map(ing => ({
-      ...ing,
-      quantity: scaleQuantity(ing.quantity, 2, targetServings)
-    }));
-
-    const recipe: Recipe = {
-      id: `ai-gen-${now}`,
-      name: dishTitle,
-      description,
-      image_url: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
-      cuisine: 'Indian',
-      category: 'Rice Dishes',
-      food_type: 'NON-VEGETARIAN',
-      ingredients: scaledIngredients,
-      instructions,
-      preparation_time: '15 mins',
-      cooking_time: '25 mins',
-      total_time: '40 mins',
-      difficulty: 'Easy',
-      servings: targetServings,
-      rating: 4.8,
-      tips,
-      nutrition: { 
-        calories: 510, 
-        protein: '34g', 
-        carbs: '58g', 
-        fat: '14g' 
-      }
-    };
-
-    return {
-      recipe,
-      userIngredients: localizedUserItems,
-      additionalIngredients,
-      conversationalIntro: intro
-    };
-  }
-
-  // -------------------------------------------------------------------------
-  // GENERAL FALLBACK: Arbitrary user ingredients
-  // -------------------------------------------------------------------------
-  const primaryIng = localizedUserItems.length > 0 ? localizedUserItems[0] : ('Fresh Vegetables');
-  const secondaryIng = localizedUserItems.length > 1 ? localizedUserItems[1] : '';
+  const primaryIng = userItemsFormatted.length > 0 ? userItemsFormatted[0] : 'Fresh Garden Vegetables';
+  const secondaryIng = userItemsFormatted.length > 1 ? userItemsFormatted[1] : '';
   const comboName = secondaryIng ? `${primaryIng} & ${secondaryIng}` : primaryIng;
 
-  const foodType = isStrictlyVegetarian ? 'VEGETARIAN' : 'NON-VEGETARIAN';
-  let dishTitle = isStrictlyVegetarian ? `Homestyle Spiced ${comboName} Medley` : `Homestyle Savory ${comboName} Special`;
-  let intro = `I have designed an authentic **${dishTitle}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} specifically incorporating your **${userItemsFormatted.join(', ')}**! ${isStrictlyVegetarian ? 'It is 100% vegetarian with zero meat or eggs.' : ''}`;
+  const hasRice = foundIngredients.some(i => i.includes('rice'));
+  const hasPasta = foundIngredients.some(i => ['pasta', 'penne', 'spaghetti', 'macaroni', 'noodle'].some(k => i.includes(k)));
+  const hasChicken = foundIngredients.some(i => i.includes('chicken'));
+  const hasMutton = foundIngredients.some(i => i.includes('mutton') || i.includes('lamb'));
+  const hasSeafood = foundIngredients.some(i => ['fish', 'prawn', 'shrimp', 'crab'].some(k => i.includes(k)));
+  const hasEgg = foundIngredients.some(i => i.includes('egg'));
+  const hasPaneer = foundIngredients.some(i => i.includes('paneer'));
+  const hasDal = foundIngredients.some(i => ['dal', 'lentil', 'chana', 'chickpea', 'rajma', 'beans'].some(k => i.includes(k)));
 
-  const baseIngredients = [
-    ...localizedUserItems.map(ing => ({
-      name: ing,
-      quantity: 'Main portion as needed',
-      isOptional: false
-    })),
-    { name: 'Cooking Oil', quantity: '2 tbsp', isOptional: false }
-  ];
+  const foodType = (isStrictlyVegetarian || (!hasChicken && !hasMutton && !hasSeafood && !hasEgg)) ? 'VEGETARIAN' : 'NON-VEGETARIAN';
 
+  // 1. Determine culinary style, dish title, and category
+  let dishTitle = '';
+  let description = '';
+  let category = '';
+  let cuisine = 'Indian';
+  let image_url = '';
+  let prepTime = '15 mins';
+  let cookTime = '20 mins';
+  let totalTime = '35 mins';
+
+  if (hasRice) {
+    dishTitle = foodType === 'VEGETARIAN' 
+      ? `Homestyle Spiced ${comboName} Pulao` 
+      : `Savory Fragrant ${comboName} Rice`;
+    description = `A fragrant one-pot spiced rice dish infused with tender ${comboName}, whole aromatic cumin seeds, caramelized onions, and warming spices.`;
+    category = 'Rice Dishes';
+    image_url = foodType === 'VEGETARIAN'
+      ? 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=800&auto=format&fit=crop&q=80'
+      : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80';
+  } else if (hasPasta) {
+    dishTitle = `Italian-Style Garlic Herb ${comboName} Skillet`;
+    description = `Al dente pasta tossed with fresh ${comboName}, minced garlic, extra virgin olive oil, herbs, and finished with a touch of grated cheese.`;
+    category = 'Dinner';
+    cuisine = 'Italian';
+    image_url = 'https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=800&auto=format&fit=crop&q=80';
+  } else if (hasDal) {
+    dishTitle = `Comforting Spiced ${comboName} Tadka Curry`;
+    description = `Slow-simmered wholesome lentils with ${comboName}, tempered in golden ghee with garlic, cumin, and red chili.`;
+    category = 'Curry';
+    image_url = 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80';
+  } else {
+    dishTitle = foodType === 'VEGETARIAN'
+      ? `Homestyle Spiced ${comboName} Masala Curry`
+      : `Rich Slow-Simmered ${comboName} Curry`;
+    description = `A rich, aromatic everyday curry crafted around ${comboName}, simmered in a golden onion-tomato gravy with roasted ground spices.`;
+    category = 'Curry';
+    image_url = foodType === 'VEGETARIAN'
+      ? (hasPaneer 
+          ? 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80'
+          : 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80')
+      : (hasSeafood
+          ? 'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=800&auto=format&fit=crop&q=80'
+          : 'https://images.unsplash.com/photo-1545247181-516773ca838b?w=800&auto=format&fit=crop&q=80');
+  }
+
+  // 2. Build complete realistic 10-12 ingredient list (base for 2 servings)
+  const baseIngredients: Array<{ name: string; quantity: string; isOptional: boolean }> = [];
+
+  // Add primary user ingredient
+  if (primaryIng) {
+    let pQty = '250g (cleaned & sliced)';
+    if (hasChicken || hasMutton) pQty = '400g (cut into bite-sized pieces)';
+    else if (hasRice) pQty = '1.5 cups (rinsed & soaked 20 mins)';
+    else if (hasPasta) pQty = '200g (penne or fusilli)';
+    else if (hasPaneer) pQty = '250g (cubed fresh)';
+    else if (hasEgg) pQty = '4 whole eggs (boiled or whisked)';
+    else if (hasSeafood) pQty = '300g (cleaned & deveined)';
+    baseIngredients.push({ name: primaryIng, quantity: pQty, isOptional: false });
+  }
+
+  // Add secondary user ingredient if present
+  if (secondaryIng) {
+    baseIngredients.push({ name: secondaryIng, quantity: '1 cup (chopped evenly)', isOptional: false });
+  }
+
+  // Add any further user ingredients
+  for (let i = 2; i < userItemsFormatted.length; i++) {
+    baseIngredients.push({ name: userItemsFormatted[i], quantity: '1/2 cup (chopped)', isOptional: false });
+  }
+
+  // Add foundational aromatics and pantry spices
+  baseIngredients.push(
+    { name: 'Yellow Onion', quantity: '1 large (finely chopped)', isOptional: false },
+    { name: 'Ginger-Garlic Paste', quantity: '1.5 tbsp (freshly ground)', isOptional: false },
+    { name: 'Ripe Tomatoes', quantity: '2 medium (pureed or finely diced)', isOptional: false },
+    { name: 'Cooking Oil or Pure Ghee', quantity: '2 tbsp', isOptional: false },
+    { name: 'Whole Cumin Seeds (Jeera)', quantity: '1 tsp', isOptional: false },
+    { name: 'Turmeric Powder', quantity: '0.5 tsp', isOptional: false },
+    { name: 'Kashmiri Red Chili Powder', quantity: '1 tsp', isOptional: false },
+    { name: 'Coriander-Cumin Powder', quantity: '1.5 tsp', isOptional: false },
+    { name: 'Garam Masala Powder', quantity: '0.5 tsp', isOptional: false },
+    { name: 'Iodized Salt', quantity: '1 tsp (or to taste)', isOptional: false },
+    { name: 'Fresh Cilantro / Coriander Leaves', quantity: '2 tbsp (finely chopped)', isOptional: false }
+  );
+
+  // Scale all ingredient quantities accurately to targetServings
   const scaledIngredients = baseIngredients.map(ing => ({
     ...ing,
     quantity: scaleQuantity(ing.quantity, 2, targetServings)
   }));
 
+  // 3. Build detailed, dish-specific 6-step cooking instructions
+  const mainItemsList = userItemsFormatted.join(', ') || 'selected ingredients';
+  const instructions = [
+    {
+      step: 1,
+      text: `Preparation: Thoroughly clean and rinse ${mainItemsList}. Cut into uniform bite-sized pieces so that all ingredients cook evenly and absorb maximum flavor.`
+    },
+    {
+      step: 2,
+      text: `Tempering Aromatics: Heat cooking oil or ghee in a deep skillet or heavy-bottomed pot over medium flame. Add whole cumin seeds and let them crackle for 30 seconds. Add finely chopped onions and sauté until translucent and lightly caramelized (about 4-5 minutes).`
+    },
+    {
+      step: 3,
+      text: `Base Gravy & Spices: Stir in the ginger-garlic paste and sauté for 1 minute until fragrant. Add pureed tomatoes, turmeric powder, Kashmiri red chili powder, coriander-cumin powder, and salt. Cook on medium heat for 4-5 minutes until the masala thickens and oil begins to separate at the edges.`
+    },
+    {
+      step: 4,
+      text: `Cooking Main Ingredients: Add your prepared ${mainItemsList} into the spiced base. Gently toss on medium-high heat for 2-3 minutes to sear and coat with spices. Pour in warm water or broth (approx. 1 cup for 2 servings), bring to a gentle boil, then cover with a tight lid. Simmer on low heat for 12-15 minutes until tender and cooked through.`
+    },
+    {
+      step: 5,
+      text: `Flavor Blooming & Reduction: Remove the lid and check the tenderness of the ingredients. Sprinkle fragrant garam masala and stir gently. Allow the curry to simmer uncovered for 2 minutes until it reaches your preferred rich sauce consistency.`
+    },
+    {
+      step: 6,
+      text: `Garnish & Presentation: Turn off the heat and garnish generously with freshly chopped coriander leaves. Let the dish rest covered for 3 minutes before serving piping hot alongside steamed basmati rice, warm butter roti, or crusty artisan bread.`
+    }
+  ];
+
+  const tips = [
+    'Sautéing the tomato and spice base until oil separates from the edges unlocks deep restaurant-quality flavor.',
+    'Cook on low-medium flame with the lid tightly closed to retain natural juices and aromatic moisture.'
+  ];
+
   const recipe: Recipe = {
     id: `ai-gen-${now}`,
     name: dishTitle,
-    description: `A delicious, homestyle preparation crafted around ${userItemsFormatted.join(', ')}, tempered with aromatic cumin and warm spices.`,
-    image_url: isStrictlyVegetarian 
-      ? 'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80'
-      : 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
-    cuisine: 'Indian',
-    category: isStrictlyVegetarian 
-      ? ('Vegetarian') 
-      : ('Non-Vegetarian'),
+    description,
+    image_url,
+    cuisine,
+    category,
     food_type: foodType,
     ingredients: scaledIngredients,
-    instructions: [
-      { step: 1, text: 'Rinse thoroughly and prep ingredients, slicing vegetables or proteins into even bite-sized pieces.' },
-      { step: 2, text: 'Heat oil or butter in a pan; add cumin seeds, minced garlic, and onions until fragrant.' },
-      { step: 3, text: 'Add the main ingredients with turmeric, ground chili, salt, and spices. Sauté and simmer covered until tender.' },
-      { step: 4, text: 'Garnish with freshly chopped coriander and serve hot with steamed rice or flatbreads.' }
-    ],
-    preparation_time: '10 mins',
-    cooking_time: '18 mins',
-    total_time: '28 mins',
+    instructions,
+    preparation_time: prepTime,
+    cooking_time: cookTime,
+    total_time: totalTime,
     difficulty: 'Easy',
     servings: targetServings,
     rating: 4.8,
-    tips: [
-      'Using fresh ground spices and slow-cooking on medium heat enhances authentic natural flavors.'
-    ],
+    tips,
     nutrition: { 
-      calories: isStrictlyVegetarian ? 260 : 420, 
-      protein: isStrictlyVegetarian ? '8g' : '28g', 
-      carbs: '38g', 
-      fat: '10g' 
+      calories: foodType === 'VEGETARIAN' ? 280 : 440, 
+      protein: foodType === 'VEGETARIAN' ? '12g' : '32g', 
+      carbs: '42g', 
+      fat: '11g' 
     }
   };
 
+  const additionalIngredients = [
+    `Yellow Onion (${scaleQuantity('1 large', 2, targetServings)})`,
+    `Ginger-Garlic Paste (${scaleQuantity('1.5 tbsp', 2, targetServings)})`,
+    `Ripe Tomatoes (${scaleQuantity('2 medium', 2, targetServings)})`,
+    `Cumin Seeds, Turmeric, Red Chili & Garam Masala`,
+    `Cooking Oil or Ghee (${scaleQuantity('2 tbsp', 2, targetServings)})`
+  ];
+
+  const intro = `I have designed an authentic, complete **${dishTitle}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'} featuring your **${userItemsFormatted.join(', ')}**! ${foodType === 'VEGETARIAN' ? 'It is 100% vegetarian with zero meat or eggs.' : ''} Follow the full ingredients checklist and step-by-step cooking instructions below.`;
+
   return {
     recipe,
-    userIngredients: localizedUserItems,
-    additionalIngredients: [
-      'Cooking Oil, Cumin Seeds, Salt, and Fresh Herbs'
-    ],
+    userIngredients: userItemsFormatted,
+    additionalIngredients,
     conversationalIntro: intro
   };
 }
 
-/**
- * Validates and sanitizes the recipe response before rendering:
- * 1. Enforces strict language segregation (Telugu or English only; zero Hindi).
- * 2. Ensures target servings and ingredient quantities match.
- * 3. Enforces vegetarian vs non-vegetarian rules.
- */
 export function validateAndSanitizeRecipe(
   response: AIChefResponse,
   _targetLang: 'en' = 'en',
@@ -829,49 +841,17 @@ export async function generateRecipeFromAI(
   // Artificial brief delay for authentic typing animation
   await new Promise(resolve => setTimeout(resolve, 800));
 
-  // If user query is a simple dish search and a matching sample recipe exists
-  if (intent.foundIngredients.length === 0) {
-    const lower = trimmed.toLowerCase();
-    const matchedSample = SAMPLE_RECIPES.find(r => {
-      const matchName = lower.includes(r.name.toLowerCase()) || r.name.toLowerCase().includes(lower);
-      if (!matchName) return false;
-      if (intent.isStrictlyVegetarian && r.food_type !== 'VEGETARIAN') return false;
-      if (intent.isStrictlyVegetarian && isNonVegWord(r.name)) return false;
-      return true;
-    });
-
-    if (matchedSample) {
-      const originalServings = matchedSample.servings || 2;
-      const scaledIngredients = matchedSample.ingredients.map(ing => ({
-        ...ing,
-        quantity: scaleQuantity(ing.quantity, originalServings, targetServings)
-      }));
-
-      const introText = `Here is the authentic recipe for **${matchedSample.name}** for ${targetServings} ${targetServings === 1 ? 'person' : 'people'}! Enjoy cooking!`;
-
-      const sampleResponse: AIChefResponse = {
-        recipe: { 
-          ...matchedSample, 
-          id: `ai-gen-${Date.now()}`,
-          servings: targetServings,
-          ingredients: scaledIngredients
-        },
-        userIngredients: ['Recipe Request'],
-        additionalIngredients: ['Standard pantry spices and ingredients as listed in recipe'],
-        conversationalIntro: introText
-      };
-      return validateAndSanitizeRecipe(sampleResponse, lang, targetServings, intent.isStrictlyVegetarian);
-    }
+  // 1. Check if query matches or overlaps with one of our 66 authentic handcrafted sample recipes
+  const sampleMatch = matchSampleRecipe(trimmed, intent, targetServings);
+  if (sampleMatch) {
+    return validateAndSanitizeRecipe(sampleMatch, lang, targetServings, intent.isStrictlyVegetarian);
   }
 
-  // Generate dynamic, guaranteed-safe recipe tailored to user ingredients in requested language & servings
+  // 2. Otherwise, dynamically synthesize a complete, chef-grade custom recipe tailored specifically to user ingredients
   const dynamicResponse = synthesizeDynamicRecipe(intent, lang, targetServings);
   return validateAndSanitizeRecipe(dynamicResponse, lang, targetServings, intent.isStrictlyVegetarian);
 }
 
-/**
- * Calls Google Gemini API with strict dietary enforcement, language purity, and target servings scaling.
- */
 async function callGeminiAPI(
   prompt: string, 
   intent: UserIntent, 
