@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   X, ArrowLeft, Clock, Flame, Users, Star, Heart, 
-  CheckCircle2, Circle, Lightbulb, Share2, Printer, Sparkles 
+  CheckCircle2, Circle, Lightbulb, Share2, Printer, Sparkles,
+  Minus, Plus
 } from 'lucide-react';
 import { Recipe } from '../types';
 import { useFavorites } from '../context/FavoritesContext';
 import { useLanguage } from '../context/LanguageContext';
+import { scaleQuantity } from '../utils/quantityScaler';
 
 interface RecipeDetailsModalProps {
   recipe: Recipe | null;
@@ -22,6 +24,14 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
   const { t } = useLanguage();
   const [checkedIngredients, setCheckedIngredients] = useState<Record<number, boolean>>({});
   const [copiedShare, setCopiedShare] = useState(false);
+  const [servingsCount, setServingsCount] = useState<number>(recipe?.servings || 2);
+
+  useEffect(() => {
+    if (recipe) {
+      setServingsCount(recipe.servings || 2);
+      setCheckedIngredients({});
+    }
+  }, [recipe]);
 
   if (!recipe) return null;
 
@@ -192,13 +202,15 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                 </div>
               </div>
 
-              <div className="p-3.5 rounded-2xl bg-stone-100 border border-stone-200 flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-stone-700 text-white">
+              <div className="p-3.5 rounded-2xl bg-orange-50/80 border border-orange-200/80 flex items-center gap-3">
+                <div className="p-2 rounded-xl bg-orange-500 text-white">
                   <Users className="w-4 h-4" />
                 </div>
                 <div>
                   <div className="text-[11px] font-bold text-stone-500 uppercase tracking-wider">{t.servings}</div>
-                  <div className="text-sm font-extrabold text-stone-900">{recipe.servings}</div>
+                  <div className="text-sm font-extrabold text-stone-900">
+                    {servingsCount} {servingsCount === 1 ? 'person' : 'people'}
+                  </div>
                 </div>
               </div>
 
@@ -250,11 +262,73 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                   {recipe.ingredients.length} {t.ingredientsCount}
                 </span>
               </div>
+              {/* Interactive People Count / Servings Scaler */}
+              <div className="p-3.5 rounded-2xl bg-orange-50/80 border border-orange-200/80 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="p-1.5 rounded-lg bg-orange-500 text-white shadow-2xs">
+                      <Users className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-stone-500 block">
+                        Adjust People Count
+                      </span>
+                      <span className="text-xs font-black text-stone-900">
+                        {servingsCount} {servingsCount === 1 ? 'person serving' : 'people servings'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Stepper Buttons: - / + */}
+                  <div className="flex items-center gap-1.5 bg-white rounded-xl p-1 border border-orange-200 shadow-2xs">
+                    <button
+                      type="button"
+                      onClick={() => setServingsCount(prev => Math.max(1, prev - 1))}
+                      disabled={servingsCount <= 1}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-stone-700 hover:bg-orange-100 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                      title="Decrease people count"
+                      aria-label="Decrease people count"
+                    >
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="w-6 text-center font-black text-sm text-stone-900">
+                      {servingsCount}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setServingsCount(prev => Math.min(24, prev + 1))}
+                      disabled={servingsCount >= 24}
+                      className="w-7 h-7 rounded-lg flex items-center justify-center font-black text-stone-700 hover:bg-orange-100 disabled:opacity-30 disabled:pointer-events-none transition-colors cursor-pointer"
+                      title="Increase people count"
+                      aria-label="Increase people count"
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                {servingsCount !== recipe.servings && (
+                  <div className="text-[11px] font-semibold text-orange-800 bg-white/80 px-2.5 py-1 rounded-lg border border-orange-200/60 flex items-center justify-between">
+                    <span>
+                      {`✓ Quantities scaled for ${servingsCount} people`}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setServingsCount(recipe.servings || 2)}
+                      className="text-[10px] text-orange-600 hover:underline font-bold"
+                    >
+                      Reset ({recipe.servings})
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <p className="text-xs text-stone-500">Click to check off ingredients as you prep:</p>
 
               <div className="space-y-2.5">
                 {recipe.ingredients.map((ing, idx) => {
                   const isChecked = checkedIngredients[idx];
+                  const scaledQty = scaleQuantity(ing.quantity, recipe.servings || 2, servingsCount);
                   return (
                     <div
                       key={idx}
@@ -275,7 +349,7 @@ export const RecipeDetailsModal: React.FC<RecipeDetailsModalProps> = ({
                       <div className="text-xs sm:text-sm">
                         <span className="font-bold">{ing.name}</span>
                         <div className="text-xs text-stone-500 font-medium">
-                          {ing.quantity}
+                          {scaledQty}
                           {ing.isOptional && (
                             <span className="ml-1.5 px-1.5 py-0.2 rounded bg-amber-100 text-amber-800 text-[10px] font-bold">
                               {t.optionalTag}

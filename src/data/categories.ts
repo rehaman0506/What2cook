@@ -93,7 +93,7 @@ export const FOOD_CATEGORIES: FoodCategory[] = [
     id: 'cat-mexican',
     name: 'Mexican',
     description: 'Zesty street tacos, cheesy quesadillas, and spicy salsas',
-    imageUrl: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&auto=format&fit=crop&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=600&auto=format&fit=crop&q=80',
     iconName: 'Utensils',
     tag: 'Mexican'
   }

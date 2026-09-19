@@ -1,157 +1,13 @@
--- ==========================================================
--- RecipeMate AI - Supabase Database Schema & Initial Seed Data
--- ==========================================================
-
--- Enable UUID extension if not enabled
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
--- 1. Create 'recipes' table
-CREATE TABLE IF NOT EXISTS public.recipes (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    name TEXT NOT NULL,
-    description TEXT NOT NULL,
-    image_url TEXT NOT NULL,
-    cuisine TEXT NOT NULL,
-    category TEXT NOT NULL,
-    food_type TEXT NOT NULL CHECK (food_type IN ('VEGETARIAN', 'NON-VEGETARIAN')),
-    ingredients JSONB NOT NULL DEFAULT '[]'::jsonb,
-    instructions JSONB NOT NULL DEFAULT '[]'::jsonb,
-    preparation_time TEXT NOT NULL,
-    cooking_time TEXT NOT NULL,
-    total_time TEXT NOT NULL,
-    difficulty TEXT NOT NULL CHECK (difficulty IN ('Easy', 'Medium', 'Hard')),
-    servings INTEGER NOT NULL DEFAULT 2,
-    rating NUMERIC(2,1) NOT NULL DEFAULT 4.5,
-    tips TEXT[] DEFAULT '{}',
-    nutrition JSONB DEFAULT '{"calories": 0, "protein": "0g", "carbs": "0g", "fat": "0g"}'::jsonb,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
-);
-
--- 2. Create 'favorites' table
-CREATE TABLE IF NOT EXISTS public.favorites (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-    recipe_id UUID NOT NULL REFERENCES public.recipes(id) ON DELETE CASCADE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-    UNIQUE(user_id, recipe_id)
-);
-
--- Indexes for lightning-fast search & filtering
-CREATE INDEX IF NOT EXISTS idx_recipes_food_type ON public.recipes(food_type);
-CREATE INDEX IF NOT EXISTS idx_recipes_cuisine ON public.recipes(cuisine);
-CREATE INDEX IF NOT EXISTS idx_recipes_category ON public.recipes(category);
-CREATE INDEX IF NOT EXISTS idx_recipes_name ON public.recipes USING gin (to_tsvector('english', name));
-CREATE INDEX IF NOT EXISTS idx_favorites_user_id ON public.favorites(user_id);
-
--- Enable Row Level Security (RLS)
-ALTER TABLE public.recipes ENABLE ROW LEVEL SECURITY;
-ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
-
--- RLS Policies for 'recipes'
--- Anyone can view recipes (public read)
-CREATE POLICY "Recipes are viewable by everyone" 
-ON public.recipes FOR SELECT 
-USING (true);
-
--- Authenticated users can insert custom community recipes if desired
-CREATE POLICY "Authenticated users can insert recipes" 
-ON public.recipes FOR INSERT 
-TO authenticated 
-WITH CHECK (true);
-
--- RLS Policies for 'favorites'
--- Users can read their own favorites
-CREATE POLICY "Users can view their own favorites" 
-ON public.favorites FOR SELECT 
-TO authenticated 
-USING (auth.uid() = user_id);
-
--- Users can insert their own favorites
-CREATE POLICY "Users can add favorites" 
-ON public.favorites FOR INSERT 
-TO authenticated 
-WITH CHECK (auth.uid() = user_id);
-
--- Users can delete their own favorites
-CREATE POLICY "Users can remove favorites" 
-ON public.favorites FOR DELETE 
-TO authenticated 
-USING (auth.uid() = user_id);
-
--- ==========================================================
--- SEED DATA: Rich Realistic Recipes
--- ==========================================================
-
 INSERT INTO public.recipes (
     id, name, description, image_url, cuisine, category, food_type, 
     ingredients, instructions, preparation_time, cooking_time, total_time, 
     difficulty, servings, rating, tips, nutrition
 ) VALUES 
 (
-    '11111111-1111-1111-1111-111111111101',
-    'Hyderabadi Chicken Dum Biryani',
-    'A majestic, aromatic South Indian layered rice dish with marinated chicken, saffron milk, caramelized fried onions, and whole aromatic spices.',
-    'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
-    'South Indian',
-    'Rice Dishes',
-    'NON-VEGETARIAN',
-    '[
-        {"name": "Basmati Rice", "quantity": "2 cups (soaked for 30 mins)", "isOptional": false},
-        {"name": "Chicken thighs / bone-in", "quantity": "500g (cut into medium pieces)", "isOptional": false},
-        {"name": "Yogurt / Curd", "quantity": "1/2 cup", "isOptional": false},
-        {"name": "Fried Onions (Birista)", "quantity": "1 cup", "isOptional": false},
-        {"name": "Ginger-Garlic Paste", "quantity": "1.5 tbsp", "isOptional": false},
-        {"name": "Biryani Masala & Garam Masala", "quantity": "1.5 tsp each", "isOptional": false},
-        {"name": "Mint & Fresh Coriander", "quantity": "1/2 cup chopped", "isOptional": false},
-        {"name": "Saffron milk & Ghee", "quantity": "2 tbsp warm milk with saffron, 2 tbsp ghee", "isOptional": true}
-    ]'::jsonb,
-    '[
-        {"step": 1, "text": "Marinate chicken with yogurt, ginger-garlic paste, red chili powder, turmeric, biryani masala, half of the fried onions, mint, and salt for at least 45 minutes."},
-        {"step": 2, "text": "Boil 6 cups of water with whole spices (bay leaf, cloves, cardamom, cinnamon) and salt. Add soaked basmati rice and cook until 70% done (about 5-6 minutes). Drain completely."},
-        {"step": 3, "text": "In a heavy-bottomed pot, spread the marinated chicken evenly at the base. Layer the parboiled rice over the chicken."},
-        {"step": 4, "text": "Top with remaining fried onions, chopped mint, coriander, saffron milk, and dollops of ghee."},
-        {"step": 5, "text": "Seal pot tightly with foil and heavy lid. Cook on high heat for 5 minutes, then place on a flat tawa on low heat (dum) for 25-30 minutes."},
-        {"step": 6, "text": "Let it rest for 10 minutes before gently fluffing the layers. Serve hot with cooling cucumber raita and mirchi ka salan."}
-    ]'::jsonb,
-    '30 mins', '45 mins', '75 mins', 'Medium', 4, 4.9,
-    ARRAY['Do not overcook the rice before layering; 70% cooked ensures the grains stay long and separate.', 'Use bone-in chicken for the juiciest dum flavor.'],
-    '{"calories": 620, "protein": "38g", "carbs": "68g", "fat": "22g"}'::jsonb
-),
-(
-    '11111111-1111-1111-1111-111111111102',
-    'Creamy Paneer Butter Masala',
-    'Rich and luscious restaurant-style North Indian cottage cheese cubes simmered in a velvety buttery tomato-cashew gravy with kasuri methi.',
-    'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=800&auto=format&fit=crop&q=80',
-    'North Indian',
-    'Vegetarian',
-    'VEGETARIAN',
-    '[
-        {"name": "Paneer (Cottage Cheese)", "quantity": "250g (cubed)", "isOptional": false},
-        {"name": "Ripe Tomatoes", "quantity": "4 large (roughly chopped)", "isOptional": false},
-        {"name": "Cashews (Kaju)", "quantity": "12-15 pieces (soaked)", "isOptional": false},
-        {"name": "Butter", "quantity": "2 tbsp", "isOptional": false},
-        {"name": "Fresh Cream", "quantity": "2 tbsp", "isOptional": false},
-        {"name": "Kashmiri Red Chili Powder", "quantity": "1 tsp", "isOptional": false},
-        {"name": "Kasuri Methi (Dried Fenugreek)", "quantity": "1 tsp (crushed)", "isOptional": false},
-        {"name": "Garam Masala & Sugar", "quantity": "1/2 tsp each", "isOptional": true}
-    ]'::jsonb,
-    '[
-        {"step": 1, "text": "Boil chopped tomatoes, soaked cashews, 1 green cardamom, and a slit green chili in 1/2 cup water for 8 minutes until tender."},
-        {"step": 2, "text": "Cool down and blend into a silky smooth puree. Strain if you want ultra-fine restaurant silkiness."},
-        {"step": 3, "text": "Melt butter in a pan with 1 tsp oil. Add ginger-garlic paste and sauté for 1 minute until fragrant."},
-        {"step": 4, "text": "Pour in tomato-cashew puree, Kashmiri red chili powder, coriander powder, and salt. Simmer covered for 8-10 minutes until butter separates."},
-        {"step": 5, "text": "Gently add paneer cubes, fresh cream, crushed kasuri methi, and a pinch of sugar to balance acidity. Cook gently for 3 minutes."},
-        {"step": 6, "text": "Garnish with a swirl of cream and fresh coriander. Serve with garlic naan or butter roti."}
-    ]'::jsonb,
-    '15 mins', '20 mins', '35 mins', 'Easy', 3, 4.8,
-    ARRAY['Soak paneer cubes in warm salted water for 10 minutes before adding to keep them pillow-soft.', 'Kasuri methi is the secret fragrance note; crush it between your palms before adding.'],
-    '{"calories": 410, "protein": "16g", "carbs": "18g", "fat": "30g"}'::jsonb
-),
-(
     '11111111-1111-1111-1111-111111111103',
     'Crispy South Indian Masala Dosa',
     'Golden fermented rice and lentil crepe stuffed with aromatic spiced potato masala, served with coconut chutney and tangy sambar.',
-    'https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=800&auto=format&fit=crop&q=80',
     'South Indian',
     'Breakfast',
     'VEGETARIAN',
@@ -170,7 +26,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111104',
     'Amritsari Stuffed Aloo Paratha',
     'Crispy whole wheat flatbread generously stuffed with spiced mashed potatoes, fresh green chilies, and coriander, served with white butter.',
-    'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1626074353765-517a681e40be?w=800&auto=format&fit=crop&q=80',
     'North Indian',
     'Breakfast',
     'VEGETARIAN',
@@ -208,7 +64,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111106',
     'Mexican Black Bean & Tomato Breakfast Tacos',
     'Warm corn tortillas filled with cumin-spiced black beans, charred corn, fresh pico de gallo, avocado slices, and lime crema.',
-    'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b?w=800&auto=format&fit=crop&q=80',
     'Mexican',
     'Breakfast',
     'VEGETARIAN',
@@ -246,7 +102,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111108',
     'Chettinad Spicy Pepper Chicken Curry',
     'An explosive Tamil culinary classic featuring bone-in chicken simmered in freshly ground roasted peppercorns, fennel seeds, and curry leaves.',
-    'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=800&auto=format&fit=crop&q=80',
     'South Indian',
     'Lunch',
     'NON-VEGETARIAN',
@@ -265,7 +121,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111109',
     'Classic Italian Margherita Pizza',
     'Crisp artisanal crust topped with crushed San Marzano tomato sauce, creamy fresh mozzarella, fragrant sweet basil, and extra virgin olive oil.',
-    'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1604382355076-af4b0eb60143?w=800&auto=format&fit=crop&q=80',
     'Italian',
     'Lunch',
     'VEGETARIAN',
@@ -360,7 +216,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111114',
     'Malabar Coconut Fish Curry',
     'Fresh kingfish steaks simmered in a velvety coconut milk gravy flavored with kudampuli (pot tamarind), mustard seeds, and fresh curry leaves.',
-    'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1620894580123-466ad3a0ca06?w=800&auto=format&fit=crop&q=80',
     'South Indian',
     'Dinner',
     'NON-VEGETARIAN',
@@ -398,7 +254,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111116',
     'Crispy Asian Vegetable Spring Rolls',
     'Golden crispy pastry rolls packed with wok-tossed julienned carrots, shredded cabbage, bell peppers, garlic, and sesame soy glaze.',
-    'https://images.unsplash.com/photo-1544025162-d76694265947?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=800&auto=format&fit=crop&q=80',
     'Chinese',
     'Snacks',
     'VEGETARIAN',
@@ -436,7 +292,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111118',
     'Crispy South Indian Chicken 65',
     'Iconic Chennai style spicy deep-fried chicken bites marinated in fiery red chilies, yogurt, curry leaves, and tempered garlic.',
-    'https://images.unsplash.com/photo-1562967914-608f82629710?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=800&auto=format&fit=crop&q=80',
     'South Indian',
     'Snacks',
     'NON-VEGETARIAN',
@@ -474,7 +330,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111120',
     'Classic Italian Tiramisu',
     'An elegant no-bake Italian dessert made with coffee-dipped savoiardi ladyfingers layered with velvety whipped mascarpone cream and dusted with cocoa.',
-    'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=800&auto=format&fit=crop&q=80',
     'Italian',
     'Dessert',
     'VEGETARIAN',
@@ -493,7 +349,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111121',
     'Creamy Kesari Mango Kulfi',
     'Traditional dense Indian frozen dessert crafted from slow-simmered caramelized whole milk, sweet Alphonso mangoes, pistachios, and saffron.',
-    'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&auto=format&fit=crop&q=80',
     'Indian',
     'Dessert',
     'VEGETARIAN',
@@ -512,7 +368,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111122',
     'Lucknowi Vegetable Dum Biryani',
     'Fragrant Awadhi royal basmati rice layered with garden vegetables, paneer cubes, saffron milk, fried onions, and whole aromatic spices.',
-    'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1645177628172-a94c1f96e6db?w=800&auto=format&fit=crop&q=80',
     'Indian',
     'Rice',
     'VEGETARIAN',
@@ -569,7 +425,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111125',
     'Fiery Schezwan Chicken Fried Rice',
     'Spicy Indo-Chinese street-style wok rice loaded with shredded chicken, crunchy carrots, scallions, and fiery homemade Schezwan red pepper paste.',
-    'https://images.unsplash.com/photo-1603133872878-684f208fb84b?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=800&auto=format&fit=crop&q=80',
     'Chinese',
     'Rice',
     'NON-VEGETARIAN',
@@ -588,7 +444,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111126',
     'Homestyle Aloo Gobi Matar Curry',
     'Classic North Indian comforting homestyle curry with tender potatoes, cauliflower florets, and sweet green peas in spiced tomato masala.',
-    'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1585937421612-70a008356fbe?w=800&auto=format&fit=crop&q=80',
     'North Indian',
     'Curry',
     'VEGETARIAN',
@@ -626,7 +482,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111128',
     'Goan Coconut Prawn Balchão Curry',
     'Plump succulent tiger prawns cooked in a spicy, tangy Goan coconut curry with tamarind pulp, dried red chilies, and coconut vinegar.',
-    'https://images.unsplash.com/photo-1559847844-5315695dadae?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=800&auto=format&fit=crop&q=80',
     'Indian',
     'Curry',
     'NON-VEGETARIAN',
@@ -664,7 +520,7 @@ INSERT INTO public.recipes (
     '11111111-1111-1111-1111-111111111130',
     'Szechuan Hot & Sour Chicken Soup',
     'A comforting, spicy and tangy Chinese soup with shredded chicken breast, wood ear mushrooms, bamboo shoots, tofu, and silky egg ribbons.',
-    'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=800&auto=format&fit=crop&q=80',
+    'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=800&auto=format&fit=crop&q=80',
     'Chinese',
     'Soup',
     'NON-VEGETARIAN',

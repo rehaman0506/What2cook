@@ -1,6 +1,6 @@
 export type FoodType = 'VEGETARIAN' | 'NON-VEGETARIAN';
 
-export type Difficulty = 'Easy' | 'Medium' | 'Hard';
+export type Difficulty = 'Easy' | 'Medium' | 'Hard' | 'సులువు' | 'మధ్యస్థం' | 'కష్టం' | 'आसान' | 'मध्यम' | 'कठिन' | (string & {});
 
 export interface RecipeIngredient {
   name: string;

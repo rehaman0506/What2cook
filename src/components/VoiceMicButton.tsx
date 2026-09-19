@@ -15,7 +15,7 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
   size = 'md',
   autoSubmit = true,
 }) => {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const [isListening, setIsListening] = useState(false);
   const [isSupported, setIsSupported] = useState(true);
   const [liveTranscript, setLiveTranscript] = useState('');
@@ -70,14 +70,8 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
       finalAccumulatedRef.current = '';
       setLiveTranscript('');
 
-      // Language selection based on active app language
-      if (language === 'te') {
-        recognition.lang = 'te-IN'; // Telugu (India)
-      } else if (language === 'hi') {
-        recognition.lang = 'hi-IN'; // Hindi (India)
-      } else {
-        recognition.lang = 'en-IN'; // Indian English
-      }
+      // English speech recognition
+      recognition.lang = 'en-IN';
 
       recognition.continuous = true;
       recognition.interimResults = true;
@@ -189,7 +183,7 @@ export const VoiceMicButton: React.FC<VoiceMicButtonProps> = ({
           <span className="flex items-center gap-1.5">
             <Volume2 className={`${iconSizes} animate-bounce`} />
             <span className="text-xs font-black tracking-wide">
-              {language === 'te' ? 'వింటున్నాను...' : language === 'hi' ? 'सुन रहा हूँ...' : 'Listening...'}
+              Listening...
             </span>
           </span>
         ) : (

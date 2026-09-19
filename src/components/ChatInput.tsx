@@ -11,29 +11,13 @@ interface ChatInputProps {
   isVegetarianMode?: boolean;
 }
 
-const MULTILINGUAL_SUGGESTIONS = {
-  en: [
-    "What can I make with spinach, rice, and tomato?",
-    "Suggest a 100% pure vegetarian recipe",
-    "How to make Hyderabadi chicken biryani?",
-    "What can I make with potato and tomato?",
-    "Give me a quick 20-minute recipe"
-  ],
-  te: [
-    "పాలకూర, బియ్యం, టమాటాతో ఏమి చేయవచ్చు?",
-    "100% స్వచ్ఛమైన శాకాహార వంటకం సూచించండి",
-    "హైదరాబాదీ చికెన్ దమ్ బిర్యానీ ఎలా చేయాలి?",
-    "బంగాళాదుంప, టమాటాతో రుచికరమైన కూర",
-    "20 నిమిషాల్లో త్వరగా అయ్యే వంటకం"
-  ],
-  hi: [
-    "पालक, चावल और टमाटर से क्या बना सकते हैं?",
-    "100% शुद्ध शाकाहारी रेसिपी बताएं",
-    "हैदराबादी चिकन दम बिरयानी कैसे बनाएं?",
-    "आलू और टमाटर की स्वादिष्ट सब्ज़ी",
-    "20 मिनट में झटपट बनने वाली रेसिपी"
-  ]
-};
+const ENGLISH_SUGGESTIONS: string[] = [
+  "What can I make with spinach, rice, and tomato?",
+  "Suggest a 100% pure vegetarian recipe",
+  "How to make Hyderabadi chicken biryani?",
+  "What can I make with potato and tomato?",
+  "Give me a quick 20-minute recipe"
+];
 
 export const ChatInput: React.FC<ChatInputProps> = ({
   onSendMessage,
@@ -42,7 +26,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   initialValue = '',
   isVegetarianMode = false,
 }) => {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const [input, setInput] = useState(initialValue);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -83,10 +67,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     }
   };
 
-  const rawSuggestions = MULTILINGUAL_SUGGESTIONS[language] || MULTILINGUAL_SUGGESTIONS.en;
-  const suggestions = isVegetarianMode
-    ? rawSuggestions.filter(q => !/chicken|చికెన్|चिकन/i.test(q))
-    : rawSuggestions;
+  const suggestions: string[] = isVegetarianMode
+    ? ENGLISH_SUGGESTIONS.filter((q: string) => !/chicken/i.test(q))
+    : ENGLISH_SUGGESTIONS;
 
   return (
     <div className="w-full space-y-3 bg-white/95 backdrop-blur-md border-t border-stone-200/80 p-3 sm:p-5">

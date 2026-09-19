@@ -1,6 +1,6 @@
 import { Recipe, RecipeFilterState } from '../types';
 import { SAMPLE_RECIPES } from '../data/sampleRecipes';
-import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { searchTheMealDB, fetchPopularGlobalMeals } from './mealDbService';
 
 export { searchTheMealDB, fetchPopularGlobalMeals };

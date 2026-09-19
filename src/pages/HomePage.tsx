@@ -22,14 +22,6 @@ const PANTRY_ITEMS_BY_LANG = {
   en: {
     all: ['Chicken', 'Rice', 'Potato', 'Tomato', 'Onion', 'Egg', 'Paneer', 'Pasta', 'Garlic', 'Spinach'],
     veg: ['Spinach', 'Rice', 'Potato', 'Tomato', 'Onion', 'Paneer', 'Pasta', 'Garlic', 'Carrot', 'Peas']
-  },
-  te: {
-    all: ['చికెన్', 'బియ్యం', 'బంగాళాదుంప', 'టమాటా', 'ఉల్లిపాయ', 'గుడ్డు', 'పనీర్', 'పాస్తా', 'వెల్లుల్లి', 'పాలకూర'],
-    veg: ['పాలకూర', 'బియ్యం', 'బంగాళాదుంప', 'టమాటా', 'ఉల్లిపాయ', 'పనీర్', 'పాస్తా', 'క్యారెట్', 'బఠానీలు', 'వెల్లుల్లి']
-  },
-  hi: {
-    all: ['चिकन', 'चावल', 'आलू', 'टमाटर', 'प्याज', 'अंडा', 'पनीर', 'पास्ता', 'लहसुन', 'पालक'],
-    veg: ['पालक', 'चावल', 'आलू', 'टमाटर', 'प्याज', 'पनीर', 'पास्ता', 'गाजर', 'मटर', 'लहसुन']
   }
 };
 
@@ -46,7 +38,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   const [homeSearch, setHomeSearch] = useState('');
   const [selectedDiet, setSelectedDiet] = useState<'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'>('ALL');
 
-  const nonVegKeywords = ['chicken', 'egg', 'mutton', 'fish', 'prawn', 'meat', 'చికెన్', 'గుడ్డు', 'మటన్', 'చేప', 'चिकन', 'अंडा', 'मटन', 'मछली'];
+  const nonVegKeywords = ['chicken', 'egg', 'mutton', 'fish', 'prawn', 'meat', 'beef', 'pork', 'seafood'];
 
   const handleDietChange = (diet: 'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN') => {
     setSelectedDiet(diet);
@@ -587,9 +579,9 @@ export const HomePage: React.FC<HomePageProps> = ({
               <div className="w-10 h-10 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
                 <HeartHandshake className="w-5 h-5" />
               </div>
-              <h4 className="font-bold text-base">3 Languages & Voice Mic</h4>
+              <h4 className="font-bold text-base">Voice Mic Assistant</h4>
               <p className="text-stone-400 text-xs leading-relaxed">
-                Speak your ingredients or browse all recipes in English, Telugu (తెలుగు), and Hindi (हिंदी).
+                Speak your ingredients aloud and let our AI Chef instantly prepare delicious recipes for you.
               </p>
             </div>
           </div>

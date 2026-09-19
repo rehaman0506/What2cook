@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChefHat, AlertCircle, Leaf, Drumstick } from 'lucide-react';
+import { ChefHat, AlertCircle, Leaf, Drumstick, Users } from 'lucide-react';
 import { ChatMessage as ChatMessageType, Recipe } from '../types';
 import { generateRecipeFromAI } from '../services/aiChefService';
 import { ChatMessage } from '../components/ChatMessage';
@@ -16,8 +16,9 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
   initialPrompt,
   onOpenRecipeDetails,
 }) => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [dietaryFilter, setDietaryFilter] = useState<'ALL' | 'VEGETARIAN' | 'NON-VEGETARIAN'>('ALL');
+  const [servings, setServings] = useState<number>(2);
 
   const defaultWelcomeMessage: ChatMessageType = {
     id: 'msg-welcome',
@@ -53,28 +54,6 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const hasSentInitialRef = useRef(false);
-
-  // Automatically update welcome message immediately when language selection changes!
-  useEffect(() => {
-    setMessages(prev => {
-      let hasChanged = false;
-      const updated = prev.map(msg => {
-        if (msg.id === 'msg-welcome' || (!msg.recipe && msg.sender === 'chef' && prev.length === 1)) {
-          const newIntro = t.chatWelcomeIntro || "Hello! I am your AI Chef. 👨‍🍳 Tell me what ingredients you have in your kitchen (type or click the microphone), and I'll create the perfect recipe for you!";
-          if (msg.text !== newIntro) {
-            hasChanged = true;
-            return {
-              ...msg,
-              id: 'msg-welcome',
-              text: newIntro
-            };
-          }
-        }
-        return msg;
-      });
-      return hasChanged ? updated : prev;
-    });
-  }, [language, t.chatWelcomeIntro]);
 
   // Sync chat messages to localStorage
   useEffect(() => {
@@ -116,7 +95,7 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
     setIsLoading(true);
 
     try {
-      const result = await generateRecipeFromAI(trimmed, dietaryFilter, language);
+      const result = await generateRecipeFromAI(trimmed, dietaryFilter, 'en', servings);
 
       const chefMessage: ChatMessageType = {
         id: `chef-${Date.now()}`,
@@ -136,11 +115,7 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
       const fallbackChefMessage: ChatMessageType = {
         id: `chef-err-${Date.now()}`,
         sender: 'chef',
-        text: language === 'te'
-          ? "క్షమించండి, ప్రస్తుతం వంటకం తయారు చేయలేకపోయాను. దయచేసి పాలకూర, బియ్యం లేదా టమాటా వంటి పదార్థాలతో ప్రయత్నించండి."
-          : language === 'hi'
-          ? "क्षमा करें, इस समय रेसिपी नहीं बन पाई। कृपया पालक, चावल या टमाटर जैसी सामग्री के साथ पुनः प्रयास करें।"
-          : "Sorry, I couldn't generate a recipe right now. Please try again with ingredients like spinach, rice, or potato.",
+        text: "Sorry, I couldn't generate a recipe right now. Please try again with ingredients like spinach, rice, or potato.",
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       };
       setMessages(prev => [...prev, fallbackChefMessage]);
@@ -181,54 +156,81 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-stone-500 font-medium">
-              {t.chatSubtitle || 'Ask for recipes, pantry twists, or cooking tips in any language'}
+              {t.chatSubtitle || 'Ask for recipes, pantry twists, or cooking tips'}
             </p>
           </div>
         </div>
 
-        {/* Dietary Preference Toggle in Chatbot */}
-        <div className="inline-flex p-1 rounded-xl bg-stone-100 border border-stone-200/80 self-stretch sm:self-auto justify-between">
-          <button
-            type="button"
-            onClick={() => setDietaryFilter('ALL')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-              dietaryFilter === 'ALL'
-                ? 'bg-white text-stone-900 shadow-sm'
-                : 'text-stone-600 hover:text-stone-900'
-            }`}
-          >
-            {t.dietAll}
-          </button>
-          <button
-            type="button"
-            onClick={() => setDietaryFilter('VEGETARIAN')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-              dietaryFilter === 'VEGETARIAN'
-                ? 'bg-emerald-600 text-white shadow-sm'
-                : 'text-emerald-700 hover:bg-emerald-50'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-sm border border-current flex items-center justify-center p-0.5">
-              <span className="w-1 h-1 rounded-full bg-current block" />
-            </span>
-            <Leaf className="w-3 h-3" />
-            {t.dietVeg}
-          </button>
-          <button
-            type="button"
-            onClick={() => setDietaryFilter('NON-VEGETARIAN')}
-            className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
-              dietaryFilter === 'NON-VEGETARIAN'
-                ? 'bg-rose-600 text-white shadow-sm'
-                : 'text-rose-700 hover:bg-rose-50'
-            }`}
-          >
-            <span className="w-2 h-2 rounded-sm border border-current flex items-center justify-center p-0.5">
-              <span className="w-1 h-1 rounded-full bg-current block" />
-            </span>
-            <Drumstick className="w-3 h-3" />
-            {t.dietNonVeg}
-          </button>
+        {/* Chat Header Controls: Prominent Number of People & Dietary Filter */}
+        <div className="flex flex-wrap items-center gap-2.5 self-stretch sm:self-auto justify-between sm:justify-end">
+          {/* Prominent Number of People / Servings Selector */}
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-orange-50/90 border border-orange-200/90 shadow-2xs">
+            <Users className="w-4 h-4 text-orange-600 shrink-0" />
+            <label htmlFor="servings-select" className="text-xs font-bold text-stone-700 whitespace-nowrap">
+              {t.numberOfPeople || 'Number of People'}:
+            </label>
+            <select
+              id="servings-select"
+              value={servings}
+              onChange={(e) => setServings(Number(e.target.value))}
+              aria-label={t.numberOfPeople || 'Number of People'}
+              className="bg-white text-stone-900 text-xs font-extrabold rounded-lg px-2.5 py-1 border border-orange-300 shadow-2xs outline-none cursor-pointer focus:ring-2 focus:ring-orange-500 hover:bg-orange-50/50 transition-all"
+            >
+              <option value={1}>1 {t.personUnit || 'Person'}</option>
+              <option value={2}>2 {t.peopleUnit || 'People'}</option>
+              <option value={3}>3 {t.peopleUnit || 'People'}</option>
+              <option value={4}>4 {t.peopleUnit || 'People'}</option>
+              <option value={5}>5 {t.peopleUnit || 'People'}</option>
+              <option value={6}>6 {t.peopleUnit || 'People'}</option>
+              <option value={8}>8 {t.peopleUnit || 'People'}</option>
+              <option value={10}>10 {t.peopleUnit || 'People'}</option>
+            </select>
+          </div>
+
+          {/* Dietary Preference Toggle in Chatbot */}
+          <div className="inline-flex p-1 rounded-xl bg-stone-100 border border-stone-200/80 shadow-2xs">
+            <button
+              type="button"
+              onClick={() => setDietaryFilter('ALL')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                dietaryFilter === 'ALL'
+                  ? 'bg-white text-stone-900 shadow-sm'
+                  : 'text-stone-600 hover:text-stone-900'
+              }`}
+            >
+              {t.dietAll}
+            </button>
+            <button
+              type="button"
+              onClick={() => setDietaryFilter('VEGETARIAN')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                dietaryFilter === 'VEGETARIAN'
+                  ? 'bg-emerald-600 text-white shadow-sm'
+                  : 'text-emerald-700 hover:bg-emerald-50'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-sm border border-current flex items-center justify-center p-0.5">
+                <span className="w-1 h-1 rounded-full bg-current block" />
+              </span>
+              <Leaf className="w-3 h-3" />
+              {t.dietVeg}
+            </button>
+            <button
+              type="button"
+              onClick={() => setDietaryFilter('NON-VEGETARIAN')}
+              className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                dietaryFilter === 'NON-VEGETARIAN'
+                  ? 'bg-rose-600 text-white shadow-sm'
+                  : 'text-rose-700 hover:bg-rose-50'
+              }`}
+            >
+              <span className="w-2 h-2 rounded-sm border border-current flex items-center justify-center p-0.5">
+                <span className="w-1 h-1 rounded-full bg-current block" />
+              </span>
+              <Drumstick className="w-3 h-3" />
+              {t.dietNonVeg}
+            </button>
+          </div>
         </div>
       </div>
 

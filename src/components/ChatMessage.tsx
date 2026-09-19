@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   ChefHat, User, Clock, Flame, Users, Heart, 
-  Check, Copy, ShieldAlert, Sparkles, ArrowRight 
+  Check, Copy, ShieldAlert, Sparkles, ArrowRight,
+  Minus, Plus
 } from 'lucide-react';
 import { ChatMessage as ChatMessageType, Recipe } from '../types';
 import { useFavorites } from '../context/FavoritesContext';
 import { useLanguage } from '../context/LanguageContext';
+import { scaleQuantity } from '../utils/quantityScaler';
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -14,11 +16,18 @@ interface ChatMessageProps {
 
 export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe }) => {
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const [copied, setCopied] = React.useState(false);
 
   const isUser = message.sender === 'user';
   const recipe = message.recipe;
+  const [servingsCount, setServingsCount] = useState<number>(recipe?.servings || 2);
+
+  React.useEffect(() => {
+    if (recipe?.servings) {
+      setServingsCount(recipe.servings);
+    }
+  }, [recipe?.servings]);
 
   const handleCopyRecipe = () => {
     if (!recipe) return;
@@ -137,11 +146,33 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
                   </div>
                 </div>
 
-                <div className="p-2.5 rounded-xl bg-orange-50 text-orange-950 flex items-center gap-2 border border-orange-100">
-                  <Users className="w-3.5 h-3.5 text-orange-600 shrink-0" />
-                  <div>
-                    <span className="text-[10px] text-stone-500 uppercase block font-bold">{t.servings || 'Servings'}</span>
-                    <strong>{recipe.servings} {language === 'te' ? 'మందికి' : language === 'hi' ? 'लोग' : 'people'}</strong>
+                <div className="p-2.5 rounded-xl bg-orange-50 text-orange-950 border border-orange-100 flex flex-col justify-between">
+                  <span className="text-[10px] text-stone-500 uppercase font-bold flex items-center gap-1">
+                    <Users className="w-3.5 h-3.5 text-orange-600" />
+                    {t.servings || 'Servings'}
+                  </span>
+                  <div className="flex items-center justify-between mt-1">
+                    <button
+                      type="button"
+                      onClick={() => setServingsCount(prev => Math.max(1, prev - 1))}
+                      disabled={servingsCount <= 1}
+                      className="w-5 h-5 rounded bg-white border border-orange-200 text-stone-700 flex items-center justify-center font-bold text-xs hover:bg-orange-100 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                      title="Decrease servings"
+                    >
+                      <Minus className="w-3 h-3" />
+                    </button>
+                    <strong className="text-xs">
+                      {servingsCount} {servingsCount === 1 ? 'Person' : 'People'}
+                    </strong>
+                    <button
+                      type="button"
+                      onClick={() => setServingsCount(prev => Math.min(24, prev + 1))}
+                      disabled={servingsCount >= 24}
+                      className="w-5 h-5 rounded bg-white border border-orange-200 text-stone-700 flex items-center justify-center font-bold text-xs hover:bg-orange-100 disabled:opacity-30 disabled:pointer-events-none cursor-pointer"
+                      title="Increase servings"
+                    >
+                      <Plus className="w-3 h-3" />
+                    </button>
                   </div>
                 </div>
 
@@ -167,7 +198,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
                 <div className="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200/80 text-xs space-y-1">
                   <span className="font-bold text-emerald-900 block flex items-center gap-1.5">
                     <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    {language === 'te' ? 'మీరు చెప్పిన పదార్థాలతో తయారుచేసినవి:' : language === 'hi' ? 'आपकी सामग्री के अनुसार उपयोग:' : 'Cooked Using Your Ingredients:'}
+                    Cooked Using Your Ingredients:
                   </span>
                   <div className="flex flex-wrap gap-1.5 pt-1">
                     {message.userIngredients.map((item, idx) => (
@@ -182,7 +213,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
               {message.additionalIngredients && message.additionalIngredients.length > 0 && (
                 <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 text-xs space-y-1">
                   <span className="font-bold text-stone-700 block">
-                    {language === 'te' ? 'అదనంగా అవసరమైన కిచెన్ పదార్థాలు:' : language === 'hi' ? 'अतिरिक्त आवश्यक रसोई सामग्री:' : 'Pantry Spices / Additional Items Needed:'}
+                    Pantry Spices / Additional Items Needed:
                   </span>
                   <p className="text-stone-600 text-[11px]">
                     {message.additionalIngredients.join(' • ')}
@@ -192,17 +223,27 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
 
               {/* Ingredients Checklist */}
               <div className="space-y-2">
-                <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider flex items-center justify-between">
-                  <span>{t.ingredientsTitle || 'Ingredients Checklist'}</span>
-                  <span className="text-stone-500 font-normal lowercase">{recipe.ingredients.length} {t.ingredientsCount || 'items'}</span>
-                </h4>
+                <div className="flex items-center justify-between">
+                  <h4 className="font-bold text-stone-900 text-xs uppercase tracking-wider flex items-center gap-1.5">
+                    <span>{t.ingredientsTitle || 'Ingredients Checklist'}</span>
+                    {servingsCount !== recipe.servings && (
+                      <span className="text-[10px] font-semibold text-orange-600 bg-orange-100 px-1.5 py-0.2 rounded">
+                        ({servingsCount} servings)
+                      </span>
+                    )}
+                  </h4>
+                  <span className="text-stone-500 font-normal lowercase text-xs">{recipe.ingredients.length} {t.ingredientsCount || 'items'}</span>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  {recipe.ingredients.map((ing, idx) => (
-                    <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-stone-50 border border-stone-100">
-                      <span className="font-medium text-stone-800">{ing.name}</span>
-                      <span className="text-stone-500 font-mono text-[11px]">{ing.quantity}</span>
-                    </div>
-                  ))}
+                  {recipe.ingredients.map((ing, idx) => {
+                    const scaledQty = scaleQuantity(ing.quantity, recipe.servings || 2, servingsCount);
+                    return (
+                      <div key={idx} className="flex items-center justify-between p-2 rounded-lg bg-stone-50 border border-stone-100">
+                        <span className="font-medium text-stone-800">{ing.name}</span>
+                        <span className="text-stone-500 font-mono text-[11px]">{scaledQty}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
@@ -306,7 +347,8 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
             <div className="p-3 bg-amber-500/10 border-t border-amber-500/20 text-amber-900 text-[11px] leading-relaxed flex items-start gap-2">
               <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
               <span>
-                <strong>Recipe Disclaimer:</strong> Recipes are AI-generated suggestions. Please verify ingredients, cooking times, and cooking methods before preparing. Always consider food allergies, dietary restrictions, and personal health requirements.
+                <strong>Recipe Disclaimer:</strong>{' '}
+                Recipes are AI-generated suggestions. Please verify ingredients, cooking times, and cooking methods before preparing. Always consider food allergies, dietary restrictions, and personal health requirements.
               </span>
             </div>
           </div>

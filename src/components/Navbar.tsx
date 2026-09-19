@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { ChefHat, Sparkles, Heart, User, Menu, X, Utensils, BookOpen, Layers, Bot, Globe } from 'lucide-react';
+import { ChefHat, Sparkles, Heart, User, Menu, X, Utensils, BookOpen, Layers, Bot } from 'lucide-react';
 import { useFavorites } from '../context/FavoritesContext';
 import { useAuth } from '../context/AuthContext';
-import { useLanguage, Language } from '../context/LanguageContext';
+import { useLanguage } from '../context/LanguageContext';
 
 interface NavbarProps {
   activeTab: 'home' | 'recipes' | 'categories' | 'chatbot';
@@ -20,19 +20,13 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { favoriteIds } = useFavorites();
   const { user } = useAuth();
-  const { language, setLanguage, t } = useLanguage();
+  const { t } = useLanguage();
 
   const handleNavClick = (tab: 'home' | 'recipes' | 'categories' | 'chatbot') => {
     setActiveTab(tab);
     setMobileMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  const languages: { code: Language; label: string; short: string }[] = [
-    { code: 'en', label: 'English', short: 'EN' },
-    { code: 'te', label: 'తెలుగు', short: 'తె' },
-    { code: 'hi', label: 'हिंदी', short: 'हि' },
-  ];
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-stone-200/80 shadow-sm transition-all">
@@ -107,27 +101,8 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </nav>
 
-          {/* Right Action Icons (Language Switcher + Favorites + Profile) */}
+          {/* Right Action Icons (Favorites + Profile) */}
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* 3-Language Switcher (English, Telugu, Hindi) */}
-            <div className="flex items-center p-1 rounded-xl bg-stone-100 border border-stone-200/80 shadow-xs">
-              <Globe className="w-3.5 h-3.5 text-stone-500 ml-1.5 mr-1 hidden sm:inline" />
-              {languages.map(lang => (
-                <button
-                  key={lang.code}
-                  onClick={() => setLanguage(lang.code)}
-                  title={`Switch language to ${lang.label}`}
-                  className={`px-2 py-1 rounded-lg text-xs font-bold transition-all ${
-                    language === lang.code
-                      ? 'bg-orange-500 text-white shadow-sm'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
-                  }`}
-                >
-                  <span className="sm:hidden">{lang.short}</span>
-                  <span className="hidden sm:inline">{lang.label}</span>
-                </button>
-              ))}
-            </div>
 
             {/* Favorites Button */}
             <button
@@ -171,25 +146,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-stone-100 py-3 space-y-2 animate-slide-up">
-            <div className="px-4 py-2 flex items-center justify-between bg-stone-50 rounded-xl mb-1">
-              <span className="text-xs font-bold text-stone-600 flex items-center gap-1.5">
-                <Globe className="w-3.5 h-3.5" /> Language / భాష / भाषा:
-              </span>
-              <div className="flex gap-1">
-                {languages.map(lang => (
-                  <button
-                    key={lang.code}
-                    onClick={() => setLanguage(lang.code)}
-                    className={`px-2.5 py-1 rounded-lg text-xs font-bold ${
-                      language === lang.code ? 'bg-orange-500 text-white' : 'bg-white border text-stone-700'
-                    }`}
-                  >
-                    {lang.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <button
               onClick={() => handleNavClick('home')}
               className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-left text-sm font-semibold ${

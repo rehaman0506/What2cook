@@ -20,13 +20,9 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   suggestedTags,
   onSelectTag,
 }) => {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
 
-  const defaultTags = language === 'te'
-    ? ["చికెన్ బిర్యానీ", "పాలకూర పనీర్", "బంగాళాదుంప", "దోశ", "గులాబ్ జామూన్"]
-    : language === 'hi'
-    ? ["चिकन बिरयानी", "पालक पनीर", "आलू पराठा", "दाल मखनी", "गुलाब जामुन"]
-    : ["Chicken Biryani", "Palak Paneer", "Potato", "South Indian", "Breakfast", "Desserts"];
+  const defaultTags = ["Chicken Biryani", "Palak Paneer", "Potato", "South Indian", "Breakfast", "Desserts"];
 
   const activeTags = suggestedTags || defaultTags;
   const activePlaceholder = placeholder || t.searchPlaceholder;
