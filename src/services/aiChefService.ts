@@ -181,6 +181,46 @@ export function normalizeIngredientName(name: string): string {
 }
 
 /**
+ * Non-ingredient stop words and conversational phrases that must never be considered ingredients.
+ */
+export const NON_INGREDIENT_WORDS = new Set([
+  'hi', 'hello', 'hey', 'heya', 'hola', 'namaste', 'yo', 'sup',
+  'bye', 'goodbye', 'cya', 'goodnight', 'night', 'morning', 'afternoon', 'evening', 'day', 'today', 'tonight',
+  'how', 'who', 'what', 'why', 'where', 'when', 'which',
+  'are', 'is', 'am', 'was', 'were', 'be', 'been', 'being',
+  'you', 'your', 'u', 'ur', 'me', 'my', 'i', 'we', 'our', 'they', 'them',
+  'can', 'could', 'would', 'should', 'will', 'shall', 'do', 'does', 'did',
+  'help', 'please', 'thanks', 'thank', 'tysm', 'thx', 'welcome',
+  'ok', 'okay', 'k', 'sure', 'yes', 'yeah', 'yep', 'no', 'nope',
+  'cool', 'nice', 'good', 'great', 'awesome', 'super', 'fine', 'alright',
+  'joke', 'jokes', 'tip', 'tips', 'advice', 'hack', 'hacks',
+  'hungry', 'craving', 'eat', 'feed', 'cook', 'cooking', 'make', 'prepare',
+  'recipe', 'recipes', 'dish', 'dishes', 'food', 'meal', 'dinner', 'lunch', 'breakfast',
+  'tell', 'give', 'suggest', 'recommend', 'show', 'find', 'need', 'want',
+  'something', 'anything', 'nothing', 'everything', 'idea', 'ideas',
+  'kitchen', 'fridge', 'pantry', 'chef', 'assistant', 'bot', 'ai', 'what2cook',
+  'taste', 'delicious', 'yummy', 'spicy', 'sweet', 'flavor'
+]);
+
+/**
+ * Checks if a prompt is a casual conversation rather than an ingredient or dish request.
+ */
+export function isCasualPrompt(text: string): boolean {
+  const clean = text.trim().toLowerCase();
+  if (/^(hi|hello|hey|heya|hola|namaste|yo|sup|greetings|good\s*(morning|afternoon|evening|day))(\s+(there|chef|bot|ai|what2cook))?[!.?]*$/i.test(clean) ||
+      /\b(hi chef|hello chef|hey chef|hey there|hello there)\b/i.test(clean)) return true;
+  if (/^(bye|goodbye|see you|see ya|cya|good night|goodnight|take care|catch you later|have a nice day|have a good day)[!.?]*$/i.test(clean) ||
+      /\b(bye|goodbye|see you|take care)\b/i.test(clean)) return true;
+  if (/\b(how are you|how r u|how are you doing|how's it going|hows it going|what's up|whats up|what are you doing|what's cooking|whats cooking|how have you been)\b/i.test(clean)) return true;
+  if (/\b(who are you|what is your name|what's your name|what can you do|what do you do|what is what2cook|tell me about yourself|introduce yourself|how does this work|how do you work|how to use this|help me|can you help|who (made|created|built) you)\b/i.test(clean)) return true;
+  if (/\b(thank you|thanks|thanks a lot|thank you so much|tysm|thx|thankyou|appreciate it|great job|good job|well done|awesome|amazing|love you|cool|super)\b/i.test(clean)) return true;
+  if (/\b(tell\s*(me\s*)?a\s*(cooking\s*|food\s*)?joke|joke|jokes|make me laugh|funny|food joke)\b/i.test(clean)) return true;
+  if (/\b(give me a (cooking |kitchen )?tip|cooking tip[s]?|kitchen tip[s]?|kitchen hack[s]?|cooking hack[s]?|cooking advice|how to cook better)\b/i.test(clean)) return true;
+  if (/^(ok|okay|k|sure|yeah|yes|yep|cool|alright|fine|got it|nice|haha|hahaha|lol|wow)[!.?]*$/i.test(clean)) return true;
+  return false;
+}
+
+/**
  * Parses user input to extract ingredients and determine dietary intention.
  * Applies the Vegetarian Safety Rule:
  * If the user's ingredients contain no non-vegetarian ingredient and the user
@@ -193,6 +233,24 @@ export function extractIngredientsAndIntent(
   const lower = prompt.toLowerCase();
   const foundIngredients: string[] = [];
 
+  // If this is a casual prompt (e.g. "hi", "bye", "how are you"), do NOT extract any fake ingredients
+  if (isCasualPrompt(prompt)) {
+    return {
+      rawPrompt: prompt,
+      foundIngredients: [],
+      userNonVegIngredients: [],
+      userVegIngredients: [],
+      isExplicitVegRequest: forcedDiet === 'VEGETARIAN',
+      isExplicitNonVegRequest: forcedDiet === 'NON-VEGETARIAN',
+      isStrictlyVegetarian: forcedDiet === 'VEGETARIAN',
+      isBreakfast: false,
+      isDinner: false,
+      isQuickRequest: false,
+      isBiryani: false,
+      isPasta: false
+    };
+  }
+
   // 0. Check for multilingual Telugu ingredients first
   for (const [nativeWord, engIng] of Object.entries(MULTILINGUAL_INGREDIENT_MAP)) {
     if (prompt.includes(nativeWord)) {
@@ -204,22 +262,29 @@ export function extractIngredientsAndIntent(
   }
 
   // 1. Direct phrase separation (commas, '+', ' and ', '&', Telugu punctuation)
-  const directChunks = prompt
-    .split(/[,+&|、।]/i)
-    .map(c => c.replace(/^(i have|what can i make with|suggest|a recipe with|recipe using|how to cook|ingredients?:?|నా దగ్గర|నేను|నాకు|నా దగ్గర ఉన్నవి|నాకు వంట కావాలి)\s*/i, '').trim())
-    .map(c => c.replace(/[^\p{L}\p{N}\s-]/gu, '').trim())
-    .filter(c => c.length > 1 && !['i', 'have', 'with', 'using', 'want', 'food', 'recipe', 'make', 'cook', 'the', 'some'].includes(c.toLowerCase()));
+  const hasMultipleSeparators = /[,+&|]|\band\b/i.test(prompt);
+  const hasIngredientPrefix = /^(i have|recipe with|recipe using|ingredients?:?|what can i make with|what to cook with)\b/i.test(prompt.trim());
 
-  // Add recognized direct chunks
-  for (const chunk of directChunks) {
-    const norm = normalizeIngredientName(chunk);
-    if (norm.length > 1 && !foundIngredients.includes(norm)) {
-      foundIngredients.push(norm);
+  if (hasMultipleSeparators || hasIngredientPrefix) {
+    const directChunks = prompt
+      .split(/[,+&|、।]/i)
+      .map(c => c.replace(/^(i have|what can i make with|suggest|a recipe with|recipe using|how to cook|ingredients?:?|నా దగ్గర|నేను|నాకు|నా దగ్గర ఉన్నవి|నాకు వంట కావాలి)\s*/i, '').trim())
+      .map(c => c.replace(/[^\p{L}\p{N}\s-]/gu, '').trim())
+      .filter(c => c.length > 1 && !['i', 'have', 'with', 'using', 'want', 'food', 'recipe', 'make', 'cook', 'the', 'some'].includes(c.toLowerCase()));
+
+    for (const chunk of directChunks) {
+      const lowerChunk = chunk.toLowerCase();
+      if (NON_INGREDIENT_WORDS.has(lowerChunk)) continue;
+      const norm = normalizeIngredientName(chunk);
+      if (norm.length > 1 && !foundIngredients.includes(norm)) {
+        foundIngredients.push(norm);
+      }
     }
   }
 
-  // Also check against culinary vocabulary for free-form queries
+  // 2. Also check against culinary vocabulary for free-form queries
   for (const item of CULINARY_VOCABULARY) {
+    if (NON_INGREDIENT_WORDS.has(item)) continue;
     const regex = new RegExp(`\\b${item}s?\\b`, 'i');
     if (regex.test(lower)) {
       const norm = normalizeIngredientName(item);
@@ -870,9 +935,9 @@ export function getCasualChatResponse(prompt: string, intent: UserIntent): strin
   if (/^(hi|hello|hey|heya|hola|namaste|yo|sup|greetings|good\s*(morning|afternoon|evening|day))(\s+(there|chef|bot|ai|what2cook))?[!.?]*$/i.test(lower) ||
       /\b(hi chef|hello chef|hey chef|hey there|hello there)\b/i.test(lower)) {
     const greetings = [
-      "Hello there! 👋 Welcome to What2Cook. I'm your AI Chef!\n\nTell me what ingredients you have in your kitchen (like *spinach, rice, eggs, or chicken*), or ask me how to make any dish, and I'll craft the perfect recipe for you!",
-      "Hey! 👨‍🍳 Great to see you in the kitchen! Ready to cook something delicious? Tell me what ingredients you have on hand, and let's make culinary magic together.",
-      "Welcome! 🍳 I'm your personal AI Chef assistant. Got ingredients in your fridge or pantry you want to turn into a tasty meal? Just type or speak them, and I'll take care of the rest!"
+      "Hi! How can I help you? 😊 Tell me what ingredients you have in your kitchen (like rice, eggs, tomatoes, chicken) or what dish you want to make, and I'll create the recipe for you!",
+      "Hello! How can I help you today? 👨‍🍳 Let me know what ingredients you have in your fridge or pantry, or name a recipe, and I'll whip up the full instructions!",
+      "Hi there! How can I help you cook today? 🍳 Feel free to share your available ingredients or ask for any dish, and let's get cooking!"
     ];
     return greetings[Math.floor(Math.random() * greetings.length)];
   }
@@ -1031,9 +1096,19 @@ export async function generateRecipeFromAI(
     return validateAndSanitizeRecipe(sampleMatch, lang, targetServings, intent.isStrictlyVegetarian);
   }
 
-  // 2. Otherwise, dynamically synthesize a complete, chef-grade custom recipe tailored specifically to user ingredients
-  const dynamicResponse = synthesizeDynamicRecipe(intent, lang, targetServings);
-  return validateAndSanitizeRecipe(dynamicResponse, lang, targetServings, intent.isStrictlyVegetarian);
+  // 2. If user provided ingredients, dynamically synthesize a complete, chef-grade custom recipe tailored specifically to user ingredients
+  if (intent.foundIngredients.length > 0) {
+    const dynamicResponse = synthesizeDynamicRecipe(intent, lang, targetServings);
+    return validateAndSanitizeRecipe(dynamicResponse, lang, targetServings, intent.isStrictlyVegetarian);
+  }
+
+  // 3. If no ingredients/items were mentioned and no recipe name matched, reply in text only (NO RECIPES)
+  return {
+    userIngredients: [],
+    additionalIngredients: [],
+    conversationalIntro: "Hi! How can I help you? 👨‍🍳 Please tell me what ingredients you have in your kitchen (like eggs, potato, rice, chicken) or mention a recipe name (like Biryani, Pasta, Curry), and I'll create the recipe for you!",
+    isCasual: true
+  };
 }
 
 async function callGeminiAPI(
