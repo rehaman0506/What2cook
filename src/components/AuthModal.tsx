@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Mail, Lock, Heart, LogOut, CheckCircle2, AlertCircle, ChefHat } from 'lucide-react';
+import { X, Mail, Lock, Heart, LogOut, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useFavorites } from '../context/FavoritesContext';
 import { Recipe } from '../types';
@@ -86,8 +86,8 @@ export const AuthModal: React.FC<AuthModalProps> = ({
         {/* Top Header */}
         <div className="px-6 py-4 border-b border-stone-100 flex items-center justify-between bg-stone-50/80">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-orange-500 text-white flex items-center justify-center shadow-xs">
-              <ChefHat className="w-4 h-4" />
+            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+              <img src="/logo.png" alt="What2Cook" className="w-8 h-8 object-contain drop-shadow-xs" />
             </div>
             <h3 className="font-extrabold text-stone-900 text-base">
               {activeTab === 'favorites' ? 'My Saved Favorites' : 'What2Cook Chef Account'}

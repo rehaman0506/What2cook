@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChefHat, AlertCircle, Leaf, Drumstick, Users } from 'lucide-react';
+import { AlertCircle, Leaf, Drumstick, Users } from 'lucide-react';
 import { ChatMessage as ChatMessageType, Recipe } from '../types';
 import { generateRecipeFromAI } from '../services/aiChefService';
 import { ChatMessage } from '../components/ChatMessage';
@@ -143,8 +143,8 @@ export const ChatbotPage: React.FC<ChatbotPageProps> = ({
       <div className="bg-white rounded-2xl border border-stone-200 p-2.5 sm:p-3 shadow-xs mb-2 flex flex-col gap-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 text-white flex items-center justify-center shadow-md shadow-orange-500/20 shrink-0">
-              <ChefHat className="w-5 h-5 stroke-[2.2]" />
+            <div className="w-9 h-9 flex items-center justify-center shrink-0">
+              <img src="/logo.png" alt="AI Chef" className="w-9 h-9 object-contain drop-shadow-xs" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
