@@ -10,6 +10,7 @@ interface SearchBarProps {
   placeholder?: string;
   suggestedTags?: string[];
   onSelectTag?: (tag: string) => void;
+  isItemNotFound?: boolean;
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({
@@ -19,6 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   placeholder,
   suggestedTags,
   onSelectTag,
+  isItemNotFound = false,
 }) => {
   const { t } = useLanguage();
 
@@ -77,6 +79,18 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           className="shrink-0 rounded-2xl bg-white shadow-sm hover:bg-orange-50 hover:text-orange-600"
         />
       </div>
+
+      {/* Prominent 'Display !!! Item not found' Indicator */}
+      {isItemNotFound && searchQuery.trim() && (
+        <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-bold animate-fade-in shadow-2xs">
+          <span className="px-2 py-0.5 rounded-md bg-rose-600 text-white text-[10px] font-black uppercase tracking-wider shrink-0">
+            Display !!!
+          </span>
+          <span className="truncate">
+            Item not found: &ldquo;{searchQuery.trim()}&rdquo; is not in the recipe list.
+          </span>
+        </div>
+      )}
 
       {/* Suggested Search Quick Tags */}
       {activeTags && activeTags.length > 0 && (

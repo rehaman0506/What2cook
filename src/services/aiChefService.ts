@@ -365,6 +365,11 @@ export function matchSampleRecipe(
   // 2. Keyword & Alias Mapping to authentic sample recipes
   const KEYWORD_MAP: Array<{ keywords: string[]; recipeId: string }> = [
     // Biryanis & Rice
+    { keywords: ['paneer biryani'], recipeId: 'rec-67' },
+    { keywords: ['kaju paneer biryani', 'kaju paneer'], recipeId: 'rec-72' },
+    { keywords: ['prawn biryani', 'prawns biryani', 'shrimp biryani'], recipeId: 'rec-68' },
+    { keywords: ['fish biryani'], recipeId: 'rec-69' },
+    { keywords: ['jackfruit biryani', 'panasa biryani', 'kathal biryani'], recipeId: 'rec-80' },
     { keywords: ['chicken biryani', 'murgh biryani'], recipeId: 'rec-01' },
     { keywords: ['mutton biryani', 'gosht biryani'], recipeId: 'rec-45' },
     { keywords: ['veg biryani', 'vegetable biryani', 'dum biryani'], recipeId: isStrictlyVegetarian ? 'rec-02' : 'rec-01' },
@@ -375,6 +380,11 @@ export function matchSampleRecipe(
     { keywords: ['lemon rice'], recipeId: 'rec-05' },
 
     // Indian Curries & Gravies
+    { keywords: ['sambar', 'sambhar'], recipeId: 'rec-70' },
+    { keywords: ['gutti vankaya', 'brinjal curry', 'brinjal masala', 'baingan masala', 'eggplant curry'], recipeId: 'rec-71' },
+    { keywords: ['ladyfinger with prawn', 'ladyfinger prawn', 'bhendakaya royyalu', 'prawn ladyfinger'], recipeId: 'rec-78' },
+    { keywords: ['kanda bachali', 'kandha bachali', 'bachali'], recipeId: 'rec-79' },
+    { keywords: ['jackfruit curry', 'kathal curry', 'kathal ki sabzi', 'kathal'], recipeId: 'rec-81' },
     { keywords: ['butter chicken', 'murgh makhani'], recipeId: 'rec-14' },
     { keywords: ['chettinad chicken', 'pepper chicken'], recipeId: 'rec-15' },
     { keywords: ['paneer butter masala', 'paneer butter', 'paneer makhani'], recipeId: 'rec-13' },
@@ -389,12 +399,17 @@ export function matchSampleRecipe(
     { keywords: ['kurma', 'vegetable kurma', 'parotta'], recipeId: 'rec-51' },
     { keywords: ['thai green curry', 'thai curry'], recipeId: 'rec-23' },
 
-    // Indo-Chinese
+    // Asian, Japanese & Indo-Chinese
+    { keywords: ['ramen', 'ramen bowl', 'miso ramen', 'shoyu ramen'], recipeId: 'rec-73' },
+    { keywords: ['sushi', 'sushi roll', 'sushi rolls'], recipeId: 'rec-74' },
+    { keywords: ['steam momos', 'steammomos', 'steamed momo', 'steamed momos', 'veg momo', 'veg momos', 'momo', 'momos'], recipeId: 'rec-75' },
+    { keywords: ['fried momo', 'fried momos', 'fried chicken momos'], recipeId: 'rec-76' },
     { keywords: ['chili chicken', 'chilli chicken'], recipeId: 'rec-49' },
     { keywords: ['veg manchurian', 'manchurian'], recipeId: 'rec-48' },
     { keywords: ['noodles', 'hakka noodles', 'chowmein'], recipeId: 'rec-50' },
 
     // Breakfast Specialties
+    { keywords: ['waffles', 'waffle', 'belgian waffles'], recipeId: 'rec-77' },
     { keywords: ['masala dosa', 'dosa'], recipeId: 'rec-07' },
     { keywords: ['idli', 'medu vada', 'vada'], recipeId: 'rec-08' },
     { keywords: ['poha', 'kanda poha'], recipeId: 'rec-09' },

@@ -118,6 +118,7 @@ export const RecipesPage: React.FC<RecipesPageProps> = ({
         searchQuery={filters.searchQuery}
         setSearchQuery={(query) => setFilters(prev => ({ ...prev, searchQuery: query }))}
         onSelectTag={handleSearchTagClick}
+        isItemNotFound={Boolean(filters.searchQuery?.trim() && filteredRecipes.length === 0)}
       />
 
       {/* Comprehensive Filter Controls */}
@@ -163,19 +164,23 @@ export const RecipesPage: React.FC<RecipesPageProps> = ({
           )}
         </div>
       ) : (
-        /* Empty Search Results State with AI Chef CTA */
-        <div className="py-16 px-4 text-center rounded-3xl bg-stone-50 border border-dashed border-stone-300 space-y-5">
-          <div className="w-16 h-16 rounded-3xl bg-orange-100 text-orange-600 mx-auto flex items-center justify-center shadow-sm">
+        /* Empty Search Results State with prominent 'Display !!! Item not found' */
+        <div className="py-16 px-4 text-center rounded-3xl bg-rose-50/40 border-2 border-dashed border-rose-300 space-y-5 animate-fade-in">
+          <div className="w-16 h-16 rounded-3xl bg-rose-100 text-rose-600 mx-auto flex items-center justify-center shadow-sm">
             <UtensilsCrossed className="w-8 h-8" />
           </div>
 
-          <div className="space-y-1.5 max-w-md mx-auto">
-            <h3 className="text-xl font-extrabold text-stone-900">
-              {t.noRecipesFound || 'No matching recipes found'}
+          <div className="space-y-2 max-w-lg mx-auto">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-xs font-black uppercase tracking-wider">
+              <span>Display !!!</span>
+              <span>Item not found</span>
+            </div>
+            <h3 className="text-2xl font-black text-stone-900 tracking-tight">
+              {filters.searchQuery ? `Item not found: "${filters.searchQuery}"` : (t.noRecipesFound || 'Item not found in recipe list')}
             </h3>
             <p className="text-xs sm:text-sm text-stone-600">
               {filters.searchQuery
-                ? `We couldn't find an existing recipe matching "${filters.searchQuery}". Why not let our AI Chef create one from scratch for you right now?`
+                ? `The item "${filters.searchQuery}" is not currently in the recipe list. You can ask our AI Chef to generate an authentic, step-by-step recipe from scratch or search global recipes below!`
                 : 'No recipes match current dietary or category filters. Try switching filters or ask AI Chef.'}
             </p>
           </div>
