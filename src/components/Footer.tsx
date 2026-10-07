@@ -1,5 +1,6 @@
 import React from 'react';
-import { ChefHat, Heart, ShieldAlert, Sparkles } from 'lucide-react';
+import { Heart, ShieldAlert, Sparkles } from 'lucide-react';
+import { Logo } from './Logo';
 
 interface FooterProps {
   setActiveTab: (tab: 'home' | 'recipes' | 'categories' | 'chatbot') => void;
@@ -23,13 +24,11 @@ export const Footer: React.FC<FooterProps> = ({ setActiveTab }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-stone-800">
           {/* Brand Col */}
           <div className="md:col-span-1 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20">
-                <ChefHat className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <span className="text-2xl font-black tracking-tight text-white">
-                What2Cook <span className="text-orange-500 text-sm font-bold bg-orange-500/20 px-1.5 py-0.5 rounded">AI</span>
-              </span>
+            <div
+              className="cursor-pointer group inline-block select-none"
+              onClick={() => { setActiveTab('home'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+            >
+              <Logo size="md" theme="dark" showTagline={false} />
             </div>
             <p className="text-stone-400 text-sm leading-relaxed">
               Transform your fridge ingredients into chef-quality meals in seconds. Student-friendly, zero food waste, and delightfully fast.

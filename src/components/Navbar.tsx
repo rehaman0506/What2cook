@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { ChefHat, Sparkles, Heart, User, Menu, X, Utensils, BookOpen, Layers, Bot } from 'lucide-react';
+import { Sparkles, Heart, User, Menu, X, Utensils, BookOpen, Layers, Bot } from 'lucide-react';
 import { useFavorites } from '../context/FavoritesContext';
 import { useAuth } from '../context/AuthContext';
 import { useLanguage } from '../context/LanguageContext';
+
+import { Logo } from './Logo';
 
 interface NavbarProps {
   activeTab: 'home' | 'recipes' | 'categories' | 'chatbot';
@@ -35,22 +37,9 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Brand Logo */}
           <div
             onClick={() => handleNavClick('home')}
-            className="flex items-center gap-2.5 cursor-pointer group select-none"
+            className="cursor-pointer group select-none"
           >
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20 group-hover:scale-105 transition-transform duration-200">
-              <ChefHat className="w-6 h-6 text-white stroke-[2.2]" />
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="text-xl sm:text-2xl font-black tracking-tight text-stone-900 group-hover:text-orange-600 transition-colors">
-                  What2Cook
-                </span>
-                <span className="bg-orange-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider">
-                  AI
-                </span>
-              </div>
-              <p className="text-[10px] text-stone-500 hidden sm:block -mt-1 font-medium">{t.smartChefTag}</p>
-            </div>
+            <Logo size="md" />
           </div>
 
           {/* Desktop Navigation Links */}

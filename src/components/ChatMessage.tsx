@@ -137,7 +137,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
               </p>
 
               {/* Time & Spec Pills */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+              <div className="grid grid-cols-2 gap-2 text-xs">
                 <div className="p-2.5 rounded-xl bg-orange-50 text-orange-950 flex items-center gap-2 border border-orange-100">
                   <Clock className="w-3.5 h-3.5 text-orange-600 shrink-0" />
                   <div>
@@ -234,7 +234,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
                   </h4>
                   <span className="text-stone-500 font-normal lowercase text-xs">{recipe.ingredients.length} {t.ingredientsCount || 'items'}</span>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="grid grid-cols-1 gap-1.5 text-xs">
                   {recipe.ingredients.map((ing, idx) => {
                     const scaledQty = scaleQuantity(ing.quantity, recipe.servings || 2, servingsCount);
                     return (
