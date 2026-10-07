@@ -11,10 +11,11 @@ export function detectLanguage(_prompt?: string, _fallback: string = 'en'): 'en'
 }
 
 export interface AIChefResponse {
-  recipe: Recipe;
+  recipe?: Recipe;
   userIngredients: string[];
   additionalIngredients: string[];
   conversationalIntro: string;
+  isCasual?: boolean;
 }
 
 export interface UserIntent {
@@ -747,6 +748,10 @@ export function validateAndSanitizeRecipe(
   targetServings: number,
   isStrictlyVegetarian: boolean
 ): AIChefResponse {
+  if (!response.recipe) {
+    return response;
+  }
+
   const { recipe } = response;
 
   // 1. Dietary Safety Check
@@ -817,6 +822,144 @@ export function validateAndSanitizeRecipe(
 }
 
 /**
+ * Detects if a user's prompt is a casual conversation rather than an ingredient/recipe request.
+ * Returns a warm, friendly, chef-grade response or null if the prompt is asking for a recipe.
+ */
+export function getCasualChatResponse(prompt: string, intent: UserIntent): string | null {
+  const trimmed = prompt.trim();
+  const lower = trimmed.toLowerCase();
+
+  // 1. If user provided any ingredients, this is a cooking request, NOT casual chat
+  if (intent.foundIngredients.length > 0) {
+    return null;
+  }
+
+  // 2. If prompt mentions explicit recipe keywords or requests, treat as recipe request
+  const hasRecipeKeywords = /\b(recipe|recipes|how to make|how to cook|how to prepare|give me a recipe|suggest a recipe|cook a dish|make a dish|prepare a dish)\b/i.test(lower);
+  if (hasRecipeKeywords) {
+    return null;
+  }
+
+  // 3. Check for specific casual conversation intents
+
+  // A. Food Jokes & Humor
+  if (/\b(tell\s*(me\s*)?a\s*(cooking\s*|food\s*)?joke|joke|jokes|make me laugh|funny|food joke)\b/i.test(lower)) {
+    const jokes = [
+      "Why did the tomato blush? 🍅\nBecause it saw the salad dressing!\n\nGot any fresh ingredients in your pantry you'd like to cook with today?",
+      "What does a nosy pepper do? 🌶️\nIt gets jalapeño business!\n\nWhat delicious dish are we making today?",
+      "Why do chefs make great DJs? 🎧\nBecause they always know how to drop the beet!\n\nTell me what ingredients you have in your kitchen!",
+      "Why was the chef so stressed? ⏳\nBecause he ran out of thyme!\n\nReady for a quick, stress-free 15-minute recipe?",
+      "What did the hungry cheese say to the cracker? 🧀\nYou're looking gouda today!\n\nWhat can I cook for you?",
+      "Why did the banana go to the doctor? 🍌\nBecause it wasn't peeling well!\n\nTell me what's in your fridge and let's get cooking!"
+    ];
+    return jokes[Math.floor(Math.random() * jokes.length)];
+  }
+
+  // B. Cooking Tips & Kitchen Hacks
+  if (/\b(give me a (cooking |kitchen )?tip|cooking tip[s]?|kitchen tip[s]?|kitchen hack[s]?|cooking hack[s]?|cooking advice|how to cook better)\b/i.test(lower)) {
+    const tips = [
+      "Here is a golden chef tip: 💡\n**Always taste your food as you cook!** Salt and season in stages—a pinch at the start, mid-way through, and a touch right before serving. This builds layered flavor that table salt alone can never match.\n\nReady to put that to work on a recipe?",
+      "Here is a top kitchen tip: 💡\n**Don't crowd the pan!** When sautéing veggies or searing proteins, leaving space allows steam to escape freely. Crowding traps moisture and steams your food instead of giving that delicious golden caramelization.\n\nTell me your ingredients and let's practice!",
+      "Here is a secret chef tip: 💡\n**Save your pasta cooking water!** That salty, starchy liquid is kitchen gold. Emulsify a ladle of it into your sauce along with a bit of butter or cheese for a velvety, restaurant-grade finish.\n\nGot pasta and cheese in your pantry?",
+      "Here is a pro hack: 💡\n**Dry before you fry!** Moisture is the enemy of crispiness. Always pat vegetables, paneer, chicken, or fish dry with a clean paper towel before it hits the hot pan.\n\nWhat ingredients are we cooking up today?"
+    ];
+    return tips[Math.floor(Math.random() * tips.length)];
+  }
+
+  // C. Greetings & Welcomes
+  if (/^(hi|hello|hey|heya|hola|namaste|yo|sup|greetings|good\s*(morning|afternoon|evening|day))(\s+(there|chef|bot|ai|what2cook))?[!.?]*$/i.test(lower) ||
+      /\b(hi chef|hello chef|hey chef|hey there|hello there)\b/i.test(lower)) {
+    const greetings = [
+      "Hello there! 👋 Welcome to What2Cook. I'm your AI Chef!\n\nTell me what ingredients you have in your kitchen (like *spinach, rice, eggs, or chicken*), or ask me how to make any dish, and I'll craft the perfect recipe for you!",
+      "Hey! 👨‍🍳 Great to see you in the kitchen! Ready to cook something delicious? Tell me what ingredients you have on hand, and let's make culinary magic together.",
+      "Welcome! 🍳 I'm your personal AI Chef assistant. Got ingredients in your fridge or pantry you want to turn into a tasty meal? Just type or speak them, and I'll take care of the rest!"
+    ];
+    return greetings[Math.floor(Math.random() * greetings.length)];
+  }
+
+  // D. How are you / Status
+  if (/\b(how are you|how r u|how are you doing|how's it going|hows it going|what's up|whats up|what are you doing|what's cooking|whats cooking|how have you been)\b/i.test(lower)) {
+    return "I'm doing wonderful and ready to cook! 🍳 Everything in my virtual kitchen is prepped, seasoned, and sizzling. How are you doing today? What ingredients are we working with?";
+  }
+
+  // E. Identity & Capabilities (Who are you / What can you do / What is What2Cook)
+  if (/\b(who are you|what is your name|what's your name|what can you do|what do you do|what is what2cook|tell me about yourself|introduce yourself|how does this work|how do you work|how to use this|help me|can you help|who (made|created|built) you)\b/i.test(lower)) {
+    return "I am your **What2Cook AI Chef**! 👨‍🍳\n\nHere is what I can do for you:\n• **Ingredient-to-Recipe**: Tell me whatever ingredients you have in your pantry or fridge (e.g. *spinach, rice, tomatoes*), and I'll create a step-by-step recipe tailored to you.\n• **Classic & Global Dishes**: Ask me how to make any dish (like *Biryani, Pasta, Paneer Butter Masala, Momos*, etc.).\n• **Dietary Filter**: Filter between **100% Pure Veg** and **Non-Vegetarian** with one click.\n• **Portion Scaling**: Use the servings selector to automatically adjust quantities for 1 to 10 people.\n\nWhat would you like to cook today?";
+  }
+
+  // F. Appreciation & Compliments
+  if (/\b(thank you|thanks|thanks a lot|thank you so much|tysm|thx|thankyou|appreciate it|great job|good job|well done|awesome|amazing|you('re|re| are) (great|awesome|the best)|love you|nice|cool|super)\b/i.test(lower)) {
+    const thanksResponses = [
+      "You're very welcome! 😊 It's an absolute pleasure cooking with you. Let me know whenever you're ready for your next delicious meal!",
+      "Anytime! 👨‍🍳 Cooking brings people together and makes every day better. Let me know if you need another recipe or cooking tip!"
+    ];
+    return thanksResponses[Math.floor(Math.random() * thanksResponses.length)];
+  }
+
+  // G. Farewells & Goodbyes
+  if (/\b(bye|goodbye|see you|see ya|cya|good night|goodnight|take care|catch you later|have a nice day|have a good day)\b/i.test(lower)) {
+    return "Goodbye for now! 👋 Have a wonderful day and enjoy every bite of your food. Whenever you're wondering *What2Cook*, I'll be right here waiting in the kitchen!";
+  }
+
+  // H. Hunger & Craving suggestions (without specific ingredients)
+  if (/\b(i('m|m|\s*am) hungry|what should i (eat|cook)|suggest (something|a dish|food)|i want (to eat|food)|feed me|what('s|s) for (dinner|lunch|breakfast)|any ideas)\b/i.test(lower)) {
+    return "Let's fix that hunger right away! 🍽️\n\nHere are 3 quick inspirations:\n1. **Creamy Garlic Butter Pasta** (ready in 15 mins)\n2. **Crispy Masala Egg Scramble or Paneer Bhurji** (ready in 10 mins)\n3. **Quick Vegetable Fried Rice** (ready in 20 mins)\n\nCheck your fridge or pantry and list 2 or 3 ingredients you have right now—I'll generate the full step-by-step recipe instantly!";
+  }
+
+  // I. Conversational Food Preferences / Questions
+  if (/\b(do you (eat|like|cook)|what('s|s| is) your favorite (food|dish|meal))\b/i.test(lower)) {
+    return "As an AI Chef, I feast on recipes, spices, and cooking creativity! 🍕 I have a soft spot for fragrant Hyderabadi Biryani and classic wood-fired Pizza. What's your all-time favorite dish?";
+  }
+
+  // J. Small talk acknowledgements
+  if (/^(ok|okay|k|sure|yeah|yes|yep|cool|alright|fine|got it|nice|haha|hahaha|lol|wow)[!.?]*$/i.test(lower)) {
+    return "Happy to chat! 😊 Whenever hunger strikes or you need dinner inspiration, just drop your ingredients or ask for a recipe. I'm always at your service!";
+  }
+
+  // K. General conversational questions / off-topic queries
+  if (/^(who|what|why|where|when|can you|do you|are you)\b/i.test(lower) && !/\b(recipe|cook|make|bake|fry|dish|eat|food|ingredient|kitchen|meal)\b/i.test(lower)) {
+    return "I'm your dedicated AI Chef, specializing in delicious culinary creations! 🍳 While I'm focused on cooking and food, I'd love to help you make a fantastic meal. Tell me what ingredients you have in your kitchen or what dish you'd like to prepare!";
+  }
+
+  return null;
+}
+
+/**
+ * Calls Gemini API for open-ended conversational chat when API key is present.
+ */
+async function callGeminiCasualChat(prompt: string, apiKey: string): Promise<string | null> {
+  try {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [
+        {
+          role: 'user',
+          parts: [{
+            text: `You are What2Cook AI Chef, a friendly, warm, enthusiastic culinary assistant and professional chef.
+The user is casually chatting with you: "${prompt}".
+Respond conversationally, warmly, and helpfully in 1-2 short paragraphs strictly in clear, natural English.
+Keep your chef persona alive—be polite, witty, passionate about cooking, and invite them to share what ingredients they have in their kitchen or what dish they want to prepare.
+Do NOT output recipe JSON. Output only plain friendly conversational response.`
+          }]
+        }
+      ]
+    };
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+  } catch {
+    return null;
+  }
+}
+
+/**
  * Intelligent AI culinary recipe engine.
  * Prioritizes user's given ingredients, strictly enforces dietary rules,
  * enforces chosen serving size and quantity scaling, validates responses,
@@ -842,6 +985,32 @@ export async function generateRecipeFromAI(
   const geminiApiKey = (typeof import.meta !== 'undefined' && import.meta.env)
     ? import.meta.env.VITE_GEMINI_API_KEY
     : undefined;
+
+  // 0. Check for casual chat (when user is conversing rather than requesting a specific recipe)
+  const casualCheck = getCasualChatResponse(trimmed, intent);
+  if (casualCheck) {
+    if (geminiApiKey && geminiApiKey.trim() !== '' && !geminiApiKey.includes('your-key')) {
+      const geminiCasual = await callGeminiCasualChat(trimmed, geminiApiKey);
+      if (geminiCasual) {
+        return {
+          userIngredients: [],
+          additionalIngredients: [],
+          conversationalIntro: geminiCasual,
+          isCasual: true
+        };
+      }
+    }
+
+    // Brief realistic typing pause
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return {
+      userIngredients: [],
+      additionalIngredients: [],
+      conversationalIntro: casualCheck,
+      isCasual: true
+    };
+  }
+
   if (geminiApiKey && geminiApiKey.trim() !== '' && !geminiApiKey.includes('your-key')) {
     try {
       const response = await callGeminiAPI(trimmed, intent, geminiApiKey, lang, targetServings);

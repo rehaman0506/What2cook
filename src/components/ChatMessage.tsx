@@ -9,6 +9,33 @@ import { useFavorites } from '../context/FavoritesContext';
 import { useLanguage } from '../context/LanguageContext';
 import { scaleQuantity } from '../utils/quantityScaler';
 
+const renderFormattedText = (text: string) => {
+  return text.split('\n\n').map((block, bIdx) => {
+    const lines = block.split('\n');
+    return (
+      <div key={bIdx} className={bIdx > 0 ? 'mt-2.5' : ''}>
+        {lines.map((line, lIdx) => {
+          const parts = line.split(/(\*\*[^*]+\*\*)/g);
+          return (
+            <p key={lIdx} className={lIdx > 0 ? 'mt-1' : ''}>
+              {parts.map((part, pIdx) => {
+                if (part.startsWith('**') && part.endsWith('**')) {
+                  return (
+                    <strong key={pIdx} className="font-bold text-stone-900">
+                      {part.slice(2, -2)}
+                    </strong>
+                  );
+                }
+                return part;
+              })}
+            </p>
+          );
+        })}
+      </div>
+    );
+  });
+};
+
 interface ChatMessageProps {
   message: ChatMessageType;
   onOpenRecipe?: (recipe: Recipe) => void;
@@ -71,7 +98,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message, onOpenRecipe 
         {/* Intro text / conversation note */}
         {message.text && (
           <div className="p-4 rounded-2xl rounded-tl-sm bg-white/95 backdrop-blur-sm border border-stone-200 shadow-sm text-stone-800 text-sm sm:text-base leading-relaxed">
-            {message.text}
+            {renderFormattedText(message.text)}
           </div>
         )}
 
